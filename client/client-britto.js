@@ -1,5 +1,4 @@
   Posts = new Meteor.Collection("Posts");
-  Users = new Meteor.Collection("Users");
 
   Meteor.subscribe("allposts");
 
