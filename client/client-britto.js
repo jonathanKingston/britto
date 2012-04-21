@@ -1,8 +1,8 @@
   Posts = new Meteor.Collection("Posts");
   Users = new Meteor.Collection("Users");
 
+  Meteor.subscribe("allposts");
 
-  //Pretty sure this shouldn't be populating as I have no publish statements, might be a bug
   Template.posts.postlist = function() {
     return Posts.find({}, {sort: {created: -1}});
   }
@@ -17,7 +17,7 @@
       return false;
     },
     'submit #post-form, click #post-button': function() {
-      Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), auth: Session.get('auth')}, postCallback);
+      Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Session.get('auth')}, postCallback);
       return false;
     }
   }
@@ -45,10 +45,14 @@
 
   BrittoRouter = Backbone.Router.extend({
     routes: {
-      "": "popular",
-      "recent": "recent",
-      ":selected_app_name": "popular",
-      "recent/:selected_app_name": "recent"
+      ":slug": "findPost",
+      ":slug/": "findPost"
     },
+    findPost: function(slug) {
+      post = Posts.findOne({slug: slug});
+      console.log(slug);
+      console.log(post);
+    }
   });
-  Router = BrittoRouter();
+  Router = new BrittoRouter;
+  Backbone.history.start({pushState: true});

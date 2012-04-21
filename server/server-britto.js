@@ -1,12 +1,21 @@
 Posts = new Meteor.Collection("Posts");
 Users = new Meteor.Collection("Users");
 
+  Meteor.publish("allusers", function() {
+    return Users.find({}, {fields: {password: 0, salt: 0, apikey: 0}});
+  });
+
+  Meteor.publish("allposts", function() {
+    return Posts.find({}, {fields: {}});
+  });
+
   Meteor.methods({
     post: function(args) {
       if(Users.findOne({apikey: args.auth})) {
         Posts.insert({
           title: args.title,
           body: args.body,
+          slug: args.slug,
           created: new Date()
         });
         return true;
