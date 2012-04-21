@@ -41,3 +41,14 @@
       return Date().toString();
     }
   });
+
+
+  BrittoRouter = Backbone.Router.extend({
+    routes: {
+      "": "popular",
+      "recent": "recent",
+      ":selected_app_name": "popular",
+      "recent/:selected_app_name": "recent"
+    },
+  });
+  Router = BrittoRouter();

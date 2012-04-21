@@ -39,13 +39,11 @@ Users = new Meteor.Collection("Users");
   }
 
   Meteor.startup(function () {
-    Meteor.default_server.method_handlers['/Posts/insert'] = function () {};
-    Meteor.default_server.method_handlers['/Posts/update'] = function () {};
-    Meteor.default_server.method_handlers['/Posts/remove'] = function () {};
-
-    Meteor.default_server.method_handlers['/Users/insert'] = function () {};
-    Meteor.default_server.method_handlers['/Users/update'] = function () {};
-    Meteor.default_server.method_handlers['/Users/remove'] = function () {};
+    _.each(['Posts', 'Users'], function(collection) {
+      _.each(['insert', 'update', 'remove'], function(method) {
+        Meteor.default_server.method_handlers['/' + collection + '/' + method] = function() {};
+      });
+    });
 
     if (Posts.find().count() === 0) {
       Posts.insert({title: 'Hello world', body: 'Cruel cruel world'});
