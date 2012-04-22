@@ -44,8 +44,16 @@
       return false;
     },
     'submit #post-button, click #post-button': function() {
-      Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Session.get('auth')});
+      Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Session.get('auth')}, madePost);
       return false;
+    }
+  }
+
+  //create post callback
+  function madePost(error, response) {
+    if(!error) {
+      Session.set('new_page', 'home');
+      Router.navigate('/');
     }
   }
 
@@ -56,13 +64,13 @@
     }
   }
 
-  Template.post.events = {
-    'click .postView': function(e) {
-      e.stopPropagation();
-      console.log(e);
-      return false;
-    }
-  }
+//  Template.post.events = {
+//    'click .postView': function(e) {
+//      e.stopPropagation();
+//      console.log(e);
+//      return false;
+//    }
+//  }
 
   function loginCallback(error, returnVal) {
     if(!error) {
@@ -98,9 +106,13 @@
 
   BrittoRouter = Backbone.Router.extend({
     routes: {
+      "/": "homePage",
       "user-area/": "userAreaPage",
       ":slug": "findPost",
       ":slug/": "findPost"
+    },
+    homePage: function() {
+      Session.set('new_page', 'home');
     },
     findPost: function(slug) {
       Session.set('new_page', 'post');
@@ -111,3 +123,12 @@
     }
   });
   Router = new BrittoRouter;
+
+
+  Meteor.startup(function() {
+      //TODO decide if [data-link="internal"] is needed here and on links
+      $('body').on('click', 'a', function(e){
+          e.preventDefault();
+          Router.navigate($(this).attr('href'), true);
+      });
+  });
