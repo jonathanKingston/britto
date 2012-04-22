@@ -4,8 +4,8 @@
   Meteor.subscribe("allposts", init);
 
   function init() {
-    Backbone.history.start({pushState: true});
     Session.set('loaded', true);
+    Backbone.history.start({pushState: true});
   }
 
   Template.posts.postlist = function() {
