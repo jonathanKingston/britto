@@ -7,7 +7,7 @@
     <div class="navbar-inner">
       <div class="container">
    
-        <a class="brand" href="#">Britto blog</a>
+        <a class="brand" href="/">Britto blog</a>
    
         <!-- Everything you want hidden at 940px or less, place within here -->
         <div class="nav-collapse">
@@ -26,16 +26,27 @@
   </div>
 
   <div class="container">
-    {{>posts}}
-    <br /><br />
-    {{>userArea}}
-
+    {{#content}}
+    {{/content}}
     <footer>
       <a href="http://britto.co">Powered by Britto</a>
     </footer>
   </div>
 
 </body>
+
+<template name="listView">
+    {{>posts}}
+    <br /><br />
+    {{>userArea}}
+</template>
+
+
+<template name="postView">
+    {{>post}}
+    <br /><br />
+    {{>userArea}}
+</template>
 
 <template name="userArea">
   {{#if user }}
@@ -89,7 +100,7 @@
 <template name="post">
   <secti
     on class="post" id="{{_id}}">
-    <h2><a href="#" >{{ title }}</a></h2>
+    <h2><a href="{{slug}}" >{{ title }}</a></h2>
     {{#markdown}}{{body}}{{/markdown}}
     {{date created}}
   </section>

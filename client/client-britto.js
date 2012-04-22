@@ -41,6 +41,16 @@
     }
   });
 
+  Handlebars.registerHelper('content', function() {
+    if(Session.equals('new_page', 'post')) {
+      post = Posts.findOne({slug: Session.get('new_slug')});
+      if(post) {
+        return Meteor.ui.chunk(function() { return Template.postView(post); });
+      }
+    }
+    return Meteor.ui.chunk(function() { return Template.listView(); });
+    return '';
+  });
 
   BrittoRouter = Backbone.Router.extend({
     routes: {
@@ -48,10 +58,11 @@
       ":slug/": "findPost"
     },
     findPost: function(slug) {
-      post = Posts.findOne({slug: slug});
-      console.log(slug);
-      console.log(post);
+      Session.set('new_page', 'post');
+      Session.set('new_slug', slug);
     }
   });
   Router = new BrittoRouter;
-  Backbone.history.start({pushState: true});
+  Meteor.startup(function () {
+    Backbone.history.start({pushState: true});
+  });
