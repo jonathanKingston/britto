@@ -27,8 +27,11 @@
   }
 
   Template.comments.commentslist = function(post) {
-    console.log('comments');
-    return Comments.find({postId: post._id}, {sort: {created: -1}});
+    comments = Comments.find({postId: post._id}, {sort: {created: 1}});
+    if(comments.count() === 0) {
+      return false;
+    }
+    return comments;
   }
 
   Template.userArea.user = function() {
@@ -71,10 +74,10 @@
 
   Handlebars.registerHelper('date', function(date) {
     if(date) {
-      return date;
-    } else {
-      return Date().toString();
+      dateObj = new Date(date);
+      return $.timeago(dateObj);
     }
+    return 'N/A';
   });
 
   Handlebars.registerHelper('content', function() {

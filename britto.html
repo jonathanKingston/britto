@@ -44,7 +44,7 @@
       {{>post}}
     {{/with}}
 
-    <h2>Comments</h2>
+    <h3>Comments</h3>
     {{>comments}}
     <form id="comment-form" class="form-horizontal" action="#" >
       <input type="hidden" id="comment-post" value="{{#with post}}{{_id}}{{/with}}" />
@@ -115,9 +115,13 @@
 </template>
 
 <template name="comments">
-  {{#each commentslist post}}
-    {{>comment}}
-  {{/each}}
+  {{#if commentslist post}}
+    {{#each commentslist post}}
+      {{>comment}}
+    {{/each}}
+  {{else}}
+    <p>There are no comments on this post yet.</p>
+  {{/if}}
 </template>
 
 <template name="post">
