@@ -5,7 +5,8 @@
 
   Meteor.subscribe("allposts");
   //TODO change this to a per post subscription - removing it was killing the templates :/
-  Meteor.subscribe("allcomments", init);
+  Meteor.subscribe("allcomments");
+  //Todo, find a better / more reliable init point
   Meteor.subscribe("allusers", init);
 
   function init() {
