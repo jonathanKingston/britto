@@ -18,6 +18,10 @@
     return Posts.find({}, {sort: {created: -1}});
   }
 
+  Template.post.commentCount = function(id) {
+    return Comments.find({postId: id}).count();
+  }
+
   Template.postView.postUser = function(post) {
     return Users.findOne({_id: post.userId}).name;
   }
