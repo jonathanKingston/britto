@@ -7,16 +7,16 @@
     <div class="navbar-inner">
       <div class="container">
    
-        <a class="brand" href="/" >Britto blog</a>
+        <a class="brand" href="/" rel="internal">Britto blog</a>
    
         <!-- Everything you want hidden at 940px or less, place within here -->
         <div class="nav-collapse">
           <ul class="nav">
               <li class="active">
-                <a href="/">Home</a>
+                <a href="/" rel="internal">Home</a>
               </li>
               <li class="">
-                <a href="/user-area/">Login</a>
+                <a href="/user-area/" rel="internal">Login</a>
               </li>
             </ul>
         </div>
@@ -126,12 +126,12 @@
 
 <template name="post">
   <section class="post" id="{{_id}}">
-    <h2><a href="{{slug}}" class="postView" >{{ title }}</a></h2>
+    <h2><a href="/{{slug}}/" rel="internal" >{{ title }}</a></h2>
     {{#markdown}}{{body}}{{/markdown}}
     <dl>
       <dt>Posted by</dt><dd>{{postUser userId}}</dd>
       <dt>Created</dt><dd>{{date created}}</dd>
-      <dt>Comments</dt><dd><a href="{{slug}}" class="postView" >{{commentCount _id}}</a></dd>
+      <dt>Comments</dt><dd><a href="/{{slug}}/" rel="internal" >{{commentCount _id}}</a></dd>
     </dl>
   </section>
   <br />

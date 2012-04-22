@@ -121,8 +121,7 @@
 
 
   Meteor.startup(function() {
-      //TODO decide if [data-link="internal"] is needed here and on links
-      $('body').on('click', 'a', function(e){
+      $('body').on('click', 'a[rel="internal"]', function(e){
           e.preventDefault();
           Router.navigate($(this).attr('href'), true);
       });
