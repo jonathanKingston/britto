@@ -1,38 +1,65 @@
 Posts = new Meteor.Collection("Posts");
 Users = new Meteor.Collection("Users");
+Comments = new Meteor.Collection("Comments");
 
-  Meteor.publish("allusers", function() {
-    return Users.find({}, {fields: {password: 0, salt: 0, apikey: 0}});
+  Meteor.publish("postcomments", function(id) {
+    return Comments.find({postId: id});
   });
+
+
+  Meteor.publish("allcomments", function() {
+    return Comments.find();
+  });
+
+
+//  Meteor.publish("allusers", function() {
+//    return Users.find({}, {fields: {password: 0, salt: 0, apikey: 0}});
+//  });
 
   Meteor.publish("allposts", function() {
     return Posts.find({}, {fields: {}});
   });
 
   Meteor.methods({
-    post: function(args) {
-      if(Users.findOne({apikey: args.auth})) {
-        Posts.insert({
-          title: args.title,
-          body: args.body,
-          slug: args.slug,
-          created: new Date()
-        });
-        return true;
-      }
-      return false;
-    },
-    login: function(username, password) {
-      user = Users.findOne({username: username});
-      if(user) {
-        if(user.password == hashPassword(password, user.salt)) {
-          thisUser = {name: user.name, username: user.username, auth: user.apikey};
-          return thisUser;
-        }
-      }
-      throw new Meteor.Error(401, 'Login not correct');
-    }
+    comment: makeComment,
+    post: makePost,
+    login: loginUser
   });
+
+  function loginUser(username, password) {
+    user = Users.findOne({username: username});
+    if(user) {
+      if(user.password == hashPassword(password, user.salt)) {
+        thisUser = {name: user.name, username: user.username, auth: user.apikey};
+        return thisUser;
+      }
+    }
+    throw new Meteor.Error(401, 'Login not correct');
+  }
+
+  function makePost(args) {
+    if(Users.findOne({apikey: args.auth})) {
+      Posts.insert({
+        title: args.title,
+        body: args.body,
+        slug: args.slug,
+        created: new Date()
+      });
+      return true;
+    }
+    return false;
+  }
+
+  function makeComment(args) {
+    if(args && args.postId) {
+      Comments.insert({
+        postId: args.postId,
+        name: args.name,
+        comment: args.comment,
+        created: new Date()
+      });
+    }
+  }
 
   function hashPassword(password, salt) {
     return Meteor.hash('sha256', password + salt);

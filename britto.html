@@ -28,6 +28,8 @@
   <div class="container">
     {{#content}}
     {{/content}}
+    <br /><br />
+    {{>userArea}}
     <footer>
       <a href="http://britto.co">Powered by Britto</a>
     </footer>
@@ -37,14 +39,30 @@
 
 <template name="listView">
     {{>posts}}
-    <br /><br />
-    {{>userArea}}
 </template>
 
 <template name="postView">
-    {{>post}}
-    <br /><br />
-    {{>userArea}}
+    {{#with post}}
+      {{>post}}
+    {{/with}}
+    {{>comments}}
+    <form id="comment-form" class="form-horizontal" action="#" >
+      <input type="hidden" id="comment-post" value="{{#with post}}{{_id}}{{/with}}" />
+      <fieldset>
+        <legend>Comment</legend>
+        <div class="control-group">
+          <label for="comment-name" class="control-label">Name</label>
+          <div class="controls"><input type="text" id="comment-name" /></div>
+        </div>
+        <div class="control-group">
+          <label for="comment-comment" class="control-label">Comment</label>
+          <div class="controls"><textarea id="comment-comment" ></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" id="comment-button" >Comment</button>
+        </div>
+      </fieldset>
+    </form>
 </template>
 
 <template name="userArea">
@@ -96,10 +114,25 @@
   {{/each}}
 </template>
 
+<template name="comments">
+  {{#each commentslist post}}
+    {{>comment}}
+  {{/each}}
+</template>
+
 <template name="post">
   <section class="post" id="{{_id}}">
     <h2><a href="{{slug}}" class="postView" >{{ title }}</a></h2>
     {{#markdown}}{{body}}{{/markdown}}
+    {{date created}}
+  </section>
+  <br />
+</template>
+
+<template name="comment">
+  <section class="comment" id="{{_id}}">
+    <strong>{{ name }}</strong>
+    {{#markdown}}{{comment}}{{/markdown}}
     {{date created}}
   </section>
   <br />
