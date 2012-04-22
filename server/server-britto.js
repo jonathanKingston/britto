@@ -21,8 +21,17 @@ Comments = new Meteor.Collection("Comments");
   Meteor.methods({
     comment: makeComment,
     post: makePost,
-    login: loginUser
+    login: loginUser,
+    deleteComment: deleteComment
   });
+
+  function deleteComment(args) {
+    if(user = Users.findOne({apikey: args.auth})) {
+      Comments.remove({_id: args.commentId});
+      return true;
+    }
+    return false;
+  }
 
   function loginUser(username, password) {
     user = Users.findOne({username: username});

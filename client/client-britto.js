@@ -34,9 +34,11 @@
     return comments;
   }
 
-  Template.userArea.user = function() {
-    return Session.get('user');
-  }
+  _.each(['userArea', 'comment'], function(template) {
+      Template[template].user = function() {
+        return Session.get('user');
+      }
+  });
 
 /*
   Template.userArea.events = {
@@ -137,7 +139,18 @@
     $('body').on('click', '#post-button', makePost);
 
     $('body').on('change', '#post-title', changeTitle);
+
+    $('body').on('click', '.delete-comment', deleteComment);
   });
+
+  function deleteComment(e) {
+    e.preventDefault();
+    if(Session.get('auth')) {
+      target = e.target;
+      commentId = $(target).attr('data-id');
+      Meteor.call('deleteComment', {commentId: commentId, auth: Session.get('auth')});
+    }
+  }
 
   function changeTitle() {
     slug = $('#post-title').val();
@@ -146,7 +159,9 @@
 
   function makePost(e) {
     e.preventDefault();
-    Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Session.get('auth')}, madePost);
+    if(Session.get('auth')) {
+      Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Session.get('auth')}, madePost);
+    }
     return false;
   }
 

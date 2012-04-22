@@ -142,6 +142,7 @@
     <strong>{{ name }}</strong>
     {{#markdown}}{{comment}}{{/markdown}}
     {{date created}}
+    {{#if user}}<button class="btn btn-primary delete-comment" data-id="{{_id}}" >Delete</button>{{/if}}
   </section>
   <br />
 </template>
