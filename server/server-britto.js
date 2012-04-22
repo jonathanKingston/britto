@@ -82,7 +82,7 @@ Comments = new Meteor.Collection("Comments");
     });
 
     if (Posts.find().count() === 0) {
-      Posts.insert({title: 'Hello world', body: 'Cruel cruel world'});
+      makePost({title: 'Hello world', body: 'Cruel cruel world', slug: 'yellow_world'});
     }
     if(Users.find().count() === 0) {
       console.log('Adding in users');
