@@ -6,15 +6,13 @@ Comments = new Meteor.Collection("Comments");
     return Comments.find({postId: id});
   });
 
-
   Meteor.publish("allcomments", function() {
     return Comments.find();
   });
 
-
-//  Meteor.publish("allusers", function() {
-//    return Users.find({}, {fields: {password: 0, salt: 0, apikey: 0}});
-//  });
+  Meteor.publish("allusers", function() {
+    return Users.find({}, {fields: {username: 0, password: 0, salt: 0, apikey: 0}});
+  });
 
   Meteor.publish("allposts", function() {
     return Posts.find({}, {fields: {}});
@@ -38,11 +36,12 @@ Comments = new Meteor.Collection("Comments");
   }
 
   function makePost(args) {
-    if(Users.findOne({apikey: args.auth})) {
+    if(user = Users.findOne({apikey: args.auth})) {
       Posts.insert({
         title: args.title,
         body: args.body,
         slug: args.slug,
+        userId: user._id,
         created: new Date()
       });
       return true;
@@ -71,21 +70,21 @@ Comments = new Meteor.Collection("Comments");
     vals.created = new Date();
     //This apikey is because we don't have server side sessions yet
     vals.apikey = Meteor.hash('md5', Math.random().toString());
-    Users.insert(vals);
+    id = Users.insert(vals);
+    return id;
   }
 
   Meteor.startup(function () {
-    _.each(['Posts', 'Users'], function(collection) {
+    _.each(['Posts', 'Users', 'Comments'], function(collection) {
       _.each(['insert', 'update', 'remove'], function(method) {
         Meteor.default_server.method_handlers['/' + collection + '/' + method] = function() {};
       });
     });
-
-    if (Posts.find().count() === 0) {
-      makePost({title: 'Hello world', body: 'Cruel cruel world', slug: 'yellow_world'});
-    }
     if(Users.find().count() === 0) {
       console.log('Adding in users');
-      createUser({username: 'jonathan', password: 'test', name: 'Jonathan Kingston'});
+      userId = createUser({username: 'jonathan', password: 'test', name: 'Jonathan Kingston'});
+      console.log('Adding in test post');
+      user = Users.findOne({_id: userId});
+      makePost({title: 'Hello world', body: 'Cruel cruel world', slug: 'yellow_world', auth: user.apikey});
     }
   });

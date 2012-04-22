@@ -1,10 +1,12 @@
   Session.set('loaded', false);
   Posts = new Meteor.Collection("Posts");
   Comments = new Meteor.Collection("Comments");
+  Users = new Meteor.Collection("Users");
 
   Meteor.subscribe("allposts");
   //TODO change this to a per post subscription - removing it was killing the templates :/
   Meteor.subscribe("allcomments", init);
+  Meteor.subscribe("allusers", init);
 
   function init() {
     Session.set('loaded', true);
@@ -15,7 +17,12 @@
     return Posts.find({}, {sort: {created: -1}});
   }
 
+  Template.postView.postUser = function(post) {
+    return Users.findOne({_id: post.userId}).name;
+  }
+
   Template.comments.commentslist = function(post) {
+    console.log('comments');
     return Comments.find({postId: post._id}, {sort: {created: -1}});
   }
 

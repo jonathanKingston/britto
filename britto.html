@@ -45,6 +45,8 @@
     {{#with post}}
       {{>post}}
     {{/with}}
+    Posted by: {{postUser post}}
+
     {{>comments}}
     <form id="comment-form" class="form-horizontal" action="#" >
       <input type="hidden" id="comment-post" value="{{#with post}}{{_id}}{{/with}}" />
