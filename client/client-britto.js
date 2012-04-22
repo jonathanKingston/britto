@@ -38,6 +38,7 @@
     return Session.get('user');
   }
 
+/*
   Template.userArea.events = {
     'submit #login-button, click #login-button': function() {
       Meteor.call('login', $('#login-username').val(), $('#login-password').val(), loginCallback);
@@ -48,6 +49,7 @@
       return false;
     }
   }
+*/
 
   //create post callback
   function madePost(error, response) {
@@ -57,17 +59,10 @@
     }
   }
 
-  Template.postView.events = {
-    'submit #comment-button, click #comment-button': function() {
-      Meteor.call('comment', {name: $('#comment-name').val(), comment: $('#comment-comment').val(), postId: $('#comment-post').val()});
-      return false;
-    }
-  }
-
-//  Template.post.events = {
-//    'click .postView': function(e) {
-//      e.stopPropagation();
-//      console.log(e);
+//Doesn't always work use startup at bottom
+//  Template.postView.events = {
+//    'submit #comment-button, click #comment-button': function() {
+//      Meteor.call('comment', {name: $('#comment-name').val(), comment: $('#comment-comment').val(), postId: $('#comment-post').val()});
 //      return false;
 //    }
 //  }
@@ -131,4 +126,38 @@
           e.preventDefault();
           Router.navigate($(this).attr('href'), true);
       });
+
+    //Internal Meteor events don't seem to always fire TODO check for bugs
+    $('body').on('click', '#comment-button', makeComment);
+    $('body').on('submit', '#comment-button', makeComment);
+
+    $('body').on('submit', '#login-button', doLogin);
+    $('body').on('click', '#login-button', doLogin);
+
+    $('body').on('submit', '#post-button', makePost);
+    $('body').on('click', '#post-button', makePost);
   });
+
+  function makePost(e) {
+    e.preventDefault();
+    Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Session.get('auth')}, madePost);
+    return false;
+  }
+
+  function doLogin(e) {
+    e.preventDefault();
+    Meteor.call('login', $('#login-username').val(), $('#login-password').val(), loginCallback);
+    return false;
+  }
+
+  function makeComment(e) {
+    e.preventDefault();
+    Meteor.call('comment', {name: $('#comment-name').val(), comment: $('#comment-comment').val(), postId: $('#comment-post').val()}, madeComment);
+    return false;
+  }
+
+  function madeComment(error, response) {
+    if(!error) {
+      $('#comment-comment').val('');
+    }
+  }
