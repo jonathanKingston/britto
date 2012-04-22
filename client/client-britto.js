@@ -1,6 +1,12 @@
+  Session.set('loaded', false);
   Posts = new Meteor.Collection("Posts");
 
-  Meteor.subscribe("allposts");
+  Meteor.subscribe("allposts", init);
+
+  function init() {
+    Backbone.history.start({pushState: true});
+    Session.set('loaded', true);
+  }
 
   Template.posts.postlist = function() {
     return Posts.find({}, {sort: {created: -1}});
@@ -17,6 +23,14 @@
     },
     'submit #post-form, click #post-button': function() {
       Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Session.get('auth')}, postCallback);
+      return false;
+    }
+  }
+
+  Template.post.events = {
+    'click .postView': function(e) {
+      e.stopPropagation();
+      console.log(e);
       return false;
     }
   }
@@ -42,6 +56,7 @@
   });
 
   Handlebars.registerHelper('content', function() {
+    if(Session.equals('loaded', true)) {
     if(Session.equals('new_page', 'post')) {
       post = Posts.findOne({slug: Session.get('new_slug')});
       if(post) {
@@ -49,6 +64,7 @@
       }
     }
     return Meteor.ui.chunk(function() { return Template.listView(); });
+    }
     return '';
   });
 
@@ -63,6 +79,3 @@
     }
   });
   Router = new BrittoRouter;
-  Meteor.startup(function () {
-    Backbone.history.start({pushState: true});
-  });
