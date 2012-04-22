@@ -158,7 +158,12 @@
 
   function makeComment(e) {
     e.preventDefault();
-    Meteor.call('comment', {name: $('#comment-name').val(), comment: $('#comment-comment').val(), postId: $('#comment-post').val()}, madeComment);
+    nameText = $('#comment-name').val();
+    commentText = $('#comment-comment').val();
+    //Stop blank messages
+    if(commentText.length > 0 && nameText.length > 0) {
+      Meteor.call('comment', {name: nameText, comment: commentText, postId: $('#comment-post').val()}, madeComment);
+    }
     return false;
   }
 
