@@ -136,7 +136,14 @@
 
     $('body').on('submit', '#post-button', makePost);
     $('body').on('click', '#post-button', makePost);
+
+    $('body').on('change', '#post-title', changeTitle);
   });
+
+  function changeTitle() {
+    slug = $('#post-title').val();
+    $('#post-slug').val(slug.replace(/\s/g, '_'));
+  }
 
   function makePost(e) {
     e.preventDefault();
