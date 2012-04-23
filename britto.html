@@ -110,7 +110,7 @@
 
 <template name="posts">
   {{#each postlist}}
-    {{>post}}
+    {{>postShort}}
   {{/each}}
 </template>
 
@@ -122,6 +122,19 @@
   {{else}}
     <p>There are no comments on this post yet.</p>
   {{/if}}
+</template>
+
+<template name="postShort">
+  <section class="post" id="{{_id}}">
+    <h2><a href="/{{slug}}/" rel="internal" >{{ title }}</a></h2>
+    {{#short_content slug}}{{body}}{{/short_content}}
+    <dl>
+      <dt>Posted by</dt><dd>{{postUser userId}}</dd>
+      <dt>Created</dt><dd>{{date created}}</dd>
+      <dt>Comments</dt><dd><a href="/{{slug}}/" rel="internal" >{{commentCount _id}}</a></dd>
+    </dl>
+  </section>
+  <br />
 </template>
 
 <template name="post">

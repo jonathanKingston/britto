@@ -18,13 +18,15 @@
     return Posts.find({}, {sort: {created: -1}});
   }
 
-  Template.post.commentCount = function(id) {
-    return Comments.find({postId: id}).count();
-  }
+  _.each(['postShort', 'post'], function(template) {
+    Template[template].commentCount = function(id) {
+      return Comments.find({postId: id}).count();
+    }
 
-  Template.post.postUser = function(id) {
-    return Users.findOne({_id: id}).name;
-  }
+    Template[template].postUser = function(id) {
+      return Users.findOne({_id: id}).name;
+    }
+  });
 
   Template.comments.commentslist = function(post) {
     comments = Comments.find({postId: post._id}, {sort: {created: 1}});
@@ -84,6 +86,17 @@
     }
     return 'N/A';
   });
+
+  Handlebars.registerHelper('short_content', function(slug, options) {
+    renderedContent = options.fn(this);
+    content = renderedContent.substring(0, 200);
+    if(content != renderedContent) {
+      content += " <a href=\"/"+slug+"/\">...</a>";
+    }
+    var converter = new Showdown.converter();
+    return converter.makeHtml(content);
+  });
+
 
   Handlebars.registerHelper('content', function() {
     if(Session.equals('loaded', true)) {
