@@ -106,8 +106,6 @@
 
 
   Handlebars.registerHelper('content', function() {
-    $('#mainContent').fadeIn('slow');
-
     if(Session.equals('loaded', true)) {
       if(Session.equals('new_page', 'post')) {
         post = Posts.findOne({slug: Session.get('new_slug')});
@@ -120,7 +118,7 @@
       }
       return Meteor.ui.chunk(function() { return Template.listView(); });
     }
-    return '';
+    return Meteor.ui.chunk(function() { return ''; });
   });
 
   BrittoRouter = Backbone.Router.extend({
