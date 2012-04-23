@@ -6,19 +6,12 @@
   <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
       <div class="container">
-   
         <a class="brand" href="/" rel="internal">Britto blog</a>
-   
-        <!-- Everything you want hidden at 940px or less, place within here -->
+
         <div class="nav-collapse">
           <ul class="nav">
-              <li class="active">
-                <a href="/" rel="internal">Home</a>
-              </li>
-              <li class="">
-                <a href="/user-area/" rel="internal">Login</a>
-              </li>
-            </ul>
+            {{>nav}}
+          </ul>
         </div>
    
       </div>
@@ -35,6 +28,24 @@
     </footer>
   </div>
 </body>
+
+<template name="nav">
+  <li class="active">
+    <a href="/" rel="internal">Home</a>
+  </li>
+  {{#if user}}
+    <li class="">
+      <a href="/user_area/" rel="internal">User area</a>
+    </li>
+    <li>
+      <a href="/logout/" rel="internal">Logout</a>
+    </li>  
+  {{else}}
+    <li class="">
+      <a href="/user_area/" rel="internal">Login</a>
+    </li>
+  {{/if}}
+</template>
 
 <template name="listView">
   <section class="listView">
@@ -73,7 +84,7 @@
 <template name="userArea">
   <section class="userArea">
     {{#if user }}
-      <p>Hello {{#with user}}{{ name }}{{/with}}</p>
+      <h2>Hi {{#with user}}{{ name }}{{/with}}!</h2>
       <form id="post-form" class="form-horizontal" action="#">
         <fieldset>
           <legend>Make a post</legend>
