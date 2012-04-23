@@ -1,4 +1,6 @@
   Session.set('loaded', false);
+  Session.equals('page_type', false);
+
   Posts = new Meteor.Collection("Posts");
   Comments = new Meteor.Collection("Comments");
   Users = new Meteor.Collection("Users");
@@ -36,14 +38,16 @@
     return comments;
   }
 
-  _.each(['userArea', 'comment', 'nav'], function(template) {
+  _.each(['user_area', 'comment', 'nav'], function(template) {
       Template[template].user = function() {
         return Session.get('user');
       }
   });
 
-  function setPage(page, pageType) {
-    Router.navigate(page);
+  function setPage(page, pageType, redirect) {
+    if(redirect) {
+      Router.navigate(page);
+    }
     if(page !== Session.get('new_page')) {
       $('#mainContent').fadeOut('slow');
       $('#mainContent').promise().done(function() {Session.set('page_type', pageType); Session.set('new_page', page); });
@@ -66,7 +70,7 @@
   //create post callback
   function madePost(error, response) {
     if(!error) {
-      setPage('/');
+      setPage('/', false, true);
     }
   }
 
@@ -82,6 +86,7 @@
     if(!error) {
       Session.set('auth', returnVal.auth);
       Session.set('user', returnVal);
+      setPage('user_area', false, true);
     }
     return false;
   }
@@ -98,7 +103,7 @@
     renderedContent = options.fn(this);
     content = renderedContent.substring(0, 200);
     if(content != renderedContent) {
-      content += " <a href=\"/"+slug+"/\" rel=\"internal\" >...</a>";
+      content += " <a href=\"/"+slug+"\" rel=\"internal\" >...</a>";
     }
     var converter = new Showdown.converter();
     return converter.makeHtml(content);
@@ -113,8 +118,10 @@
           //TODO  Meteor.subscribe("postcomments", post._id, init);
           return Meteor.ui.chunk(function() { return Template.postView({post: post}); });
         }
-      } else if(Session.equals('new_page', 'user_area/')) {
-        return Meteor.ui.chunk(function() { return Template.userArea(); });
+      } else if(Session.equals('new_page', 'user_area')) {
+        return Meteor.ui.chunk(function() { return Template.user_area(); });
+      } else if(Session.equals('new_page', 'login')) {
+        return Meteor.ui.chunk(function() { return Template.login(); });
       }
       return Meteor.ui.chunk(function() { return Template.listView(); });
     }
@@ -124,24 +131,32 @@
   BrittoRouter = Backbone.Router.extend({
     routes: {
       "/": "homePage",
+//      "": "homePage",
       "user_area/": "userAreaPage",
+      "user_area": "userAreaPage",
+      "login/": "login",
+      "login": "login",
       "logout/": "logoutPage",
+      "logout": "logoutPage",
       ":slug": "findPost",
       ":slug/": "findPost"
     },
+    login: function() {
+      setPage('login', false, false);
+    },
     homePage: function() {
-      setPage('/', false);
+      setPage('/', false, false);
     },
     findPost: function(slug) {
-      setPage(slug, 'post');
+      setPage(slug, 'post', false);
     },
     userAreaPage: function() {
-      setPage('user_area/');
+      setPage('user_area', false, true);
     },
     logoutPage: function() {
       Session.set('user', false);
       Session.set('auth', false);
-      setPage('/', false);
+      setPage('/', false, true);
     }
   });
   Router = new BrittoRouter;
@@ -150,7 +165,8 @@
   Meteor.startup(function() {
     $('body').on('click', 'a[rel="internal"]', function(e){
       e.preventDefault();
-      Router.navigate($(this).attr('href'), true);
+      link = $(this).attr('href');
+      Router.navigate(link, true);
     });
 
     //Internal Meteor events don't seem to always fire TODO check for bugs

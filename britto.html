@@ -35,14 +35,14 @@
   </li>
   {{#if user}}
     <li class="">
-      <a href="/user_area/" rel="internal">User area</a>
+      <a href="/user_area" rel="internal">User area</a>
     </li>
     <li>
-      <a href="/logout/" rel="internal">Logout</a>
+      <a href="/logout" rel="internal">Logout</a>
     </li>  
   {{else}}
     <li class="">
-      <a href="/user_area/" rel="internal">Login</a>
+      <a href="/login" rel="internal">Login</a>
     </li>
   {{/if}}
 </template>
@@ -81,48 +81,52 @@
   </section>
 </template>
 
-<template name="userArea">
-  <section class="userArea">
-    {{#if user }}
-      <h2>Hi {{#with user}}{{ name }}{{/with}}!</h2>
-      <form id="post-form" class="form-horizontal" action="#">
-        <fieldset>
-          <legend>Make a post</legend>
-          <div class="control-group">
-            <label for="post-title" class="control-label">Title</label>
-            <div class="controls"><input type="text" id="post-title" /></div>
-          </div>
-          <div class="control-group">
-            <label for="post-body" class="control-label">Body</label>
-            <div class="controls"><textarea id="post-body" style="width:100%; height:300px;"></textarea></div>
-          </div>
-          <div class="control-group">
-            <label for="post-slug" class="control-label">Slug</label>
-            <div class="controls"><input type="text" id="post-slug" /></div>
-          </div>
-          <div class="form-actions">
-            <button class="btn btn-primary" id="post-button" >Post</button>
-          </div>
-        </fieldset>
-      </form>
-    {{else}}
-      <form id="login-form" class="form-horizontal" action="#" >
-        <fieldset>
-          <legend>Login</legend>
-          <div class="control-group">
-            <label for="login-username" class="control-label">Username</label>
-            <div class="controls"><input type="text" id="login-username" /></div>
-          </div>
-          <div class="control-group">
-            <label for="login-password" class="control-label">Password</label>
-            <div class="controls"><input type="password" id="login-password" /></div>
-          </div>
-          <div class="form-actions">
-            <button class="btn btn-primary" id="login-button" >Login</button>
-          </div>
-        </fieldset>
-      </form>
-    {{/if}}
+<template name="user_area">
+  {{#if user }}
+  <section class="user_area">
+    <h2>Hi {{#with user}}{{ name }}{{/with}}!</h2>
+    <form id="post-form" class="form-horizontal" action="#">
+      <fieldset>
+        <legend>Make a post</legend>
+        <div class="control-group">
+          <label for="post-title" class="control-label">Title</label>
+          <div class="controls"><input type="text" id="post-title" /></div>
+        </div>
+        <div class="control-group">
+          <label for="post-body" class="control-label">Body</label>
+          <div class="controls"><textarea id="post-body" style="width:100%; height:300px;"></textarea></div>
+        </div>
+        <div class="control-group">
+          <label for="post-slug" class="control-label">Slug</label>
+          <div class="controls"><input type="text" id="post-slug" /></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" id="post-button" >Post</button>
+        </div>
+      </fieldset>
+    </form>
+  </section>
+  {{/if}}
+</template>
+
+<template name="login">
+  <section name="login">
+    <form id="login-form" class="form-horizontal" action="#" >
+      <fieldset>
+        <legend>Login</legend>
+        <div class="control-group">
+          <label for="login-username" class="control-label">Username</label>
+          <div class="controls"><input type="text" id="login-username" /></div>
+        </div>
+        <div class="control-group">
+          <label for="login-password" class="control-label">Password</label>
+          <div class="controls"><input type="password" id="login-password" /></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" id="login-button" >Login</button>
+        </div>
+      </fieldset>
+    </form>
   </section>
 </template>
 
@@ -160,12 +164,12 @@
 
 <template name="post">
   <article class="post" id="{{_id}}">
-    <h2><a href="/{{slug}}/" rel="internal" >{{ title }}</a></h2>
+    <h2><a href="/{{slug}}" rel="internal" >{{ title }}</a></h2>
     {{#markdown}}{{body}}{{/markdown}}
     <dl>
       <dt>Posted by</dt><dd>{{postUser userId}}</dd>
       <dt>Created</dt><dd>{{date created}}</dd>
-      <dt>Comments</dt><dd><a href="/{{slug}}/" rel="internal" >{{commentCount _id}}</a></dd>
+      <dt>Comments</dt><dd><a href="/{{slug}}" rel="internal" >{{commentCount _id}}</a></dd>
     </dl>
   </article>
 </template>
