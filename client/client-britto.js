@@ -42,6 +42,13 @@
       }
   });
 
+  function setPage(page) {
+    if(page !== Session.get('new_page')) {
+      $('#mainContent').fadeOut('slow');
+      $('#mainContent').promise().done(function() { Session.set('new_page', page); });
+    }
+  }
+
 /*
   Template.userArea.events = {
     'submit #login-button, click #login-button': function() {
@@ -58,7 +65,7 @@
   //create post callback
   function madePost(error, response) {
     if(!error) {
-      Session.set('new_page', 'home');
+      setPage('home');
       Router.navigate('/');
     }
   }
@@ -99,11 +106,13 @@
 
 
   Handlebars.registerHelper('content', function() {
+    $('#mainContent').fadeIn('slow');
+
     if(Session.equals('loaded', true)) {
       if(Session.equals('new_page', 'post')) {
         post = Posts.findOne({slug: Session.get('new_slug')});
         if(post) {
-  //TODO        Meteor.subscribe("postcomments", post._id, init);
+          //TODO  Meteor.subscribe("postcomments", post._id, init);
           return Meteor.ui.chunk(function() { return Template.postView({post: post}); });
         }
       } else if(Session.equals('new_page', 'userArea')) {
@@ -122,14 +131,14 @@
       ":slug/": "findPost"
     },
     homePage: function() {
-      Session.set('new_page', 'home');
+      setPage('home');
     },
     findPost: function(slug) {
-      Session.set('new_page', 'post');
+      setPage('post');
       Session.set('new_slug', slug);
     },
     userAreaPage: function() {
-      Session.set('new_page', 'userArea');
+      setPage('userArea');
     }
   });
   Router = new BrittoRouter;
