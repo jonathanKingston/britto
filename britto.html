@@ -136,7 +136,7 @@
 </template>
 
 <template name="postShort">
-  <section class="post" id="{{_id}}">
+  <article class="post" id="{{_id}}">
     <h2><a href="/{{slug}}/" rel="internal" >{{ title }}</a></h2>
     {{#short_content slug}}{{body}}{{/short_content}}
     <dl>
@@ -144,12 +144,11 @@
       <dt>Created</dt><dd>{{date created}}</dd>
       <dt>Comments</dt><dd><a href="/{{slug}}/" rel="internal" >{{commentCount _id}}</a></dd>
     </dl>
-  </section>
-  <br />
+  </article>
 </template>
 
 <template name="post">
-  <section class="post" id="{{_id}}">
+  <article class="post" id="{{_id}}">
     <h2><a href="/{{slug}}/" rel="internal" >{{ title }}</a></h2>
     {{#markdown}}{{body}}{{/markdown}}
     <dl>
@@ -157,8 +156,7 @@
       <dt>Created</dt><dd>{{date created}}</dd>
       <dt>Comments</dt><dd><a href="/{{slug}}/" rel="internal" >{{commentCount _id}}</a></dd>
     </dl>
-  </section>
-  <br />
+  </article>
 </template>
 
 <template name="comment">
