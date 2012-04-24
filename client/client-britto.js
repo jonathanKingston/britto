@@ -88,7 +88,7 @@
     renderedContent = options.fn(this);
     content = renderedContent.substring(0, 200);
     if(content != renderedContent) {
-      content += " <a href=\"/"+slug+"\" rel=\"internal\" >...</a>";
+      content += " <a href=\"/blog/"+slug+"\" rel=\"internal\" >...</a>";
     }
     var converter = new Showdown.converter();
     return converter.makeHtml(content);
@@ -125,8 +125,9 @@
       "logout": "logoutPage",
       "change_password": "changePasswordPage",
       "change_password/": "changePasswordPage",
-      ":slug": "findPost",
-      ":slug/": "findPost"
+      "blog/:slug": "findPost",
+      "blog/:slug/": "findPost",
+      "": "homePage",
     },
     login: function() {
       setPage('login', false, false);
