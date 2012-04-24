@@ -70,15 +70,15 @@ function changePassword(args) {
   }
 
   function hashPassword(password, salt) {
-    return Meteor.hash('sha256', password + salt);
+    return Crypto.SHA256(salt + '-' + password);
   }
 
   function createUser(vals) {
-    vals.salt = Meteor.hash('md5', Math.random().toString());
+    vals.salt = Crypto.SHA256(Math.random().toString());
     vals.password = hashPassword(vals.password, vals.salt);
     vals.created = new Date();
     //This apikey is because we don't have server side sessions yet
-    vals.apikey = Meteor.hash('md5', Math.random().toString());
+    vals.apikey = Crypto.SHA256(Math.random().toString());
     id = Users.insert(vals);
     return id;
   }
