@@ -19,3 +19,5 @@ Move to that direcory and deploy to your own location:
 
     cd britto
     meteor deploy [yourlocation].meteor.com
+
+You can then visit your applications address and login with username: admin and password: password.

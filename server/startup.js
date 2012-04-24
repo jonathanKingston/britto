@@ -6,7 +6,7 @@ Meteor.startup(function () {
   });
   if(Users.find().count() === 0) {
     console.log('Adding in users');
-    userId = createUser({username: 'jonathan', password: 'test', name: 'Jonathan Kingston'});
+    userId = createUser({username: 'admin', password: 'password', name: 'Your name'});
     console.log('Adding in test post');
     user = Users.findOne({_id: userId});
     makePost({title: 'Hello world', body: 'Cruel cruel world', slug: 'yellow_world', auth: user.apikey});
