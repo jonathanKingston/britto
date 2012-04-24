@@ -131,7 +131,7 @@
       "change_password/": "changePasswordPage",
       "blog/:slug": "findPost",
       "blog/:slug/": "findPost",
-      "": "homePage",
+      ":page": "findPost",
     },
     settingsPage: function() {
       setPage('settings', false, false);
