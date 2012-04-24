@@ -7,6 +7,9 @@ Meteor.startup(function () {
   if(Users.find().count() === 0) {
     console.log('Setup settings');
     setSetting('site_name', 'Britto blog');
+    setSetting('disqus', '');
+    setSetting('analytics_code', '');
+
     console.log('Adding in users');
     userId = createUser({username: 'admin', password: 'password', name: 'Your name'});
     console.log('Adding in test post');

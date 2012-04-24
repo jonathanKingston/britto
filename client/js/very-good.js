@@ -35,6 +35,14 @@
     return comments;
   }
 
+  Template.settings.settings = function() {
+    settings = Settings.find();
+    if(settings.count() === 0) {
+      return false;
+    }
+    return settings;
+  }
+
   _.each(['user_area', 'comment', 'nav', 'post'], function(template) {
       Template[template].user = function() {
         return Session.get('user');
@@ -94,8 +102,17 @@
     return converter.makeHtml(content);
   });
 
+  Handlebars.registerHelper('labelify', function(options) {
+    label = options.fn(this).replace(/\_/g, ' ');
+    return label.charAt(0).toUpperCase() + label.substr(1);
+  });
+
   Handlebars.registerHelper('content', function() {
     if(Session.equals('loaded', true)) {
+
+      //Stupid issue of home page not rendering, will refactor below to use this instead of equals
+      console.log(Session.get('new_page'));
+
       if(Session.equals('page_type', 'post')) {
         post = Posts.findOne({slug: Session.get('new_page')});
         if(post) {
@@ -148,7 +165,9 @@
   function changeSetting(e) {
     e.preventDefault();
     if(Session.get('auth')) {
-      Meteor.call('changeSetting', {key: 'site_name', value: $('#change-setting-site-name').val(), auth: Session.get('auth')}, standardHandler);
+     settings = [];
+     $('#change-setting-form input').each(function(input) { settings.push([$(this).attr('data-key'), $(this).val()]);});
+     Meteor.call('changeSetting', {settings: settings, auth: Session.get('auth')}, standardHandler);
     }
   }
 
