@@ -1,9 +1,20 @@
 Meteor.methods({
   comment: makeComment,
+  changePassword: changePassword,
   post: makePost,
   login: loginUser,
   deleteComment: deleteComment
 });
+
+function changePassword(args) {
+  if(user = Users.findOne({apikey: args.auth})) {
+    if(hashPassword(args.current_password, user.salt) == user.password) {
+      Users.update({apikey: args.auth}, {$set: {password: hashPassword(args.password, user.salt)}});
+      return true;
+    }
+  }
+  return false;
+}
 
   function deleteComment(args) {
     if(user = Users.findOne({apikey: args.auth})) {
