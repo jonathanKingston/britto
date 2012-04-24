@@ -50,7 +50,7 @@
     }
     if(page !== Session.get('new_page')) {
       $('#mainContent').fadeOut('slow');
-      $('#mainContent').promise().done(function() {Session.set('page_type', pageType); Session.set('new_page', page); });
+      $('#mainContent').promise().done(function() {window.scrollBy(0,0); Session.set('page_type', pageType); Session.set('new_page', page); });
     }
   }
 
