@@ -34,6 +34,9 @@
                 <a href="/change_password" rel="internal">Change Password</a>
               </li>
               <li>
+                <a href="/settings" rel="internal">Settings</a>
+              </li>
+              <li>
                 <a href="/logout" rel="internal">Logout</a>
               </li>  
             {{else}}
@@ -104,6 +107,21 @@
       </div>
     </fieldset>
   </form>
+</template>
+
+<template name="settings">
+  <form id="change-setting-form" class="form-horizontal" action="#" >
+    <fieldset>
+      <legend>Change settings</legend>
+      <div class="control-group">
+        <label for="change-setting-site-name" class="control-label">Site name</label>
+        <div class="controls"><input type="text" id="change-setting-site-name" value="{{#setting}}site_name{{/setting}}" /></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="change-setting-button" >Submit</button>
+      </div>
+    </fieldset>
+  </form>  
 </template>
 
 <template name="user_area">

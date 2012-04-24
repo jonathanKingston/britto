@@ -104,6 +104,8 @@
         }
       } else if(Session.equals('new_page', 'user_area')) {
         return Meteor.ui.chunk(function() { return Template.user_area(); });
+      } else if(Session.equals('new_page', 'settings')) {
+        return Meteor.ui.chunk(function() { return Template.settings(); });
       } else if(Session.equals('new_page', 'change_password')) {
         return Meteor.ui.chunk(function() { return Template.change_password(); });
       } else if(Session.equals('new_page', 'login')) {
@@ -121,6 +123,8 @@
       "user_area": "userAreaPage",
       "login/": "login",
       "login": "login",
+      "settings/": "settingsPage",
+      "settings": "settingsPage",
       "logout/": "logoutPage",
       "logout": "logoutPage",
       "change_password": "changePasswordPage",
@@ -128,6 +132,9 @@
       "blog/:slug": "findPost",
       "blog/:slug/": "findPost",
       "": "homePage",
+    },
+    settingsPage: function() {
+      setPage('settings', false, false);
     },
     login: function() {
       setPage('login', false, false);
@@ -170,6 +177,9 @@
     $('body').on('submit', '#post-button', makePost);
     $('body').on('click', '#post-button', makePost);
 
+    $('body').on('submit', '#change-setting-button', changeSetting);
+    $('body').on('click', '#change-setting-button', changeSetting);
+
     $('body').on('submit', '#change-password-button', changePassword);
     $('body').on('click', '#change-password-button', changePassword);
 
@@ -179,22 +189,29 @@
     $('body').on('click', '.delete-post', deletePost);
   });
 
-  function changePassword(e) {
+  function changeSetting(e) {
     e.preventDefault();
     if(Session.get('auth')) {
-      if($('#change-new-password').val() == $('#change-repeat-password').val()) {
-        Meteor.call('changePassword', {current_password: $('#change-current-password').val(), password: $('#change-new-password').val(), auth: Session.get('auth')}, passwordChanged);
-      } else {
-        alert('Get the password the same fool!');
-      }
+      Meteor.call('changeSetting', {key: 'site_name', value: $('#change-setting-site-name').val(), auth: Session.get('auth')}, standardHandler);
     }
   }
 
-  function passwordChanged(error, response) {
+  function standardHandler(error, response) {
     if(!error && response) {
       setPage('', false, true);
     } else {
       alert('There was an error updating that');
+    }    
+  }
+
+  function changePassword(e) {
+    e.preventDefault();
+    if(Session.get('auth')) {
+      if($('#change-new-password').val() == $('#change-repeat-password').val()) {
+        Meteor.call('changePassword', {current_password: $('#change-current-password').val(), password: $('#change-new-password').val(), auth: Session.get('auth')}, standardHandler);
+      } else {
+        alert('Get the password the same fool!');
+      }
     }
   }
 

@@ -1,6 +1,7 @@
 Meteor.methods({
   comment: makeComment,
   changePassword: changePassword,
+  changeSetting: changeSetting,
   post: makePost,
   login: loginUser,
   deleteComment: deleteComment,
@@ -16,6 +17,16 @@ function changePassword(args) {
   }
   return false;
 }
+
+function changeSetting(args) {
+  if(user = Users.findOne({apikey: args.auth})) {
+    Settings.update({key: args.key}, {$set: {value: args.value}});
+    return true;
+  }
+  return false;
+}
+
+
 
   function deleteComment(args) {
     if(user = Users.findOne({apikey: args.auth})) {
