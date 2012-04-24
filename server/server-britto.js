@@ -3,7 +3,8 @@ Meteor.methods({
   changePassword: changePassword,
   post: makePost,
   login: loginUser,
-  deleteComment: deleteComment
+  deleteComment: deleteComment,
+  deletePost: deletePost
 });
 
 function changePassword(args) {
@@ -19,6 +20,14 @@ function changePassword(args) {
   function deleteComment(args) {
     if(user = Users.findOne({apikey: args.auth})) {
       Comments.remove({_id: args.commentId});
+      return true;
+    }
+    return false;
+  }
+
+  function deletePost(args) {
+    if(user = Users.findOne({apikey: args.auth})) {
+      Posts.remove({_id: args.commentId});
       return true;
     }
     return false;

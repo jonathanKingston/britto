@@ -38,7 +38,7 @@
     return comments;
   }
 
-  _.each(['user_area', 'comment', 'nav'], function(template) {
+  _.each(['user_area', 'comment', 'nav', 'post'], function(template) {
       Template[template].user = function() {
         return Session.get('user');
       }
@@ -169,6 +169,7 @@
     $('body').on('change', '#post-title', changeTitle);
 
     $('body').on('click', '.delete-comment', deleteComment);
+    $('body').on('click', '.delete-post', deletePost);
   });
 
   function changePassword(e) {
@@ -196,6 +197,21 @@
       target = e.target;
       commentId = $(target).attr('data-id');
       Meteor.call('deleteComment', {commentId: commentId, auth: Session.get('auth')});
+    }
+  }
+
+  function deletePost(e) {
+    e.preventDefault();
+    if(Session.get('auth') && confirm('Are you sure you want to delete this post?')) {
+      target = e.target;
+      postId = $(target).attr('data-id');
+      Meteor.call('deletePost', {commentId: postId, auth: Session.get('auth')}, deletedPost);
+    }
+  }
+
+  function deletedPost(error, response) {
+    if(!error && response) {
+      setPage('/', false, true);
     }
   }
 

@@ -196,6 +196,7 @@
       <dt>Posted by</dt><dd>{{postUser userId}}</dd>
       <dt>Created</dt><dd>{{date created}}</dd>
       <dt>Comments</dt><dd><a href="/{{slug}}" rel="internal" >{{commentCount _id}}</a></dd>
+      {{#if user}}<button class="btn btn-primary delete-post" data-id="{{_id}}" >Delete post</button>{{/if}}
     </dl>
   </article>
 </template>
@@ -205,7 +206,7 @@
     <strong>{{ name }}</strong>
     {{#markdown}}{{comment}}{{/markdown}}
     {{date created}}
-    {{#if user}}<button class="btn btn-primary delete-comment" data-id="{{_id}}" >Delete</button>{{/if}}
+    {{#if user}}<button class="btn btn-primary delete-comment" data-id="{{_id}}" >Delete comment</button>{{/if}}
   </section>
   <br />
 </template>
