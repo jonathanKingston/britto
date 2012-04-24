@@ -241,7 +241,7 @@
 
   function changeTitle() {
     slug = $('#post-title').val();
-    $('#post-slug').val(slug.replace(/\s/g, '_'));
+    $('#post-slug').val(slug.replace(/\s/g, '_').toLowerCase());
   }
 
   function makePost(e) {
