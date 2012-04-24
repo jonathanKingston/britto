@@ -116,50 +116,6 @@
     return Meteor.ui.chunk(function() { return ''; });
   });
 
-  BrittoRouter = Backbone.Router.extend({
-    routes: {
-      "/": "homePage",
-      "user_area/": "userAreaPage",
-      "user_area": "userAreaPage",
-      "login/": "login",
-      "login": "login",
-      "settings/": "settingsPage",
-      "settings": "settingsPage",
-      "logout/": "logoutPage",
-      "logout": "logoutPage",
-      "change_password": "changePasswordPage",
-      "change_password/": "changePasswordPage",
-      "blog/:slug": "findPost",
-      "blog/:slug/": "findPost",
-      ":page": "findPost",
-    },
-    settingsPage: function() {
-      setPage('settings', false, false);
-    },
-    login: function() {
-      setPage('login', false, false);
-    },
-    homePage: function() {
-      setPage('/', false, false);
-    },
-    changePasswordPage: function() {
-      setPage('change_password', false, false);
-    },
-    findPost: function(slug) {
-      setPage(slug, 'post', false);
-    },
-    userAreaPage: function() {
-      setPage('user_area', false, true);
-    },
-    logoutPage: function() {
-      Session.set('user', false);
-      Session.set('auth', false);
-      setPage('/', false, true);
-    }
-  });
-  Router = new BrittoRouter;
-
-
   Meteor.startup(function() {
     $('body').on('click', 'a[rel="internal"]', function(e){
       e.preventDefault();
