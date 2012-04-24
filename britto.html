@@ -199,7 +199,7 @@
     {{#short_content slug}}{{body}}{{/short_content}}
     <dl>
       <dt>Posted by</dt><dd>{{postUser userId}}</dd>
-      <dt>Created</dt><dd>{{date created}}</dd>
+      <dt>Created</dt><dd><time>{{date created}}</time></dd>
       <dt>Comments</dt><dd><a href="/blog/{{slug}}/" rel="internal" >{{commentCount _id}}</a></dd>
     </dl>
   </article>
@@ -211,7 +211,7 @@
     {{#markdown}}{{body}}{{/markdown}}
     <dl>
       <dt>Posted by</dt><dd>{{postUser userId}}</dd>
-      <dt>Created</dt><dd>{{date created}}</dd>
+      <dt>Created</dt><dd><time>{{date created}}</time></dd>
       <dt>Comments</dt><dd><a href="/blog/{{slug}}" rel="internal" >{{commentCount _id}}</a></dd>
       {{#if user}}<button class="btn btn-primary delete-post" data-id="{{_id}}" >Delete post</button>{{/if}}
     </dl>
