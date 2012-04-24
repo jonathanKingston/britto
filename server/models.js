@@ -1,8 +1,3 @@
-Posts = new Meteor.Collection("Posts");
-Users = new Meteor.Collection("Users");
-Comments = new Meteor.Collection("Comments");
-
-
 Meteor.publish("postcomments", function(id) {
   return Comments.find({postId: id});
 });
@@ -17,4 +12,8 @@ Meteor.publish("allusers", function() {
 
 Meteor.publish("allposts", function() {
   return Posts.find({}, {fields: {}});
+});
+
+Meteor.publish("allsettings", function() {
+  return Settings.find({}, {fields: {}});
 });

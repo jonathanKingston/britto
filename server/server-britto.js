@@ -69,6 +69,15 @@ function changePassword(args) {
     }
   }
 
+  function setSetting(key, value) {
+    if(key && value) {
+      Settings.insert({
+        key: key,
+        value: value
+      });
+    }
+  }
+
   function hashPassword(password, salt) {
     return Crypto.SHA256(salt + '-' + password);
   }

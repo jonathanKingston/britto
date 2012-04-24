@@ -1,10 +1,12 @@
 Meteor.startup(function () {
-  _.each(['Posts', 'Users', 'Comments'], function(collection) {
+  _.each(['Posts', 'Users', 'Comments', 'Settings'], function(collection) {
     _.each(['insert', 'update', 'remove'], function(method) {
       Meteor.default_server.method_handlers['/' + collection + '/' + method] = function() {};
     });
   });
   if(Users.find().count() === 0) {
+    console.log('Setup settings');
+    setSetting('site_name', 'Britto blog');
     console.log('Adding in users');
     userId = createUser({username: 'admin', password: 'password', name: 'Your name'});
     console.log('Adding in test post');

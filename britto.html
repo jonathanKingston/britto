@@ -3,21 +3,7 @@
 </head>
 
 <body>
-  <div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container">
-        <a class="brand" href="/" rel="internal">Britto blog</a>
-
-        <div class="nav-collapse">
-          <ul class="nav">
-            {{>nav}}
-          </ul>
-        </div>
-   
-      </div>
-    </div>
-  </div>
-
+  {{>nav}}
   <div class="container">
     <div id="mainContent">
       {{#content}}
@@ -30,24 +16,37 @@
 </body>
 
 <template name="nav">
-  <li class="active">
-    <a href="/" rel="internal">Home</a>
-  </li>
-  {{#if user}}
-    <li class="">
-      <a href="/user_area" rel="internal">User area</a>
-    </li>
-    <li class="">
-      <a href="/change_password" rel="internal">Change Password</a>
-    </li>
-    <li>
-      <a href="/logout" rel="internal">Logout</a>
-    </li>  
-  {{else}}
-    <li class="">
-      <a href="/login" rel="internal">Login</a>
-    </li>
-  {{/if}}
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="/" rel="internal">{{#setting}}site_name{{/setting}}</a>
+
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="active">
+              <a href="/" rel="internal">Home</a>
+            </li>
+            {{#if user}}
+              <li class="">
+                <a href="/user_area" rel="internal">User area</a>
+              </li>
+              <li class="">
+                <a href="/change_password" rel="internal">Change Password</a>
+              </li>
+              <li>
+                <a href="/logout" rel="internal">Logout</a>
+              </li>  
+            {{else}}
+              <li class="">
+                <a href="/login" rel="internal">Login</a>
+              </li>
+            {{/if}}
+          </ul>
+        </div>
+   
+      </div>
+    </div>
+  </div>
 </template>
 
 <template name="listView">

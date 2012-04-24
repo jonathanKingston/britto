@@ -1,10 +1,7 @@
   Session.set('loaded', false);
   Session.equals('page_type', false);
 
-  Posts = new Meteor.Collection("Posts");
-  Comments = new Meteor.Collection("Comments");
-  Users = new Meteor.Collection("Users");
-
+  Meteor.subscribe("allsettings");
   Meteor.subscribe("allposts");
   //TODO change this to a per post subscription - removing it was killing the templates :/
   Meteor.subscribe("allcomments");
@@ -76,6 +73,15 @@
       return $.timeago(dateObj);
     }
     return 'N/A';
+  });
+
+  Handlebars.registerHelper('setting', function(options) {
+    key = options.fn(this);
+    setting = Settings.findOne({key: key.toString()});
+    if(setting) {
+      return setting.value;
+    }
+    return '';
   });
 
   Handlebars.registerHelper('short_content', function(slug, options) {
