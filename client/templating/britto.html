@@ -59,6 +59,7 @@
 <template name="listView">
   <section class="listView">
     {{>posts}}
+    {{attach_event}}
   </section>
 </template>
 
@@ -212,7 +213,13 @@
     <dl>
       <dt>Posted by</dt><dd>{{postUser userId}}</dd>
       <dt>Created</dt><dd><time>{{date created}}</time></dd>
-      <dt>Comments</dt><dd><a href="/blog/{{slug}}/" rel="internal" >{{commentCount _id}}</a></dd>
+      <dt>Comments</dt><dd>
+        {{#if disqus}}
+          <a href="/blog/{{slug}}/#disqus_thread" rel="internal" ></a>
+        {{else}}
+          <a href="/blog/{{slug}}/" rel="internal" >{{commentCount _id}}</a>
+        {{/if}}
+      </dd>
     </dl>
   </article>
 </template>
@@ -224,10 +231,10 @@
     <dl>
       <dt>Posted by</dt><dd>{{postUser userId}}</dd>
       <dt>Created</dt><dd><time>{{date created}}</time></dd>
-      <dt>Comments</dt><dd><a href="/blog/{{slug}}" rel="internal" >{{commentCount _id}}</a></dd>
-      {{#if user}}<button class="btn btn-primary delete-post" data-id="{{_id}}" >Delete post</button>{{/if}}
     </dl>
+    {{#if user}}<button class="btn btn-primary delete-post" data-id="{{_id}}" >Delete post</button>{{/if}}
   </article>
+  {{attach_event}}
 </template>
 
 <template name="comment">

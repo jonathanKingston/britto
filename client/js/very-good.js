@@ -9,7 +9,6 @@
   Meteor.subscribe("allusers", init);
 
   function init() {
-    loadDisqus();
     loadAnalytics();
     Session.set('loaded', true);
     Backbone.history.start({pushState: true});
@@ -36,14 +35,25 @@
   function loadDisqus() {
     disqus = Settings.findOne({key: 'disqus'});
     if(disqus && disqus.value != '') {
-      $(document).load(function() {
-        var disqus_shortname = disqus.value;
-        (function() {
-            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-      });
+      var disqus_shortname = disqus.value;
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    }
+  }
+
+  function loadDisqusCount() {
+    disqus = Settings.findOne({key: 'disqus'});
+    if(disqus && disqus.value != '') {
+      var disqus_shortname = disqus.value;
+      (function () {
+          var s = document.createElement('script'); s.async = true;
+          s.type = 'text/javascript';
+          s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+          (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+      }());
     }
   }
 
@@ -85,13 +95,27 @@
     return false;
   }
 
-  Template.postView.disqus = function() {
-    setting = Settings.findOne({key: 'disqus'});
-    if(setting && setting.value != '') {
-      return setting.value;
-    }
-    return false;
+
+  //Hack to hell - this needs to go soon as possible
+  Template.post.attach_event = function() {
+    //Use this to add some lag to the event
+    $('head').append('<script type="text/javascript">loadDisqus();</script>');
   }
+
+  Template.listView.attach_event = function() {
+    //Use this to add some lag to the event
+    $('head').append('<script type="text/javascript">loadDisqusCount();</script>');
+  }
+
+  _.each(['postShort', 'post', 'postView'], function(template) {
+    Template[template].disqus = function() {
+      setting = Settings.findOne({key: 'disqus'});
+      if(setting && setting.value != '') {
+        return setting.value;
+      }
+      return false;
+    }
+  });
 
   _.each(['user_area', 'comment', 'nav', 'post'], function(template) {
       Template[template].user = function() {
