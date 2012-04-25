@@ -20,13 +20,13 @@ function changePassword(args) {
 
 function changeSetting(args) {
   if(user = Users.findOne({apikey: args.auth})) {
-    Settings.update({key: args.key}, {$set: {value: args.value}});
+    _.each(args.settings, function(setting) {
+      Settings.update({key: setting[0]}, {$set: {value: setting[1]}});
+    });
     return true;
   }
   return false;
 }
-
-
 
   function deleteComment(args) {
     if(user = Users.findOne({apikey: args.auth})) {
@@ -80,13 +80,12 @@ function changeSetting(args) {
     }
   }
 
-  function setSetting(key, value) {
-    if(key && value) {
-      Settings.insert({
-        key: key,
-        value: value
-      });
-    }
+  function setSetting(key, value, description) {
+    Settings.insert({
+      key: key,
+      value: value,
+      description: description
+    });
   }
 
   function hashPassword(password, salt) {

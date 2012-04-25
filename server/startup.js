@@ -6,9 +6,9 @@ Meteor.startup(function () {
   });
   if(Users.find().count() === 0) {
     console.log('Setup settings');
-    setSetting('site_name', 'Britto blog');
-    setSetting('disqus', '');
-    setSetting('analytics_code', '');
+    setSetting('site_name', 'Britto blog', 'This is the name of your site');
+    setSetting('disqus', '', 'This is to enable disqus comments on the blog instead of inbuilt comments, leave blank to use inbuilt ones');
+    setSetting('analytics_code', '', 'Enable google analytics by adding code here');
 
     console.log('Adding in users');
     userId = createUser({username: 'admin', password: 'password', name: 'Your name'});

@@ -1,5 +1,9 @@
 <head>
   <title>Britto - Blogging made better</title>
+
+<script type="text/javascript">
+
+</script>
 </head>
 
 <body>
@@ -64,6 +68,9 @@
       {{>post}}
     {{/with}}
 
+    {{#if disqus}}
+      <div id="disqus_thread"></div>
+    {{else}}
     <h3>Comments</h3>
     {{>comments}}
     <form id="comment-form" class="form-horizontal" action="#" >
@@ -83,6 +90,7 @@
         </div>
       </fieldset>
     </form>
+    {{/if}}
   </section>
 </template>
 
@@ -116,7 +124,9 @@
       {{#each settings}}
       <div class="control-group">
         <label for="change-setting-{{key}}" class="control-label">{{#labelify}}{{key}}{{/labelify}}</label>
-        <div class="controls"><input type="text" data-key="{{key}}" id="change-setting-{{key}}" value="{{value}}" /></div>
+        <div class="controls"><input type="text" data-key="{{key}}" id="change-setting-{{key}}" value="{{value}}" />
+          <span class="help-inline">{{description}}</span>
+        </div>
       </div>
       {{/each}}
       <div class="form-actions">

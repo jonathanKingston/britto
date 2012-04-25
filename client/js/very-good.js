@@ -9,8 +9,22 @@
   Meteor.subscribe("allusers", init);
 
   function init() {
+    loadDisqus();
     Session.set('loaded', true);
     Backbone.history.start({pushState: true});
+  }
+
+  function loadDisqus() {
+    disqus = Settings.findOne({key: 'disqus'});
+    if(disqus && disqus.value != '') {
+      var disqus_shortname = disqus.value;
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    }
   }
 
   Template.posts.postlist = function() {
@@ -41,6 +55,22 @@
       return false;
     }
     return settings;
+  }
+
+  Template.postView.is_disqus = function() {
+    setting = Settings.findOne({key: 'disqus'});
+    if(setting && setting.value != '') {
+      return true;
+    }
+    return false;
+  }
+
+  Template.postView.disqus = function() {
+    setting = Settings.findOne({key: 'disqus'});
+    if(setting && setting.value != '') {
+      return setting.value;
+    }
+    return false;
   }
 
   _.each(['user_area', 'comment', 'nav', 'post'], function(template) {
