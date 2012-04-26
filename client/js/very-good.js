@@ -186,19 +186,21 @@
   function renderNewSlide(content) {
     console.log('Render new slide');
     newSlide = $('<div class="slide">' + content + '</div>');
-    newSlide.css('left', '110%');
+    newSlide.css('left', '0%');
     newSlide.css('top', '2em');
+    newSlide.css('display', 'none');
     $('#slides').append(newSlide);
     if($('#slides .slide').length > 1) {
       counter = $('#slides .slide').length;
       $('#slides .slide').each(function(index) {
         if(index+1 !== counter) {
-          $(this).animate({left: '-110%'}, 1200).promise().done(function() {$(this).remove();});
+          $(this).fadeOut('slow').promise().done(function() {$(this).remove();});
+        } else {
+          $('#slides .slide:last').fadeIn('slow');
         }
       });
-      $('#slides .slide:last').animate({left: '-0%'}, 1200);
     } else {
-      $('#slides .slide:last').css('left','0%');
+      $('#slides .slide:last').css('display','block');
     }
   }
 

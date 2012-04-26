@@ -7,4 +7,4 @@ body {padding-top:50px; padding-bottom:50px; }
 .madewith_upvote:hover {background-image:url(/madewithmeteorarrow.png);}
 
 #slides {display:block; position:relative; }
-.slide {position:absolute; width:900px; }
+.slide {position:absolute; width:900px; background:#fff;}
