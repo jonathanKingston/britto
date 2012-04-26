@@ -58,72 +58,6 @@
     }
   }
 
-  Template.posts.postlist = function() {
-    return Posts.find({}, {sort: {created: -1}});
-  }
-
-  _.each(['postShort', 'post'], function(template) {
-    Template[template].commentCount = function(id) {
-      return Comments.find({postId: id}).count();
-    }
-
-    Template[template].postUser = function(id) {
-      return Users.findOne({_id: id}).name;
-    }
-  });
-
-  Template.comments.commentslist = function(post) {
-    comments = Comments.find({postId: post._id}, {sort: {created: 1}});
-    if(comments.count() === 0) {
-      return false;
-    }
-    return comments;
-  }
-
-  Template.settings.settings = function() {
-    settings = Settings.find();
-    if(settings.count() === 0) {
-      return false;
-    }
-    return settings;
-  }
-
-  Template.postView.is_disqus = function() {
-    setting = Settings.findOne({key: 'disqus'});
-    if(setting && setting.value != '') {
-      return true;
-    }
-    return false;
-  }
-
-
-  //Hack to hell - this needs to go soon as possible
-  Template.post.attach_event = function(slug) {
-    //Use this to add some lag to the event
-    $('head').append('<script type="text/javascript">loadDisqus("/blog/'+slug+'");</script>');
-  }
-
-  Template.listView.attach_event = function() {
-    //Use this to add some lag to the event
-    $('head').append('<script type="text/javascript">loadDisqusCount();</script>');
-  }
-
-  _.each(['postShort', 'post', 'postView'], function(template) {
-    Template[template].disqus = function() {
-      setting = Settings.findOne({key: 'disqus'});
-      if(setting && setting.value != '') {
-        return setting.value;
-      }
-      return false;
-    }
-  });
-
-  _.each(['user_area', 'comment', 'nav', 'post'], function(template) {
-      Template[template].user = function() {
-        return Session.get('user');
-      }
-  });
-
   function setPage(page, pageType, redirect) {
     console.log('set page');
     if(redirect) {
@@ -228,8 +162,8 @@
         renderNewSlide(Template.user_area());
       } else if(Session.equals('new_page', 'settings')) {
         renderNewSlide(Template.settings());
-      } else if(Session.equals('new_page', 'change_password')) {
-        renderNewSlide(Template.change_password());
+      } else if(Session.equals('new_page', 'options')) {
+        renderNewSlide(Template.options());
       } else if(Session.equals('new_page', 'login')) {
         renderNewSlide(Template.login());
       } else {
@@ -267,6 +201,9 @@
     $('body').on('submit', '#change-password-button', changePassword);
     $('body').on('click', '#change-password-button', changePassword);
 
+    $('body').on('submit', '#change-user-button', changeUser);
+    $('body').on('click', '#change-user-button', changeUser);
+
     $('body').on('change', '#post-title', changeTitle);
 
     $('body').on('click', '.delete-comment', deleteComment);
@@ -298,6 +235,14 @@
       } else {
         alert('Get the password the same fool!');
       }
+    }
+  }
+
+  function changeUser(e) {
+    e.preventDefault();
+    if(Session.get('auth')) {
+      details = {auth: Session.get('auth'), name: $('#change-user-name').val()};
+      Meteor.call('changeUser', details, standardHandler);
     }
   }
 

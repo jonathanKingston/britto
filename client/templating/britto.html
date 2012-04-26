@@ -41,7 +41,7 @@
                 <a href="/user_area" rel="internal">User area</a>
               </li>
               <li class="">
-                <a href="/change_password" rel="internal">Change Password</a>
+                <a href="/options" rel="internal">Options</a>
               </li>
               <li>
                 <a href="/settings" rel="internal">Settings</a>
@@ -101,7 +101,21 @@
   </section>
 </template>
 
-<template name="change_password">
+<template name="options">
+
+  <form id="change-user-form" class="form-horizontal" action="#" >
+    <fieldset>
+      <legend>About you</legend>
+      <div class="control-group">
+        <label for="change-user-name" class="control-label">Name</label>
+        <div class="controls"><input type="text" id="change-user-name" value="{{#with user}}{{name}}{{/with}}" /></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="change-user-button" >Submit</button>
+      </div>
+    </fieldset>
+  </form>
+
   <form id="change-password-form" class="form-horizontal" action="#" >
     <fieldset>
       <legend>Change password</legend>

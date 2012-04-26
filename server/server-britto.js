@@ -1,6 +1,7 @@
 Meteor.methods({
   comment: makeComment,
   changePassword: changePassword,
+  changeUser: changeUser,
   changeSetting: changeSetting,
   post: makePost,
   login: loginUser,
@@ -8,8 +9,12 @@ Meteor.methods({
   deletePost: deletePost
 });
 
+function checkAuth(auth) {
+  return Users.findOne({apikey: auth});
+}
+
 function changePassword(args) {
-  if(user = Users.findOne({apikey: args.auth})) {
+  if(user = checkAuth(args.auth)) {
     if(hashPassword(args.current_password, user.salt) == user.password) {
       Users.update({apikey: args.auth}, {$set: {password: hashPassword(args.password, user.salt)}});
       return true;
@@ -18,8 +23,18 @@ function changePassword(args) {
   return false;
 }
 
+function changeUser(args) {
+  if(user = checkAuth(args.auth)) {
+    Users.update({apikey: args.auth}, {$set: {name: args.name}});
+    return true;
+  }
+  return false;
+}
+
+
+
 function changeSetting(args) {
-  if(user = Users.findOne({apikey: args.auth})) {
+  if(user = checkAuth(args.auth)) {
     _.each(args.settings, function(setting) {
       Settings.update({key: setting[0]}, {$set: {value: setting[1]}});
     });
@@ -29,7 +44,7 @@ function changeSetting(args) {
 }
 
   function deleteComment(args) {
-    if(user = Users.findOne({apikey: args.auth})) {
+    if(user = checkAuth(args.auth)) {
       Comments.remove({_id: args.commentId});
       return true;
     }
@@ -37,7 +52,7 @@ function changeSetting(args) {
   }
 
   function deletePost(args) {
-    if(user = Users.findOne({apikey: args.auth})) {
+    if(user = checkAuth(args.auth)) {
       Posts.remove({_id: args.commentId});
       return true;
     }
@@ -56,7 +71,7 @@ function changeSetting(args) {
   }
 
   function makePost(args) {
-    if(user = Users.findOne({apikey: args.auth})) {
+    if(user = checkAuth(args.auth)) {
       Posts.insert({
         title: args.title,
         body: args.body,
