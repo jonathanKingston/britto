@@ -124,12 +124,14 @@
   });
 
   function setPage(page, pageType, redirect) {
+    console.log('set page');
     if(redirect) {
       Router.navigate(page);
     }
     if(page !== Session.get('new_page')) {
-      $('#mainContent').fadeOut('slow');
-      $('#mainContent').promise().done(function() {window.scrollBy(0,0); Session.set('page_type', pageType); Session.set('new_page', page); });
+      window.scrollBy(0,0);
+      Session.set('page_type', pageType);
+      Session.set('new_page', page); 
     }
   }
 
@@ -181,9 +183,28 @@
     return label.charAt(0).toUpperCase() + label.substr(1);
   });
 
-  Handlebars.registerHelper('content', function() {
-    if(Session.equals('loaded', true)) {
+  function renderNewSlide(content) {
+    console.log('Render new slide');
+    newSlide = $('<div class="slide">' + content + '</div>');
+    newSlide.css('left', '110%');
+    newSlide.css('top', '2em');
+    $('#slides').append(newSlide);
+    if($('#slides .slide').length > 1) {
+      counter = $('#slides .slide').length;
+      $('#slides .slide').each(function(index) {
+        if(index+1 !== counter) {
+          $(this).animate({left: '-110%'}, 1200).promise().done(function() {$(this).remove();});
+        }
+      });
+      $('#slides .slide:last').animate({left: '-0%'}, 1200);
+    } else {
+      $('#slides .slide:last').css('left','0%');
+    }
+  }
 
+  Handlebars.registerHelper('content', function() {
+    console.log('Content helper');
+    if(Session.equals('loaded', true)) {
       //Stupid issue of home page not rendering, will refactor below to use this instead of equals
       console.log(Session.get('new_page'));
 
@@ -191,20 +212,23 @@
         post = Posts.findOne({slug: Session.get('new_page')});
         if(post) {
           //TODO  Meteor.subscribe("postcomments", post._id, init);
-          return Meteor.ui.chunk(function() { return Template.postView({post: post}); });
+          renderNewSlide(Template.postView({post: post}));
         }
       } else if(Session.equals('new_page', 'user_area')) {
-        return Meteor.ui.chunk(function() { return Template.user_area(); });
+        renderNewSlide(Template.user_area());
       } else if(Session.equals('new_page', 'settings')) {
-        return Meteor.ui.chunk(function() { return Template.settings(); });
+        renderNewSlide(Template.settings());
       } else if(Session.equals('new_page', 'change_password')) {
-        return Meteor.ui.chunk(function() { return Template.change_password(); });
+        renderNewSlide(Template.change_password());
       } else if(Session.equals('new_page', 'login')) {
-        return Meteor.ui.chunk(function() { return Template.login(); });
+        renderNewSlide(Template.login());
+      } else {
+        renderNewSlide(Template.listView());
       }
-      return Meteor.ui.chunk(function() { return Template.listView(); });
+      return '';
     }
-    return Meteor.ui.chunk(function() { return ''; });
+    console.log('Show nowt');
+    return '';
   });
 
   Meteor.startup(function() {
@@ -212,6 +236,9 @@
       e.preventDefault();
       link = $(this).attr('href');
       Router.navigate(link, true);
+      console.log('Link clicked');
+      console.log(Router);
+      console.log(link);
     });
 
     //Internal Meteor events don't seem to always fire TODO check for bugs

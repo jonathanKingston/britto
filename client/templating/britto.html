@@ -9,15 +9,21 @@
 <body>
   {{>nav}}
   <div class="container">
-    <div id="mainContent">
-      {{#content}}
-      {{/content}}
+    <div id="slides">
     </div>
+    {{>container}}
     <footer>
       <a href="http://britto.co">Powered by Britto</a>
     </footer>
   </div>
 </body>
+
+<template name="container">
+    <div id="mainContent">
+      {{#content}}
+      {{/content}}  
+    </div>
+</template>
 
 <template name="nav">
   <div class="navbar navbar-fixed-top">
