@@ -32,10 +32,11 @@
     }
   }
 
-  function loadDisqus() {
+  function loadDisqus(slug) {
     disqus = Settings.findOne({key: 'disqus'});
     if(disqus && disqus.value != '') {
       var disqus_shortname = disqus.value;
+      var disqus_identifier = slug;
       (function() {
           var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
           dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
@@ -97,9 +98,9 @@
 
 
   //Hack to hell - this needs to go soon as possible
-  Template.post.attach_event = function() {
+  Template.post.attach_event = function(slug) {
     //Use this to add some lag to the event
-    $('head').append('<script type="text/javascript">loadDisqus();</script>');
+    $('head').append('<script type="text/javascript">loadDisqus("/blog/'+slug+'");</script>');
   }
 
   Template.listView.attach_event = function() {
@@ -130,6 +131,9 @@
     }
     if(page !== Session.get('new_page')) {
       window.scrollBy(0,0);
+      if(page) {
+        page = page.replace(/#(.*)/, '');
+      }
       Session.set('page_type', pageType);
       Session.set('new_page', page); 
     }
@@ -176,6 +180,10 @@
     }
     var converter = new Showdown.converter();
     return converter.makeHtml(content);
+  });
+
+  Handlebars.registerHelper('disqus_link', function(slug, options) {
+    return '<a href="/blog/'+slug+'#disqus_thread" rel="internal" data-disqus-identifier="/blog/'+slug+'" ></a>';
   });
 
   Handlebars.registerHelper('labelify', function(options) {

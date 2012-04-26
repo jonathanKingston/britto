@@ -219,13 +219,13 @@
     <dl>
       <dt>Posted by</dt><dd>{{postUser userId}}</dd>
       <dt>Created</dt><dd><time>{{date created}}</time></dd>
-      <dt>Comments</dt><dd>
-        {{#if disqus}}
-          <a href="/blog/{{slug}}/#disqus_thread" rel="internal" ></a>
-        {{else}}
-          <a href="/blog/{{slug}}/" rel="internal" >{{commentCount _id}}</a>
-        {{/if}}
-      </dd>
+      {{#if disqus}}
+        {{#disqus_link slug}}{{/disqus_link}}
+      {{else}}
+        <dt>Comments</dt><dd>
+         <a href="/blog/{{slug}}/" rel="internal" >{{commentCount _id}}</a>
+        </dd>
+      {{/if}}
     </dl>
   </article>
 </template>
@@ -240,7 +240,7 @@
     </dl>
     {{#if user}}<button class="btn btn-primary delete-post" data-id="{{_id}}" >Delete post</button>{{/if}}
   </article>
-  {{attach_event}}
+  {{attach_event slug}}
 </template>
 
 <template name="comment">
