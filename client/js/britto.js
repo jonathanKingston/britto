@@ -1,15 +1,30 @@
-Session.set('loaded', false);
-Session.equals('page_type', false);
+//This is here to speed the site name being shown, sorry kids
+Handlebars.registerHelper('setting', function(options) {
+  key = options.fn(this);
+  setting = Settings.findOne({key: key.toString()});
+  if(setting) {
+    return setting.value;
+  }
+  return '';
+});
 
 Britto = {};
 
-Britto.init = function() {
+Britto.settingsLoaded = function() {
+  console.log('settings loaded');
   Britto.load.analytics();
+}
+
+Britto.init = function() {
+  console.log('init');
   Session.set('loaded', true);
   Backbone.history.start({pushState: true});
 }
 
-Meteor.subscribe("allsettings");
+Meteor.subscribe("allsettings", Britto.settingsLoaded);
+Session.set('loaded', false);
+Session.equals('page_type', false);
+
 Meteor.subscribe("allposts");
 //TODO change this to a per post subscription - removing it was killing the templates :/
 Meteor.subscribe("allcomments");

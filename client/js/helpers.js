@@ -6,15 +6,6 @@ Handlebars.registerHelper('date', function(date) {
   return 'N/A';
 });
 
-Handlebars.registerHelper('setting', function(options) {
-  key = options.fn(this);
-  setting = Settings.findOne({key: key.toString()});
-  if(setting) {
-    return setting.value;
-  }
-  return '';
-});
-
 Handlebars.registerHelper('short_content', function(slug, options) {
   renderedContent = options.fn(this);
   content = renderedContent.substring(0, 200);
