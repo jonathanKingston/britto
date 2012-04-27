@@ -64,8 +64,9 @@ Britto.load.analytics = function() {
     var _gaq = _gaq || [];
     Britto.analytics = _gaq;
     _gaq.push(['_setAccount', analytics.value]);
-      _gaq.push(['_setDomainName', window.location.host]);
-    _gaq.push(['_setAllowLinker', true]);
+// Not sure if these are needed
+//    _gaq.push(['_setDomainName', window.location.host]);
+//    _gaq.push(['_setAllowLinker', true]);
     _gaq.push(['_trackPageview']);
    (function() {
       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
