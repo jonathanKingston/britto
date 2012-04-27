@@ -27,10 +27,10 @@ Handlebars.registerHelper('labelify', function(options) {
 
 //TODO Need to move to a better MVC style setup soon
 Handlebars.registerHelper('content', function() {
-  console.log('Content helper');
+  Britto.log('Content helper');
   if(Session.equals('loaded', true)) {
     //Stupid issue of home page not rendering, will refactor below to use this instead of equals
-    console.log(Session.get('new_page'));
+    Britto.log(Session.get('new_page'));
 
     if(Session.equals('page_type', 'post')) {
       post = Posts.findOne({slug: Session.get('new_page')});
@@ -48,6 +48,6 @@ Handlebars.registerHelper('content', function() {
     }
     return '';
   }
-  console.log('Show nowt');
+  Britto.log('Show nowt');
   return '';
 });

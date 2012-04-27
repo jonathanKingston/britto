@@ -10,7 +10,7 @@ BrittoRouter = Backbone.Router.extend({
     ":page/": "basicPage",
   },
   basicPage: function(page) {
-    console.log('basic Page');
+    Britto.log('basic Page');
     Britto.setPage(page, false, false);
   },
   findPost: function(slug) {

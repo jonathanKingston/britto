@@ -1,3 +1,4 @@
+var timeStart = new Date().getTime();
 //This is here to speed the site name being shown, sorry kids
 Handlebars.registerHelper('setting', function(options) {
   key = options.fn(this);
@@ -11,14 +12,24 @@ Handlebars.registerHelper('setting', function(options) {
 Britto = {};
 
 Britto.settingsLoaded = function() {
-  console.log('settings loaded');
+  Britto.log('settings loaded');
+  timeLoad = new Date().getTime();
+  Britto.log('Time start:'+timeStart);
+  Britto.log('Time Load:'+timeLoad);
+  Britto.log('Time Load:'+(timeLoad - timeStart));
   Britto.load.analytics();
 }
 
 Britto.init = function() {
-  console.log('init');
+  Britto.log('init');
   Session.set('loaded', true);
   Backbone.history.start({pushState: true});
+}
+
+Britto.log = function(message) {
+  if(console && console.log) {
+    console.log(message);
+  }
 }
 
 Meteor.subscribe("allsettings", Britto.settingsLoaded);
@@ -32,7 +43,7 @@ Meteor.subscribe("allcomments");
 Meteor.subscribe("allusers", Britto.init);
 
 Britto.alert = function(type, message) {
-  console.log(message);
+  Britto.log(message);
   className = 'alert';
   if(type == 'warning' || type == 'info' || type == 'error') {
     className += ' alert-'+type
@@ -51,6 +62,7 @@ Britto.load.analytics = function() {
   analytics = Settings.findOne({key: 'analytics_code'});
   if(analytics && analytics.value != '') {
     var _gaq = _gaq || [];
+    Britto.analytics = _gaq;
     _gaq.push(['_setAccount', analytics.value]);
 //      _gaq.push(['_setDomainName', 'britto.co']);
     _gaq.push(['_setAllowLinker', true]);
@@ -89,10 +101,22 @@ Britto.load.disqusCount = function() {
   }
 }
 
+Britto.navigate = function(path, load) {
+  Britto.logPageLoad(path);
+  Router.navigate(path, load);
+}
+
+Britto.logPageLoad = function(path) {
+  if(Britto.analytics) {
+    Britto.log('log page'+path);
+    Britto.analytics.push(['_trackPageview', path]);
+  }
+}
+
 Britto.setPage = function(page, pageType, redirect) {
-  console.log('set page');
+  Britto.log('set page');
   if(redirect) {
-    Router.navigate(page);
+    Britto.navigate(page);
   }
   if(page !== Session.get('new_page')) {
     window.scrollBy(0,0);
@@ -121,7 +145,7 @@ function loginCallback(error, returnVal) {
 }
 
 function renderNewSlide(content) {
-  console.log('Render new slide');
+  Britto.log('Render new slide');
   newSlide = $('<div class="slide">' + content + '</div>');
   newSlide.css('left', '0%');
   newSlide.css('top', '2em');
@@ -145,10 +169,10 @@ Meteor.startup(function() {
   $('body').on('click', 'a[rel="internal"]', function(e){
     e.preventDefault();
     link = $(this).attr('href');
-    Router.navigate(link, true);
-    console.log('Link clicked');
-    console.log(Router);
-    console.log(link);
+    Britto.navigate(link, true);
+    Britto.log('Link clicked');
+    Britto.log(Router);
+    Britto.log(link);
   });
 
   //Internal Meteor events don't seem to always fire TODO check for bugs
