@@ -11,15 +11,15 @@ BrittoRouter = Backbone.Router.extend({
   },
   basicPage: function(page) {
     console.log('basic Page');
-    setPage(page, false, false);
+    Britto.setPage(page, false, false);
   },
   findPost: function(slug) {
-    setPage(slug, 'post', false);
+    Britto.setPage(slug, 'post', false);
   },
   logoutPage: function() {
     Session.set('user', false);
     Session.set('auth', false);
-    setPage('/', false, true);
+    Britto.setPage('/', false, true);
   }
 });
 Router = new BrittoRouter;

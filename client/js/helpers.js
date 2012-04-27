@@ -34,6 +34,7 @@ Handlebars.registerHelper('labelify', function(options) {
   return label.charAt(0).toUpperCase() + label.substr(1);
 });
 
+//TODO Need to move to a better MVC style setup soon
 Handlebars.registerHelper('content', function() {
   console.log('Content helper');
   if(Session.equals('loaded', true)) {
@@ -46,16 +47,13 @@ Handlebars.registerHelper('content', function() {
         //TODO  Meteor.subscribe("postcomments", post._id, init);
         renderNewSlide(Template.postView({post: post}));
       }
-    } else if(Session.equals('new_page', 'user_area')) {
-      renderNewSlide(Template.user_area());
-    } else if(Session.equals('new_page', 'settings')) {
-      renderNewSlide(Template.settings());
-    } else if(Session.equals('new_page', 'options')) {
-      renderNewSlide(Template.options());
-    } else if(Session.equals('new_page', 'login')) {
-      renderNewSlide(Template.login());
     } else {
-      renderNewSlide(Template.listView());
+      //Check template exists, if not use list view
+      if(Template[Session.get('new_page')]) {
+        renderNewSlide(Template[Session.get('new_page')]());
+      } else {
+        renderNewSlide(Template.listView());
+      }
     }
     return '';
   }

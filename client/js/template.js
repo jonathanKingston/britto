@@ -1,64 +1,64 @@
-  Template.posts.postlist = function() {
-    return Posts.find({}, {sort: {created: -1}});
+Template.posts.postlist = function() {
+  return Posts.find({}, {sort: {created: -1}});
+}
+
+_.each(['postShort', 'post'], function(template) {
+  Template[template].commentCount = function(id) {
+    return Comments.find({postId: id}).count();
   }
 
-  _.each(['postShort', 'post'], function(template) {
-    Template[template].commentCount = function(id) {
-      return Comments.find({postId: id}).count();
-    }
-
-    Template[template].postUser = function(id) {
-      return Users.findOne({_id: id}).name;
-    }
-  });
-
-  Template.comments.commentslist = function(post) {
-    comments = Comments.find({postId: post._id}, {sort: {created: 1}});
-    if(comments.count() === 0) {
-      return false;
-    }
-    return comments;
+  Template[template].postUser = function(id) {
+    return Users.findOne({_id: id}).name;
   }
+});
 
-  Template.settings.settings = function() {
-    settings = Settings.find();
-    if(settings.count() === 0) {
-      return false;
-    }
-    return settings;
+Template.comments.commentslist = function(post) {
+  comments = Comments.find({postId: post._id}, {sort: {created: 1}});
+  if(comments.count() === 0) {
+    return false;
   }
+  return comments;
+}
 
-  Template.postView.is_disqus = function() {
+Template.settings.settings = function() {
+  settings = Settings.find();
+  if(settings.count() === 0) {
+    return false;
+  }
+  return settings;
+}
+
+Template.postView.is_disqus = function() {
+  setting = Settings.findOne({key: 'disqus'});
+  if(setting && setting.value != '') {
+    return true;
+  }
+  return false;
+}
+
+//Hack to hell - this needs to go soon as possible
+Template.post.attach_event = function(slug) {
+  //Use this to add some lag to the event
+  $('head').append('<script type="text/javascript">Britto.load.disqus("/blog/'+slug+'");</script>');
+}
+
+Template.listView.attach_event = function() {
+  //Use this to add some lag to the event
+  $('head').append('<script type="text/javascript">Britto.load.disqusCount();</script>');
+}
+
+_.each(['postShort', 'post', 'postView'], function(template) {
+  Template[template].disqus = function() {
     setting = Settings.findOne({key: 'disqus'});
     if(setting && setting.value != '') {
-      return true;
+      return setting.value;
     }
     return false;
   }
+});
 
-  //Hack to hell - this needs to go soon as possible
-  Template.post.attach_event = function(slug) {
-    //Use this to add some lag to the event
-    $('head').append('<script type="text/javascript">loadDisqus("/blog/'+slug+'");</script>');
+_.each(['options', 'user_area', 'comment', 'nav', 'post'], function(template) {
+  Template[template].user = function() {
+    return Session.get('user');
   }
-
-  Template.listView.attach_event = function() {
-    //Use this to add some lag to the event
-    $('head').append('<script type="text/javascript">loadDisqusCount();</script>');
-  }
-
-  _.each(['postShort', 'post', 'postView'], function(template) {
-    Template[template].disqus = function() {
-      setting = Settings.findOne({key: 'disqus'});
-      if(setting && setting.value != '') {
-        return setting.value;
-      }
-      return false;
-    }
-  });
-
-  _.each(['options', 'user_area', 'comment', 'nav', 'post'], function(template) {
-      Template[template].user = function() {
-        return Session.get('user');
-      }
-  });
+});

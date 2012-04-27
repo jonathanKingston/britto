@@ -1,0 +1,44 @@
+<template name="container">
+    <div id="mainContent">
+      {{#content}}
+      {{/content}}  
+    </div>
+</template>
+
+<template name="nav">
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="/" rel="internal">{{#setting}}site_name{{/setting}}</a>
+
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="active">
+              <a href="/" rel="internal">Home</a>
+            </li>
+            {{#if user}}
+              <li class="">
+                <a href="/user_area" rel="internal">User area</a>
+              </li>
+              <li class="">
+                <a href="/options" rel="internal">Options</a>
+              </li>
+              <li>
+                <a href="/settings" rel="internal">Settings</a>
+              </li>
+              <li>
+                <a href="/logout" rel="internal">Logout</a>
+              </li>  
+            {{else}}
+              <li class="">
+                <a href="/login" rel="internal">Login</a>
+              </li>
+            {{/if}}
+          </ul>
+        </div>
+   
+      </div>
+    </div>
+  </div>
+</template>
+

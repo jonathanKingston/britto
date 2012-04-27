@@ -1,20 +1,38 @@
 Session.set('loaded', false);
 Session.equals('page_type', false);
 
+Britto = {};
+
+Britto.init = function() {
+  Britto.load.analytics();
+  Session.set('loaded', true);
+  Backbone.history.start({pushState: true});
+}
+
 Meteor.subscribe("allsettings");
 Meteor.subscribe("allposts");
 //TODO change this to a per post subscription - removing it was killing the templates :/
 Meteor.subscribe("allcomments");
 //Todo, find a better / more reliable init point
-Meteor.subscribe("allusers", init);
+Meteor.subscribe("allusers", Britto.init);
 
-function init() {
-  loadAnalytics();
-  Session.set('loaded', true);
-  Backbone.history.start({pushState: true});
+Britto.alert = function(type, message) {
+  console.log(message);
+  className = 'alert';
+  if(type == 'warning' || type == 'info' || type == 'error') {
+    className += ' alert-'+type
+  }
+  if(type == 'warning') {
+    sarcasm = 'You better check yoursely; before you wreak yourself';
+    message = sarcasm+': '+message;
+  }
+  alert = $('<div class="'+className+'">  <button class="close" data-dismiss="alert">×</button>  '+message+'</div>').alert();
+  $('#slides').prepend(alert);
 }
 
-function loadAnalytics() {
+Britto.load = {};
+
+Britto.load.analytics = function() {
   analytics = Settings.findOne({key: 'analytics_code'});
   if(analytics && analytics.value != '') {
     var _gaq = _gaq || [];
@@ -30,7 +48,7 @@ function loadAnalytics() {
   }
 }
 
-function loadDisqus(slug) {
+Britto.load.disqus = function(slug) {
   disqus = Settings.findOne({key: 'disqus'});
   if(disqus && disqus.value != '') {
     var disqus_shortname = disqus.value;
@@ -43,7 +61,7 @@ function loadDisqus(slug) {
   }
 }
 
-function loadDisqusCount() {
+Britto.load.disqusCount = function() {
   disqus = Settings.findOne({key: 'disqus'});
   if(disqus && disqus.value != '') {
     var disqus_shortname = disqus.value;
@@ -56,7 +74,7 @@ function loadDisqusCount() {
   }
 }
 
-function setPage(page, pageType, redirect) {
+Britto.setPage = function(page, pageType, redirect) {
   console.log('set page');
   if(redirect) {
     Router.navigate(page);
@@ -74,7 +92,7 @@ function setPage(page, pageType, redirect) {
 //create post callback
 function madePost(error, response) {
   if(!error) {
-    setPage('/', false, true);
+    Britto.setPage('/', false, true);
   }
 }
 
@@ -82,7 +100,7 @@ function loginCallback(error, returnVal) {
   if(!error) {
     Session.set('auth', returnVal.auth);
     Session.set('user', returnVal);
-    setPage('user_area', false, true);
+    Britto.setPage('user_area', false, true);
   }
   return false;
 }
@@ -146,27 +164,31 @@ Meteor.startup(function() {
 function changeSetting(e) {
   e.preventDefault();
   if(Session.get('auth')) {
-   settings = [];
-   $('#change-setting-form input').each(function(input) { settings.push([$(this).attr('data-key'), $(this).val()]);});
-   Meteor.call('changeSetting', {settings: settings, auth: Session.get('auth')}, standardHandler);
+    settings = [];
+    $('#change-setting-form input').each(function(input) { settings.push([$(this).attr('data-key'), $(this).val()]);});
+    Meteor.call('changeSetting', {settings: settings, auth: Session.get('auth')}, standardHandler);
   }
 }
 
 function standardHandler(error, response) {
   if(!error && response) {
-    setPage('', false, true);
+    Britto.setPage('', false, true);
   } else {
-    alert('There was an error updating that');
+    Britto.alert('error', 'There was an error updating that');
   }    
 }
 
 function changePassword(e) {
   e.preventDefault();
   if(Session.get('auth')) {
+    if($('#change-new-password').val() === '') {
+      Britto.alert('warning', 'Your passwords were blank, what sort of parents would we be letting you do that?');
+      return;
+    }
     if($('#change-new-password').val() == $('#change-repeat-password').val()) {
       Meteor.call('changePassword', {current_password: $('#change-current-password').val(), password: $('#change-new-password').val(), auth: Session.get('auth')}, standardHandler);
     } else {
-      alert('Get the password the same fool!');
+      Britto.alert('warning', 'Your passwords were not the same');
     }
   }
 }
@@ -199,7 +221,7 @@ function deletePost(e) {
 
 function deletedPost(error, response) {
   if(!error && response) {
-    setPage('/', false, true);
+    Britto.setPage('/', false, true);
   }
 }
 
@@ -217,7 +239,7 @@ function makePost(e) {
 }
 
 function doLogin(e) {
- e.preventDefault();
+  e.preventDefault();
   Meteor.call('login', $('#login-username').val(), $('#login-password').val(), loginCallback);
   return false;
 }

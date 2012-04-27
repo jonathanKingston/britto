@@ -1,0 +1,204 @@
+<template name="listView">
+  <section class="listView">
+    {{>posts}}
+    {{attach_event}}
+  </section>
+</template>
+
+<template name="postView">
+  <section class="postView">
+    {{#with post}}
+      {{>post}}
+    {{/with}}
+
+    {{#if disqus}}
+      <div id="disqus_thread"></div>
+    {{else}}
+    <h3>Comments</h3>
+    {{>comments}}
+    <form id="comment-form" class="form-horizontal" action="#" >
+      <input type="hidden" id="comment-post" value="{{#with post}}{{_id}}{{/with}}" />
+      <fieldset>
+        <legend>Comment</legend>
+        <div class="control-group">
+          <label for="comment-name" class="control-label">Name</label>
+          <div class="controls"><input type="text" id="comment-name" /></div>
+        </div>
+        <div class="control-group">
+          <label for="comment-comment" class="control-label">Comment</label>
+          <div class="controls"><textarea id="comment-comment" ></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" id="comment-button" >Comment</button>
+        </div>
+      </fieldset>
+    </form>
+    {{/if}}
+  </section>
+</template>
+
+<template name="options">
+
+  <form id="change-user-form" class="form-horizontal" action="#" >
+    <fieldset>
+      <legend>About you</legend>
+      <div class="control-group">
+        <label for="change-user-name" class="control-label">Name</label>
+        <div class="controls"><input type="text" id="change-user-name" value="{{#with user}}{{name}}{{/with}}" /></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="change-user-button" >Submit</button>
+      </div>
+    </fieldset>
+  </form>
+
+  <form id="change-password-form" class="form-horizontal" action="#" >
+    <fieldset>
+      <legend>Change password</legend>
+      <div class="control-group">
+        <label for="change-current-password" class="control-label">Current password</label>
+        <div class="controls"><input type="password" id="change-current-password" /></div>
+      </div>
+      <div class="control-group">
+        <label for="change-new-password" class="control-label">New password</label>
+        <div class="controls"><input type="password" id="change-new-password" /></div>
+      </div>
+      <div class="control-group">
+        <label for="change-repeat-password" class="control-label">Confirm password</label>
+        <div class="controls"><input type="password" id="change-repeat-password" /></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="change-password-button" >Submit</button>
+      </div>
+    </fieldset>
+  </form>
+</template>
+
+<template name="settings">
+  <form id="change-setting-form" class="form-horizontal" action="#" >
+    <fieldset>
+      <legend>Change settings</legend>
+      {{#each settings}}
+      <div class="control-group">
+        <label for="change-setting-{{key}}" class="control-label">{{#labelify}}{{key}}{{/labelify}}</label>
+        <div class="controls"><input type="text" data-key="{{key}}" id="change-setting-{{key}}" value="{{value}}" />
+          <span class="help-inline">{{description}}</span>
+        </div>
+      </div>
+      {{/each}}
+      <div class="form-actions">
+        <button class="btn btn-primary" id="change-setting-button" >Submit</button>
+      </div>
+    </fieldset>
+  </form>  
+</template>
+
+<template name="user_area">
+  {{#if user }}
+  <section class="user_area">
+    <h2>Hi {{#with user}}{{ name }}{{/with}}!</h2>
+    <form id="post-form" class="form-horizontal" action="#">
+      <fieldset>
+        <legend>Make a post</legend>
+        <div class="control-group">
+          <label for="post-title" class="control-label">Title</label>
+          <div class="controls"><input type="text" id="post-title" /></div>
+        </div>
+        <div class="control-group">
+          <label for="post-body" class="control-label">Body</label>
+          <div class="controls"><textarea id="post-body" style="width:100%; height:300px;"></textarea></div>
+        </div>
+        <div class="control-group">
+          <label for="post-slug" class="control-label">Slug</label>
+          <div class="controls"><input type="text" id="post-slug" /></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" id="post-button" >Post</button>
+        </div>
+      </fieldset>
+    </form>
+  </section>
+  {{/if}}
+</template>
+
+<template name="login">
+  <section name="login">
+    <form id="login-form" class="form-horizontal" action="#" >
+      <fieldset>
+        <legend>Login</legend>
+        <div class="control-group">
+          <label for="login-username" class="control-label">Username</label>
+          <div class="controls"><input type="text" id="login-username" /></div>
+        </div>
+        <div class="control-group">
+          <label for="login-password" class="control-label">Password</label>
+          <div class="controls"><input type="password" id="login-password" /></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" id="login-button" >Login</button>
+        </div>
+      </fieldset>
+    </form>
+  </section>
+</template>
+
+<template name="posts">
+  <section class="posts">
+    {{#each postlist}}
+      {{>postShort}}
+    {{/each}}
+  </section>
+</template>
+
+<template name="comments">
+  <section class="comments">
+    {{#if commentslist post}}
+      {{#each commentslist post}}
+        {{>comment}}
+      {{/each}}
+    {{else}}
+      <p>There are no comments on this post yet.</p>
+    {{/if}}
+  </section>
+</template>
+
+<template name="postShort">
+  <article class="post" id="{{_id}}">
+    <h2><a href="/blog/{{slug}}/" rel="internal" >{{ title }}</a></h2>
+    {{#short_content slug}}{{body}}{{/short_content}}
+    <dl>
+      <dt>Posted by</dt><dd>{{postUser userId}}</dd>
+      <dt>Created</dt><dd><time>{{date created}}</time></dd>
+      {{#if disqus}}
+        {{#disqus_link slug}}{{/disqus_link}}
+      {{else}}
+        <dt>Comments</dt><dd>
+         <a href="/blog/{{slug}}/" rel="internal" >{{commentCount _id}}</a>
+        </dd>
+      {{/if}}
+    </dl>
+  </article>
+</template>
+
+<template name="post">
+  <article class="post" id="{{_id}}">
+    <h2><a href="/blog/{{slug}}" rel="internal" >{{ title }}</a></h2>
+    {{#markdown}}{{body}}{{/markdown}}
+    <dl>
+      <dt>Posted by</dt><dd>{{postUser userId}}</dd>
+      <dt>Created</dt><dd><time>{{date created}}</time></dd>
+    </dl>
+    {{#if user}}<button class="btn btn-primary delete-post" data-id="{{_id}}" >Delete post</button>{{/if}}
+  </article>
+  {{attach_event slug}}
+</template>
+
+<template name="comment">
+  <section class="comment" id="{{_id}}">
+    <strong>{{ name }}</strong>
+    {{#markdown}}{{comment}}{{/markdown}}
+    {{date created}}
+    {{#if user}}<button class="btn btn-primary delete-comment" data-id="{{_id}}" >Delete comment</button>{{/if}}
+  </section>
+  <br />
+</template>
