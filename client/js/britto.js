@@ -64,7 +64,7 @@ Britto.load.analytics = function() {
     var _gaq = _gaq || [];
     Britto.analytics = _gaq;
     _gaq.push(['_setAccount', analytics.value]);
-//      _gaq.push(['_setDomainName', 'britto.co']);
+      _gaq.push(['_setDomainName', window.location.host]);
     _gaq.push(['_setAllowLinker', true]);
     _gaq.push(['_trackPageview']);
    (function() {
