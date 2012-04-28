@@ -10,14 +10,14 @@ Handlebars.registerHelper('short_content', function(slug, options) {
   renderedContent = options.fn(this);
   content = renderedContent.substring(0, 200);
   if(content != renderedContent) {
-    content += " <a href=\"/blog/"+slug+"\" rel=\"internal\" >...</a>";
+    content += " <a href=\"/blog/"+slug+"\" >...</a>";
   }
   var converter = new Showdown.converter();
   return converter.makeHtml(content);
 });
 
 Handlebars.registerHelper('disqus_link', function(slug, options) {
-  return '<a href="/blog/'+slug+'#disqus_thread" rel="internal" data-disqus-identifier="/blog/'+slug+'" ></a>';
+  return '<a href="/blog/'+slug+'#disqus_thread" data-disqus-identifier="/blog/'+slug+'" ></a>';
 });
 
 Handlebars.registerHelper('labelify', function(options) {

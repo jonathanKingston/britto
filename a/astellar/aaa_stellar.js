@@ -21,7 +21,7 @@ Stellar.client.linkHandler = function() {
   $('body').on('click', 'a', function(e){
     link = $(this).attr('href');
     //TODO decide what links should use this function
-    if(!link.match(/^http:\/\/www\./)) {
+    if(!link.match(/^(?:https?|mailto):\/\/.*/)) {
       e.preventDefault();
       Stellar.log('Link clicked');
       Stellar.navigate(link, true);
