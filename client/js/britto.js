@@ -20,12 +20,6 @@ Britto.settingsLoaded = function() {
   Britto.load.analytics();
 }
 
-Britto.init = function() {
-  Britto.log('init');
-  Session.set('loaded', true);
-  Backbone.history.start({pushState: true});
-}
-
 Britto.log = function(message) {
   if(console && console.log) {
     console.log(message);
@@ -40,7 +34,7 @@ Meteor.subscribe("allposts");
 //TODO change this to a per post subscription - removing it was killing the templates :/
 Meteor.subscribe("allcomments");
 //Todo, find a better / more reliable init point
-Meteor.subscribe("allusers", Britto.init);
+Meteor.subscribe("allusers");
 
 Britto.alert = function(type, message) {
   Britto.log(message);
@@ -91,30 +85,11 @@ Britto.load.disqusCount = function() {
   }
 }
 
-Britto.navigate = function(path, load) {
-  Britto.logPageLoad(path);
-  Router.navigate(path, load);
-}
-
+//TODO hook up to Stellar
 Britto.logPageLoad = function(path) {
   if(Britto.analytics) {
     Britto.log('log page'+path);
     Britto.analytics.push(['_trackPageview', path]);
-  }
-}
-
-Britto.setPage = function(page, pageType, redirect) {
-  Britto.log('set page');
-  if(redirect) {
-    Britto.navigate(page);
-  }
-  if(page !== Session.get('new_page')) {
-    window.scrollBy(0,0);
-    if(page) {
-      page = page.replace(/#(.*)/, '');
-    }
-    Session.set('page_type', pageType);
-    Session.set('new_page', page); 
   }
 }
 
@@ -134,6 +109,7 @@ function loginCallback(error, returnVal) {
   return false;
 }
 
+/* TODO - Goodbye for now, add back later
 function renderNewSlide(content) {
   Britto.log('Render new slide');
   newSlide = $('<div class="slide">' + content + '</div>');
@@ -154,17 +130,9 @@ function renderNewSlide(content) {
     $('#slides .slide:last').css('display','block');
   }
 }
+*/
 
 Meteor.startup(function() {
-  $('body').on('click', 'a[rel="internal"]', function(e){
-    e.preventDefault();
-    link = $(this).attr('href');
-    Britto.navigate(link, true);
-    Britto.log('Link clicked');
-    Britto.log(Router);
-    Britto.log(link);
-  });
-
   //Internal Meteor events don't seem to always fire TODO check for bugs
   $('body').on('click', '#comment-button', makeComment);
   $('body').on('submit', '#comment-button', makeComment);

@@ -1,9 +1,4 @@
 Meteor.startup(function () {
-  _.each(['Posts', 'Users', 'Comments', 'Settings'], function(collection) {
-    _.each(['insert', 'update', 'remove'], function(method) {
-      Meteor.default_server.method_handlers['/' + collection + '/' + method] = function() {};
-    });
-  });
   if(Users.find().count() === 0) {
     console.log('Setup settings');
     setSetting('site_name', 'Britto blog', 'This is the name of your site');

@@ -24,30 +24,3 @@ Handlebars.registerHelper('labelify', function(options) {
   label = options.fn(this).replace(/\_/g, ' ');
   return label.charAt(0).toUpperCase() + label.substr(1);
 });
-
-//TODO Need to move to a better MVC style setup soon
-Handlebars.registerHelper('content', function() {
-  Britto.log('Content helper');
-  if(Session.equals('loaded', true)) {
-    //Stupid issue of home page not rendering, will refactor below to use this instead of equals
-    Britto.log(Session.get('new_page'));
-
-    if(Session.equals('page_type', 'post')) {
-      post = Posts.findOne({slug: Session.get('new_page')});
-      if(post) {
-        //TODO  Meteor.subscribe("postcomments", post._id, init);
-        renderNewSlide(Template.postView({post: post}));
-      }
-    } else {
-      //Check template exists, if not use list view
-      if(Template[Session.get('new_page')]) {
-        renderNewSlide(Template[Session.get('new_page')]());
-      } else {
-        renderNewSlide(Template.listView());
-      }
-    }
-    return '';
-  }
-  Britto.log('Show nowt');
-  return '';
-});
