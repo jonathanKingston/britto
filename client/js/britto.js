@@ -1,4 +1,3 @@
-var timeStart = new Date().getTime();
 //This is here to speed the site name being shown, sorry kids
 Handlebars.registerHelper('setting', function(options) {
   key = options.fn(this);
@@ -14,9 +13,6 @@ Britto = {};
 Britto.settingsLoaded = function() {
   Britto.log('settings loaded');
   timeLoad = new Date().getTime();
-  Britto.log('Time start:'+timeStart);
-  Britto.log('Time Load:'+timeLoad);
-  Britto.log('Time Load:'+(timeLoad - timeStart));
   Britto.load.analytics();
 }
 
@@ -27,8 +23,6 @@ Britto.log = function(message) {
 }
 
 Meteor.subscribe("allsettings", Britto.settingsLoaded);
-Session.set('loaded', false);
-Session.equals('page_type', false);
 
 Meteor.subscribe("allposts");
 //TODO change this to a per post subscription - removing it was killing the templates :/
