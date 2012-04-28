@@ -144,7 +144,7 @@ Stellar.client.registerHelper('stellar_page', function() {
       console.log('Load new page');
       return Meteor.ui.chunk(function() { return Template[Stellar.page.template]();});
     } else {
-      Stellar.log('404!'); //TODO
+      throw new Meteor.Error('404', 'Page not found');
     }
     return '';
   }
