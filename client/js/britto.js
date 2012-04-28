@@ -90,7 +90,7 @@ Britto.logPageLoad = function(path) {
 //create post callback
 function madePost(error, response) {
   if(!error) {
-    Britto.setPage('/', false, true);
+    Stellar.reditect('/');
   }
 }
 
@@ -98,7 +98,7 @@ function loginCallback(error, returnVal) {
   if(!error) {
     Session.set('auth', returnVal.auth);
     Session.set('user', returnVal);
-    Britto.setPage('user_area', false, true);
+    Stellar.redirect('user_area');
   }
   return false;
 }
@@ -163,7 +163,7 @@ function changeSetting(e) {
 
 function standardHandler(error, response) {
   if(!error && response) {
-    Britto.setPage('', false, true);
+    Stellar.redirect('');
   } else {
     Britto.alert('error', 'There was an error updating that');
   }    
@@ -212,7 +212,7 @@ function deletePost(e) {
 
 function deletedPost(error, response) {
   if(!error && response) {
-    Britto.setPage('/', false, true);
+    Stellar.redirect('/');
   }
 }
 

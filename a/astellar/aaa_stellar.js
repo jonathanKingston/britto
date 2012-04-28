@@ -20,16 +20,19 @@ Stellar.client.init = function() {
 Stellar.client.linkHandler = function() {
   $('body').on('click', 'a', function(e){
     link = $(this).attr('href');
-    //TODO decide what links should use this function
     if(!link.match(/^(?:https?|mailto):\/\/.*/)) {
       e.preventDefault();
       Stellar.log('Link clicked');
-      Stellar.navigate(link, true);
-      Stellar.log('Link Navigated');
-      Stellar.page.call();
-      Stellar.log('Link called');
+      Stellar.redirect(link);
     }
   });
+}
+
+Stellar.redirect = function(link) {
+  Stellar.navigate(link, true);
+  Stellar.log('Link Navigated');
+  Stellar.page.call();
+  Stellar.log('Link called');
 }
 
 Stellar.client.registerHelper = function(name, func) {

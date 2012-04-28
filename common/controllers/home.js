@@ -11,5 +11,5 @@ HomeController.login = function() {
 HomeController.logout = function() {
   Session.set('user', false);
   Session.set('auth', false);
-  Stellar.navigate('/', true);
+  Stellar.redirect('/');
 };
