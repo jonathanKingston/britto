@@ -102,6 +102,9 @@ Stellar.page.set = function(controller, action) {
 
   params = {};
   //TODO - pass in get string here
+  actionBits = action.split('#');
+  action = actionBits[0];
+  params['hash'] = actionBits[1];
 
   //Check for controller, if it exists check for that action
   //If it doesn't exist look for a show action instead
