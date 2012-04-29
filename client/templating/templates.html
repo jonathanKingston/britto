@@ -165,7 +165,7 @@
 <template name="postShort">
   <article class="post" id="{{_id}}">
     <h2><a href="/blog/{{slug}}/" >{{ title }}</a></h2>
-    {{#short_content slug}}{{body}}{{/short_content}}
+    {{#short_content_escape slug body}}{{/short_content_escape}}
     <dl>
       <dt>Posted by</dt><dd>{{postUser userId}}</dd>
       <dt>Created</dt><dd><time>{{date created}}</time></dd>
@@ -183,7 +183,7 @@
 <template name="post">
   <article class="post" id="{{_id}}">
     <h2><a href="/blog/{{slug}}" >{{ title }}</a></h2>
-    {{#markdown}}{{body}}{{/markdown}}
+    {{#better_markdown_escape body}}{{/better_markdown_escape}}
     <dl>
       <dt>Posted by</dt><dd>{{postUser userId}}</dd>
       <dt>Created</dt><dd><time>{{date created}}</time></dd>
