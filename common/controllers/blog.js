@@ -5,11 +5,12 @@ BlogController.index = function() {
 };
 
 BlogController.show = function() {
-  //TODO FIX RESULTS NOT LOADING HERE!
-  post = Posts.findOne({slug: Stellar.page.params['show']});
-  if(post) {
-    //TODO  Meteor.subscribe("postcomments", post._id, init);
-    Stellar.render('postView', {post: post});
-  }
+  //TODO  Meteor.subscribe("postcomments", post._id, init);
+  Meteor.subscribe("allposts", function() {
+    post = Posts.findOne({slug: Stellar.page.params['show']});
+    if(post) {
+      Stellar.render('postView', {post: post});
+    }
+  });
 };
 
