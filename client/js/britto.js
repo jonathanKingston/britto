@@ -35,7 +35,7 @@ Britto.alert = function(type, message) {
     message = sarcasm+': '+message;
   }
   alert = $('<div class="'+className+'">  <button class="close" data-dismiss="alert">×</button>  '+message+'</div>').alert();
-  $('#slides').prepend(alert);
+  $('#mainContent').prepend(alert);
 }
 
 Britto.load = {};
