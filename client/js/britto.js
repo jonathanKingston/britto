@@ -1,9 +1,10 @@
 //This is here to speed the site name being shown, sorry kids
 Handlebars.registerHelper('setting', function(options) {
+  //TODO: escaping the key here could cause issues
   key = options.fn(this);
   setting = Settings.findOne({key: key.toString()});
   if(setting) {
-    return setting.value;
+    return Handlebars._escape(setting.value);
   }
   return '';
 });
@@ -27,7 +28,6 @@ Meteor.subscribe("allsettings", Britto.settingsLoaded);
 Meteor.subscribe("allposts");
 //TODO change this to a per post subscription - removing it was killing the templates :/
 Meteor.subscribe("allcomments");
-//Todo, find a better / more reliable init point
 Meteor.subscribe("allusers");
 
 Britto.alert = function(type, message) {
@@ -53,6 +53,13 @@ Britto.load.analytics = function() {
   }
 }
 
+$(window).bind('stellar_page_load', function(event, path) {
+  if($.ga && $.ga.trackPageview) {
+    $.ga.trackPageview(spath);
+  }
+});
+
+
 Britto.load.disqus = function(slug) {
   disqus = Settings.findOne({key: 'disqus'});
   if(disqus && disqus.value != '') {
@@ -76,14 +83,6 @@ Britto.load.disqusCount = function() {
         s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
         (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
     }());
-  }
-}
-
-//TODO hook up to Stellar
-Britto.logPageLoad = function(path) {
-  if(Britto.analytics) {
-    Britto.log('log page'+path);
-    Britto.analytics.push(['_trackPageview', path]);
   }
 }
 
