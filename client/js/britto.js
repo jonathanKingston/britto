@@ -54,8 +54,8 @@ Britto.load.analytics = function() {
 }
 
 $(window).bind('stellar_page_load', function(event, path) {
-  if($.ga && $.ga.trackPageview) {
-    $.ga.trackPageview(spath);
+  if(path && $.ga && $.ga.trackPageview) {
+    $.ga.trackPageview(path);
   }
 });
 
