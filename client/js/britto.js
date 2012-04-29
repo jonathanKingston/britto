@@ -12,15 +12,9 @@ Handlebars.registerHelper('setting', function(options) {
 Britto = {};
 
 Britto.settingsLoaded = function() {
-  Britto.log('settings loaded');
+  Stellar.log('settings loaded');
   timeLoad = new Date().getTime();
   Britto.load.analytics();
-}
-
-Britto.log = function(message) {
-  if(console && console.log) {
-    console.log(message);
-  }
 }
 
 Meteor.subscribe("allsettings", Britto.settingsLoaded);
@@ -31,7 +25,7 @@ Meteor.subscribe("allcomments");
 Meteor.subscribe("allusers");
 
 Britto.alert = function(type, message) {
-  Britto.log(message);
+  Stellar.log(message);
   className = 'alert';
   if(type == 'warning' || type == 'info' || type == 'error') {
     className += ' alert-'+type
@@ -55,7 +49,11 @@ Britto.load.analytics = function() {
 
 $(window).bind('stellar_page_load', function(event, path) {
   if(path && $.ga && $.ga.trackPageview) {
-    $.ga.trackPageview(path);
+    try {
+      $.ga.trackPageview(path);
+    } catch(err) {
+      Stellar.log('Not tracking due to issue :/');
+    }
   }
 });
 
@@ -104,7 +102,7 @@ function loginCallback(error, returnVal) {
 
 /* TODO - Goodbye for now, add back later
 function renderNewSlide(content) {
-  Britto.log('Render new slide');
+  Stellar.log('Render new slide');
   newSlide = $('<div class="slide">' + content + '</div>');
   newSlide.css('left', '0%');
   newSlide.css('top', '2em');
