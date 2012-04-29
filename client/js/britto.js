@@ -90,7 +90,7 @@ Britto.logPageLoad = function(path) {
 //create post callback
 function madePost(error, response) {
   if(!error) {
-    Stellar.reditect('/');
+    Stellar.redirect('/');
   }
 }
 
