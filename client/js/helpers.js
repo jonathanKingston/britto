@@ -1,17 +1,17 @@
 Handlebars.registerHelper('date', function(date) {
   if(date) {
     dateObj = new Date(date);
-    return $.timeago(dateObj);
+    return Handlebars._escape($.timeago(dateObj));
   }
   return 'N/A';
 });
 
+//Markdown handles escapes so shouldn't be an issue
 Handlebars.registerHelper('better_markdown_escape', function(string, fn) {
   return better_markdown(string);
 });
 
 Handlebars.registerHelper('short_content_escape', function(slug, content, options) {
-//  renderedContent = options.fn(this);
   renderedContent = content;
   content = renderedContent.substring(0, 200);
   if(content != renderedContent) {
@@ -21,6 +21,7 @@ Handlebars.registerHelper('short_content_escape', function(slug, content, option
 });
 
 Handlebars.registerHelper('disqus_link', function(slug, options) {
+  //TODO url escape?
   return '<a href="/blog/'+slug+'#disqus_thread" data-disqus-identifier="/blog/'+slug+'" ></a>';
 });
 
