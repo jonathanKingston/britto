@@ -102,15 +102,15 @@
         <legend>Make a post</legend>
         <div class="control-group">
           <label for="post-title" class="control-label">Title</label>
-          <div class="controls"><input type="text" id="post-title" /></div>
+          <div class="controls"><input type="text" id="post-title" value="{{#with post}}{{title}}{{/with}}" /></div>
         </div>
         <div class="control-group">
           <label for="post-body" class="control-label">Body</label>
-          <div class="controls"><textarea id="post-body" style="width:100%; height:300px;"></textarea></div>
+          <div class="controls"><textarea id="post-body" style="width:100%; height:300px;">{{#with post}}{{body}}{{/with}}</textarea></div>
         </div>
         <div class="control-group">
           <label for="post-slug" class="control-label">Slug</label>
-          <div class="controls"><input type="text" id="post-slug" /></div>
+          <div class="controls"><input type="text" id="post-slug" value="{{#with post}}{{slug}}{{/with}}" /></div>
         </div>
         <div class="form-actions">
           <button class="btn btn-primary" id="post-button" >Post</button>
@@ -189,6 +189,7 @@
       <dt>Created</dt><dd><time>{{date created}}</time></dd>
     </dl>
     {{#if user}}<button class="btn btn-primary delete-post" data-id="{{_id}}" >Delete post</button>{{/if}}
+    {{#if user}}<button class="btn btn-primary edit-post" data-slug="{{slug}}" >Edit post</button>{{/if}}
   </article>
   {{attach_event slug}}
 </template>

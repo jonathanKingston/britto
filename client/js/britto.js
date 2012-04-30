@@ -173,6 +173,7 @@ function renderNewSlide(content) {
 
 Meteor.startup(function() {
   //Internal Meteor events don't seem to always fire TODO check for bugs
+  //TODO need a better way to do this crap
   $('body').on('click', '#comment-button', makeComment);
   $('body').on('submit', '#comment-button', makeComment);
 
@@ -195,6 +196,9 @@ Meteor.startup(function() {
 
   $('body').on('click', '.delete-comment', deleteComment);
   $('body').on('click', '.delete-post', deletePost);
+
+  $('body').on('click', '.edit-post', editPost);
+
 });
 
 function changeSetting(e) {
@@ -253,6 +257,13 @@ function deletePost(e) {
     postId = $(target).attr('data-id');
     Meteor.call('deletePost', {commentId: postId, auth: Session.get('auth')}, deletedPost);
   }
+}
+
+function editPost(e) {
+  e.preventDefault();
+  target = e.target;
+  postId = $(target).attr('data-slug');
+  Stellar.redirect('/user_area/edit?id='+postId);
 }
 
 function deletedPost(error, response) {

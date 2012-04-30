@@ -13,11 +13,15 @@ Handlebars.registerHelper('better_markdown_escape', function(string, fn) {
 
 Handlebars.registerHelper('short_content_escape', function(slug, content, options) {
   renderedContent = content;
-  content = renderedContent.substring(0, 200);
-  if(content != renderedContent) {
-    content += " <a href=\"/blog/"+slug+"\" >...</a>";
+  if(content) {
+    content = renderedContent.substring(0, 200);
+    if(content != renderedContent) {
+      content += " <a href=\"/blog/"+slug+"\" >...</a>";
+    }
+    return better_markdown(content);
+  } else {
+    return '';
   }
-  return better_markdown(content);
 });
 
 Handlebars.registerHelper('disqus_link', function(slug, options) {

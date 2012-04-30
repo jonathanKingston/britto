@@ -8,7 +8,12 @@ _.each(['postShort', 'post'], function(template) {
   }
 
   Template[template].postUser = function(id) {
-    return Users.findOne({_id: id}).name;
+    user = Users.findOne({_id: id});
+    if(user) {
+      return user.name;
+    } else {
+      return '';
+    }
   }
 });
 

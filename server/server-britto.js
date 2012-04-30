@@ -70,13 +70,23 @@ function loginUser(username, password) {
 
 function makePost(args) {
   if(user = checkAuth(args.auth)) {
-    Posts.insert({
-      title: args.title,
-      body: args.body,
-      slug: args.slug,
-      userId: user._id,
-      created: new Date()
-    });
+    post = Posts.findOne({slug: args.slug});
+    //TODO If the user changes the slug, this will create a new post, Should fix at some point
+    if(post) {
+      Posts.update({slug: args.slug}, {$set: {
+          title: args.title,
+          body: args.body
+        } 
+      });
+    } else {
+      Posts.insert({
+        title: args.title,
+        body: args.body,
+        slug: args.slug,
+        userId: user._id,
+        created: new Date()
+      });
+    }
     return true;
   }
   return false;
