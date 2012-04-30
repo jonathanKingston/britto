@@ -1,11 +1,12 @@
 Meteor.startup(function () {
-  if(Users.find().count() === 0) {
-    console.log('Setup settings');
-    setSetting('site_name', 'Britto blog', 'This is the name of your site');
-    setSetting('disqus', '', 'This is to enable disqus comments on the blog instead of inbuilt comments, leave blank to use inbuilt ones');
-    setSetting('analytics_code', '', 'Enable google analytics by adding code here');
-    setSetting('madewith_shortname', '', 'Enable madewith on your site specify [appname].meteor.com or [urlname.com]');
 
+  console.log('Setup settings');
+  setSetting('site_name', 'Britto blog', 'This is the name of your site');
+  setSetting('disqus', '', 'This is to enable disqus comments on the blog instead of inbuilt comments, leave blank to use inbuilt ones');
+  setSetting('analytics_code', '', 'Enable google analytics by adding code here');
+  setSetting('madewith_shortname', '', 'Enable madewith on your site specify [appname].meteor.com or [urlname.com]');
+
+  if(Users.find().count() === 0) {
     console.log('Adding in users');
     userId = createUser({username: 'admin', password: 'password', name: 'Your name'});
     console.log('Adding in test post');

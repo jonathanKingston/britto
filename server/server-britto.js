@@ -94,11 +94,13 @@ function makeComment(args) {
 }
 
 function setSetting(key, value, description) {
-  Settings.insert({
-    key: key,
-    value: value,
-    description: description
-  });
+  if(!Settings.findOne({key: key})) {
+    Settings.insert({
+      key: key,
+      value: value,
+      description: description
+    });
+  }
 }
 
 function hashPassword(password, salt) {
