@@ -192,10 +192,14 @@ Meteor.startup(function() {
   $('body').on('submit', '#change-user-button', changeUser);
   $('body').on('click', '#change-user-button', changeUser);
 
+  $('body').on('submit', '#add-user-button', addUser);
+  $('body').on('click', '#add-user-button', addUser);
+
   $('body').on('change', '#post-title', changeTitle);
 
   $('body').on('click', '.delete-comment', deleteComment);
   $('body').on('click', '.delete-post', deletePost);
+  $('body').on('click', '.delete-user', deleteUser);
 
   $('body').on('click', '.edit-post', editPost);
 
@@ -241,12 +245,30 @@ function changeUser(e) {
   }
 }
 
+function addUser(e) {
+  e.preventDefault();
+  if(Session.get('auth')) {
+    details = {auth: Session.get('auth'), name: $('#add-user-name').val(), username: $('#add-user-username').val(), password: $('#add-user-password').val()};
+    Meteor.call('addUser', details, standardHandler);
+  }
+}
+
 function deleteComment(e) {
   e.preventDefault();
   if(Session.get('auth')) {
     target = e.target;
     commentId = $(target).attr('data-id');
     Meteor.call('deleteComment', {commentId: commentId, auth: Session.get('auth')});
+  }
+}
+
+
+function deleteUser(e) {
+  e.preventDefault();
+  if(Session.get('auth') && confirm('Are you sure you want to delete this user?')) {
+    target = e.target;
+    userId = $(target).attr('data-user-id');
+    Meteor.call('removeUser', {id: userId, auth: Session.get('auth')}, standardHandler);
   }
 }
 

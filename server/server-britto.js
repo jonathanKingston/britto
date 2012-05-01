@@ -1,7 +1,10 @@
+//TODO add auth filters here to neaten and also put these methods in a class
 Meteor.methods({
   comment: makeComment,
   changePassword: changePassword,
   changeUser: changeUser,
+  addUser: addUser,
+  removeUser: removeUser,
   changeSetting: changeSetting,
   post: makePost,
   login: loginUser,
@@ -26,6 +29,24 @@ function changePassword(args) {
 function changeUser(args) {
   if(user = checkAuth(args.auth)) {
     Users.update({apikey: args.auth}, {$set: {name: args.name}});
+    return true;
+  }
+  return false;
+}
+
+function addUser(args) {
+  if(user = checkAuth(args.auth)) {
+    //strip out crap
+    user = {name: args.name, username: args.username, password: args.password};
+    createUser(user);
+    return true;
+  }
+  return false;
+}
+
+function removeUser(args) {
+  if(user = checkAuth(args.auth)) {
+    Users.remove({_id: args.id});
     return true;
   }
   return false;

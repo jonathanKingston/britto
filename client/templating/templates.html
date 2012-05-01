@@ -5,6 +5,44 @@
   </section>
 </template>
 
+<template name="users">
+  <section class="users">
+    <h2>Users</h2>
+    <ul>
+      {{#each users}}
+        <li>{{ name }} - <button class="btn btn-primary delete-user" data-user-id="{{_id}}" >Delete</button></li>
+      {{/each}}
+    </ul>
+
+
+    <form id="add-user-form" class="form-horizontal" action="#" >
+      <fieldset>
+        <legend>User details</legend>
+        <div class="control-group">
+          <label for="change-user-name" class="control-label">Name</label>
+          <div class="controls"><input type="text" id="add-user-name" value="" /></div>
+        </div>
+
+        <div class="control-group">
+          <label for="change-user-name" class="control-label">Username</label>
+          <div class="controls"><input type="text" id="add-user-username" value="" /></div>
+        </div>
+
+        <div class="control-group">
+          <label for="change-user-name" class="control-label">Password</label>
+          <div class="controls"><input type="password" id="add-user-password" value="" /></div>
+        </div>
+
+
+        <div class="form-actions">
+          <button class="btn btn-primary" id="add-user-button" >Add</button>
+        </div>
+      </fieldset>
+    </form>
+
+  </section>
+</template>
+
 <template name="postView">
   <section class="postView">
     {{#with post}}

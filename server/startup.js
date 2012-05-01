@@ -1,6 +1,6 @@
 Meteor.startup(function () {
 
-  console.log('Setup settings');
+//  console.log('Setup settings');
   setSetting('site_name', 'Britto blog', 'This is the name of your site');
   setSetting('disqus', '', 'This is to enable disqus comments on the blog instead of inbuilt comments, leave blank to use inbuilt ones');
   setSetting('analytics_code', '', 'Enable google analytics by adding code here');
