@@ -10,3 +10,4 @@ body {padding-top:50px; padding-bottom:50px; }
 
 #slides {display:block; position:relative; }
 .slide {position:absolute; width:900px; background:#fff;}
+footer {margin-top:2em;}

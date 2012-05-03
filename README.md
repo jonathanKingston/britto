@@ -2,7 +2,6 @@ Britto
 ======
 
 Britto a simple blog made with Meteor.
-This is very much still work in progress still though.
 
 How to use
 ----------
@@ -15,9 +14,23 @@ Then you can clone the code onto your system:
 
     git clone git://github.com/jonathanKingston/britto.git
 
-Move to that direcory and deploy to your own location:
+Add packages Britto needs:
+    //You need to add in Stellar which isn't an official package yet
+    //My meteor package dir was here: /usr/lib/meteor/packages/ You should just be able to run the following command there.
+    git clone git://github.com/jonathanKingston/stellar.git
+    
+    //In the app direcory now:
+    meteor add stellar
+    meteor add bootstrap
+
+
+Move to that directory and deploy to your own location:
 
     cd britto
     meteor deploy [yourlocation].meteor.com
 
 You can then visit your applications address and login with username: admin and password: password.
+
+Legacy
+------
+So if anyone wanted page transitions from before... it has been disabled but it is coming back, the code is still available just not working just yet :).

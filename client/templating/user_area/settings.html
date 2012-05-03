@@ -16,12 +16,6 @@
     </fieldset>
   </form>
 
-  <ul>
-    {{#each blogRoll}}
-      <li>{{link}} - {{name}} <button class="delete-blog-roll btn btn-primary" data-id="{{_id}}" >Delete</button></li>
-    {{/each}}
-  </ul>
-
   <form id="blog-roll-form" class="form-horizontal" action="#" >
     <fieldset>
       <legend>Blog roll</legend>
@@ -38,5 +32,11 @@
       </div>
     </fieldset>
   </form>
+
+  <ul>
+    {{#each blogRoll}}
+      <li>{{link}} - {{name}} <button class="delete-blog-roll btn btn-primary" data-id="{{_id}}" >Delete</button></li>
+    {{/each}}
+  </ul>
 
 </template>
