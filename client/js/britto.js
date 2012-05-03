@@ -20,6 +20,7 @@ Britto.settingsLoaded = function() {
 
 Meteor.subscribe("allsettings", Britto.settingsLoaded);
 
+Meteor.subscribe("allblogroll");
 Meteor.subscribe("allposts");
 //TODO change this to a per post subscription - removing it was killing the templates :/
 Meteor.subscribe("allcomments");
@@ -104,7 +105,6 @@ $(window).bind('stellar_page_load', function(event, path) {
     }
   }
 });
-
 
 Britto.load.disqus = function(slug) {
   disqus = Settings.findOne({key: 'disqus'});
@@ -197,9 +197,13 @@ Meteor.startup(function() {
 
   $('body').on('change', '#post-title', changeTitle);
 
+  $('body').on('submit', '#add-blog-roll-button', addBlogRoll);
+  $('body').on('click', '#add-blog-roll-button', addBlogRoll);
+
   $('body').on('click', '.delete-comment', deleteComment);
   $('body').on('click', '.delete-post', deletePost);
   $('body').on('click', '.delete-user', deleteUser);
+  $('body').on('click', '.delete-blog-roll', deleteBlogRoll);
 
   $('body').on('click', '.edit-post', editPost);
 
@@ -253,6 +257,14 @@ function addUser(e) {
   }
 }
 
+function addBlogRoll(e) {
+  e.preventDefault();
+  if(Session.get('auth')) {
+    details = {auth: Session.get('auth'), name: $('#add-blog-roll-name').val(), link: $('#add-blog-roll-link').val()};
+    Meteor.call('insertBlogRoll', details, standardHandler);
+  }
+}
+
 function deleteComment(e) {
   e.preventDefault();
   if(Session.get('auth')) {
@@ -269,6 +281,15 @@ function deleteUser(e) {
     target = e.target;
     userId = $(target).attr('data-user-id');
     Meteor.call('removeUser', {id: userId, auth: Session.get('auth')}, standardHandler);
+  }
+}
+
+function deleteBlogRoll(e) {
+  e.preventDefault();
+  if(Session.get('auth')) {
+    target = e.target;
+    id = $(target).attr('data-id');
+    Meteor.call('deleteBlogRoll', {id: id, auth: Session.get('auth')}, standardHandler);
   }
 }
 

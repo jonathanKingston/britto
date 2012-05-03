@@ -9,7 +9,9 @@ Meteor.methods({
   post: makePost,
   login: loginUser,
   deleteComment: deleteComment,
-  deletePost: deletePost
+  deletePost: deletePost,
+  deleteBlogRoll: deleteBlogRoll,
+  insertBlogRoll: insertBlogRoll
 });
 
 function checkAuth(auth) {
@@ -78,6 +80,14 @@ function deletePost(args) {
   return false;
 }
 
+function deleteBlogRoll(args) {
+  if(user = checkAuth(args.auth)) {
+    BlogRoll.remove({_id: args.id});
+    return true;
+  }
+  return false;
+}
+
 function loginUser(username, password) {
   user = Users.findOne({username: username});
   if(user) {
@@ -108,6 +118,18 @@ function makePost(args) {
         created: new Date()
       });
     }
+    return true;
+  }
+  return false;
+}
+
+function insertBlogRoll(args) {
+  if(user = checkAuth(args.auth)) {
+    BlogRoll.insert({
+      name: args.name,
+      link: args.link,
+      created: new Date()
+    });
     return true;
   }
   return false;

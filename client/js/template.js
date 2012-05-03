@@ -1,7 +1,7 @@
-Template.sidelinks.sidelinks = function() {
-  var sidelinks = Sidelinks.find();
-  if(sidelinks && sidelinks.count() > 0) {
-    return sidelinks;
+Template.sidelinks.blogRoll = function() {
+  var blogRoll = BlogRoll.find();
+  if(blogRoll && blogRoll.count() > 0) {
+    return blogRoll;
   }
   return false;
 }

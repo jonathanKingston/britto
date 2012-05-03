@@ -46,10 +46,10 @@
 </template>
 
 <template name="sidelinks">
-  {{#if sidelinks}}
+  {{#if blogRoll}}
   <h2>Blog roll</h2>
   <ul>
-    {{#each sidelinks}}
+    {{#each blogRoll}}
       <li><a href="{{link}}">{{name}}</a></li>
     {{/each}}
   </ul>

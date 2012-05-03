@@ -17,3 +17,7 @@ Meteor.publish("allposts", function() {
 Meteor.publish("allsettings", function() {
   return Settings.find({}, {fields: {}});
 });
+
+Meteor.publish("allblogroll", function() {
+  return BlogRoll.find({}, {fields: {}});
+});
