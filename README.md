@@ -34,3 +34,8 @@ You can then visit your applications address and login with username: admin and 
 Legacy
 ------
 So if anyone wanted page transitions from before... it has been disabled but it is coming back, the code is still available just not working just yet :).
+
+
+Licence
+-------
+This is using an MIT licence, I would paste it here but I am pretty busy with development right now.

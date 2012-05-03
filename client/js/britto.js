@@ -33,7 +33,7 @@ Britto.alert = function(type, message) {
     className += ' alert-'+type
   }
   if(type == 'warning') {
-    sarcasm = 'You better check yoursely; before you wreak yourself';
+    sarcasm = 'You better check yourself; before you wreck yourself';
     message = sarcasm+': '+message;
   }
   alert = $('<div class="'+className+'">  <button class="close" data-dismiss="alert">×</button>  '+message+'</div>').alert();
