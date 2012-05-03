@@ -1,0 +1,9 @@
+<template name="comment">
+  <section class="comment" id="{{_id}}">
+    <strong>{{ name }}</strong>
+    {{#markdown}}{{comment}}{{/markdown}}
+    {{date created}}
+    {{#if user}}<button class="btn btn-primary delete-comment" data-id="{{_id}}" >Delete comment</button>{{/if}}
+  </section>
+  <br />
+</template>

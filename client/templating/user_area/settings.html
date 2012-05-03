@@ -1,0 +1,42 @@
+<template name="settings">
+  <form id="change-setting-form" class="form-horizontal" action="#" >
+    <fieldset>
+      <legend>Change settings</legend>
+      {{#each settings}}
+      <div class="control-group">
+        <label for="change-setting-{{key}}" class="control-label">{{#labelify}}{{key}}{{/labelify}}</label>
+        <div class="controls"><input type="text" data-key="{{key}}" id="change-setting-{{key}}" value="{{value}}" />
+          <span class="help-inline">{{description}}</span>
+        </div>
+      </div>
+      {{/each}}
+      <div class="form-actions">
+        <button class="btn btn-primary" id="change-setting-button" >Submit</button>
+      </div>
+    </fieldset>
+  </form>
+
+  <form id="blog-roll-form" class="form-horizontal" action="#" >
+    <fieldset>
+      <legend>Blog roll</legend>
+      <div class="control-group">
+        <label for="add-blog-roll-name" class="control-label">Name</label>
+        <div class="controls"><input type="text" id="add-blog-roll-name" value="" /></div>
+      </div>
+      <div class="control-group">
+        <label for="add-blog-roll-link" class="control-label">Link</label>
+        <div class="controls"><input type="text" id="add-blog-roll-link" value="" /></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="add-blog-roll-button" >Submit</button>
+      </div>
+    </fieldset>
+  </form>
+
+  <ul>
+    {{#each blogRoll}}
+      <li>{{link}} - {{name}} <button class="delete-blog-roll btn btn-primary" data-id="{{_id}}" >Delete</button></li>
+    {{/each}}
+  </ul>
+
+</template>

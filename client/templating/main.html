@@ -1,7 +1,7 @@
 <template name="container">
     <div id="mainContent">
-      {{#content}}
-      {{/content}}  
+      {{#stellar_page}}
+      {{/stellar_page}}  
     </div>
 </template>
 
@@ -9,29 +9,32 @@
   <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
       <div class="container">
-        <a class="brand" href="/" rel="internal">{{#setting}}site_name{{/setting}}</a>
+        <a class="brand" href="/" >{{#setting}}site_name{{/setting}}</a>
 
         <div class="nav-collapse">
           <ul class="nav">
             <li class="active">
-              <a href="/" rel="internal">Home</a>
+              <a href="/" >Home</a>
             </li>
             {{#if user}}
               <li class="">
-                <a href="/user_area" rel="internal">User area</a>
+                <a href="/user_area">User area</a>
               </li>
               <li class="">
-                <a href="/options" rel="internal">Options</a>
+                <a href="/user_area/users">Users</a>
+              </li>
+              <li class="">
+                <a href="/user_area/options">Options</a>
               </li>
               <li>
-                <a href="/settings" rel="internal">Settings</a>
+                <a href="/user_area/settings">Settings</a>
               </li>
               <li>
-                <a href="/logout" rel="internal">Logout</a>
+                <a href="/home/logout">Logout</a>
               </li>  
             {{else}}
               <li class="">
-                <a href="/login" rel="internal">Login</a>
+                <a href="/home/login">Login</a>
               </li>
             {{/if}}
           </ul>
@@ -42,3 +45,13 @@
   </div>
 </template>
 
+<template name="sidelinks">
+  {{#if blogRoll}}
+  <h2>Blog roll</h2>
+  <ul>
+    {{#each blogRoll}}
+      <li><a href="{{link}}">{{name}}</a></li>
+    {{/each}}
+  </ul>
+  {{/if}}
+</template>

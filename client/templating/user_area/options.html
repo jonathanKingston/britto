@@ -1,0 +1,35 @@
+<template name="options">
+  <form id="change-user-form" class="form-horizontal" action="#" >
+    <fieldset>
+      <legend>About you</legend>
+      <div class="control-group">
+        <label for="change-user-name" class="control-label">Name</label>
+        <div class="controls"><input type="text" id="change-user-name" value="{{#with user}}{{name}}{{/with}}" /></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="change-user-button" >Submit</button>
+      </div>
+    </fieldset>
+  </form>
+
+  <form id="change-password-form" class="form-horizontal" action="#" >
+    <fieldset>
+      <legend>Change password</legend>
+      <div class="control-group">
+        <label for="change-current-password" class="control-label">Current password</label>
+        <div class="controls"><input type="password" id="change-current-password" /></div>
+      </div>
+      <div class="control-group">
+        <label for="change-new-password" class="control-label">New password</label>
+        <div class="controls"><input type="password" id="change-new-password" /></div>
+      </div>
+      <div class="control-group">
+        <label for="change-repeat-password" class="control-label">Confirm password</label>
+        <div class="controls"><input type="password" id="change-repeat-password" /></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="change-password-button" >Submit</button>
+      </div>
+    </fieldset>
+  </form>
+</template>

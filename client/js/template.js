@@ -1,3 +1,11 @@
+Template.sidelinks.blogRoll = function() {
+  var blogRoll = BlogRoll.find();
+  if(blogRoll && blogRoll.count() > 0) {
+    return blogRoll;
+  }
+  return false;
+}
+
 Template.posts.postlist = function() {
   return Posts.find({}, {sort: {created: -1}});
 }
@@ -8,7 +16,12 @@ _.each(['postShort', 'post'], function(template) {
   }
 
   Template[template].postUser = function(id) {
-    return Users.findOne({_id: id}).name;
+    user = Users.findOne({_id: id});
+    if(user) {
+      return user.name;
+    } else {
+      return '';
+    }
   }
 });
 

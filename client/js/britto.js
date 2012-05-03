@@ -1,10 +1,10 @@
-var timeStart = new Date().getTime();
 //This is here to speed the site name being shown, sorry kids
 Handlebars.registerHelper('setting', function(options) {
-  key = options.fn(this);
-  setting = Settings.findOne({key: key.toString()});
+  //TODO: escaping the key here could cause issues
+  var key = options.fn(this);
+  var setting = Settings.findOne({key: key.toString()});
   if(setting) {
-    return setting.value;
+    return Handlebars._escape(setting.value);
   }
   return '';
 });
@@ -12,38 +12,22 @@ Handlebars.registerHelper('setting', function(options) {
 Britto = {};
 
 Britto.settingsLoaded = function() {
-  Britto.log('settings loaded');
+  Stellar.log('settings loaded');
   timeLoad = new Date().getTime();
-  Britto.log('Time start:'+timeStart);
-  Britto.log('Time Load:'+timeLoad);
-  Britto.log('Time Load:'+(timeLoad - timeStart));
   Britto.load.analytics();
-}
-
-Britto.init = function() {
-  Britto.log('init');
-  Session.set('loaded', true);
-  Backbone.history.start({pushState: true});
-}
-
-Britto.log = function(message) {
-  if(console && console.log) {
-    console.log(message);
-  }
+  Britto.load.madewith();
 }
 
 Meteor.subscribe("allsettings", Britto.settingsLoaded);
-Session.set('loaded', false);
-Session.equals('page_type', false);
 
+Meteor.subscribe("allblogroll");
 Meteor.subscribe("allposts");
 //TODO change this to a per post subscription - removing it was killing the templates :/
 Meteor.subscribe("allcomments");
-//Todo, find a better / more reliable init point
-Meteor.subscribe("allusers", Britto.init);
+Meteor.subscribe("allusers");
 
 Britto.alert = function(type, message) {
-  Britto.log(message);
+  Stellar.log(message);
   className = 'alert';
   if(type == 'warning' || type == 'info' || type == 'error') {
     className += ' alert-'+type
@@ -53,10 +37,57 @@ Britto.alert = function(type, message) {
     message = sarcasm+': '+message;
   }
   alert = $('<div class="'+className+'">  <button class="close" data-dismiss="alert">×</button>  '+message+'</div>').alert();
-  $('#slides').prepend(alert);
+  $('#mainContent').prepend(alert);
 }
 
 Britto.load = {};
+
+//TODO this is a hack as it shouldn't be here, I need to get Madewith allowing me to change the path
+Britto.load.madewith = function() {
+  madewith = Settings.findOne({key: 'madewith_shortname'});
+  if(madewith && madewith.value != '') {
+
+    var hostname = window.location.host;
+    var match = hostname.match(/(.*)\.meteor.com$/);
+
+    shortname = madewith.value;  // connect to madewith and subscribe to my app's record
+    var server = Meteor.connect("http://madewith.meteor.com/sockjs");
+    var sub = server.subscribe("myApp", hostname);
+
+    // minimongo collection to hold my singleton app record.
+    var apps = new Meteor.Collection('madewith_apps', server);
+
+    server.methods({
+      vote: function (hostname) {
+        apps.update({name: hostname}, {$inc: {vote_count: 1}});
+      }
+    });
+
+    Template.madewith.vote_count = function() {
+      var app = apps.findOne();
+      return app ? app.vote_count : '???';
+    };
+
+    Template.madewith.shortname = function () {
+      return shortname;
+    };
+
+    Template.madewith.events = {
+      'click .madewith_upvote': function(event) {
+        var app = apps.findOne();
+        if (app) {
+          server.call('vote', hostname);
+          // stop these so you don't click through the link to go to the
+          // app.
+          event.stopPropagation();
+          event.preventDefault();
+        }
+      }
+    };
+
+    $('body').append(Template.madewith());
+  }
+}
 
 Britto.load.analytics = function() {
   analytics = Settings.findOne({key: 'analytics_code'});
@@ -64,6 +95,16 @@ Britto.load.analytics = function() {
     $.ga.load(analytics.value);
   }
 }
+
+$(window).bind('stellar_page_load', function(event, path) {
+  if(path && $.ga && $.ga.trackPageview) {
+    try {
+      $.ga.trackPageview(path);
+    } catch(err) {
+      Stellar.log('Not tracking due to issue :/');
+    }
+  }
+});
 
 Britto.load.disqus = function(slug) {
   disqus = Settings.findOne({key: 'disqus'});
@@ -91,37 +132,10 @@ Britto.load.disqusCount = function() {
   }
 }
 
-Britto.navigate = function(path, load) {
-  Britto.logPageLoad(path);
-  Router.navigate(path, load);
-}
-
-Britto.logPageLoad = function(path) {
-  if(Britto.analytics) {
-    Britto.log('log page'+path);
-    Britto.analytics.push(['_trackPageview', path]);
-  }
-}
-
-Britto.setPage = function(page, pageType, redirect) {
-  Britto.log('set page');
-  if(redirect) {
-    Britto.navigate(page);
-  }
-  if(page !== Session.get('new_page')) {
-    window.scrollBy(0,0);
-    if(page) {
-      page = page.replace(/#(.*)/, '');
-    }
-    Session.set('page_type', pageType);
-    Session.set('new_page', page); 
-  }
-}
-
 //create post callback
 function madePost(error, response) {
   if(!error) {
-    Britto.setPage('/', false, true);
+    Stellar.redirect('/');
   }
 }
 
@@ -129,13 +143,14 @@ function loginCallback(error, returnVal) {
   if(!error) {
     Session.set('auth', returnVal.auth);
     Session.set('user', returnVal);
-    Britto.setPage('user_area', false, true);
+    Stellar.redirect('user_area');
   }
   return false;
 }
 
+/* TODO - Goodbye for now, add back later
 function renderNewSlide(content) {
-  Britto.log('Render new slide');
+  Stellar.log('Render new slide');
   newSlide = $('<div class="slide">' + content + '</div>');
   newSlide.css('left', '0%');
   newSlide.css('top', '2em');
@@ -154,18 +169,11 @@ function renderNewSlide(content) {
     $('#slides .slide:last').css('display','block');
   }
 }
+*/
 
 Meteor.startup(function() {
-  $('body').on('click', 'a[rel="internal"]', function(e){
-    e.preventDefault();
-    link = $(this).attr('href');
-    Britto.navigate(link, true);
-    Britto.log('Link clicked');
-    Britto.log(Router);
-    Britto.log(link);
-  });
-
   //Internal Meteor events don't seem to always fire TODO check for bugs
+  //TODO need a better way to do this crap
   $('body').on('click', '#comment-button', makeComment);
   $('body').on('submit', '#comment-button', makeComment);
 
@@ -184,10 +192,21 @@ Meteor.startup(function() {
   $('body').on('submit', '#change-user-button', changeUser);
   $('body').on('click', '#change-user-button', changeUser);
 
+  $('body').on('submit', '#add-user-button', addUser);
+  $('body').on('click', '#add-user-button', addUser);
+
   $('body').on('change', '#post-title', changeTitle);
+
+  $('body').on('submit', '#add-blog-roll-button', addBlogRoll);
+  $('body').on('click', '#add-blog-roll-button', addBlogRoll);
 
   $('body').on('click', '.delete-comment', deleteComment);
   $('body').on('click', '.delete-post', deletePost);
+  $('body').on('click', '.delete-user', deleteUser);
+  $('body').on('click', '.delete-blog-roll', deleteBlogRoll);
+
+  $('body').on('click', '.edit-post', editPost);
+
 });
 
 function changeSetting(e) {
@@ -201,7 +220,7 @@ function changeSetting(e) {
 
 function standardHandler(error, response) {
   if(!error && response) {
-    Britto.setPage('', false, true);
+    Stellar.redirect('');
   } else {
     Britto.alert('error', 'There was an error updating that');
   }    
@@ -230,12 +249,47 @@ function changeUser(e) {
   }
 }
 
+function addUser(e) {
+  e.preventDefault();
+  if(Session.get('auth')) {
+    details = {auth: Session.get('auth'), name: $('#add-user-name').val(), username: $('#add-user-username').val(), password: $('#add-user-password').val()};
+    Meteor.call('addUser', details, standardHandler);
+  }
+}
+
+function addBlogRoll(e) {
+  e.preventDefault();
+  if(Session.get('auth')) {
+    details = {auth: Session.get('auth'), name: $('#add-blog-roll-name').val(), link: $('#add-blog-roll-link').val()};
+    Meteor.call('insertBlogRoll', details, standardHandler);
+  }
+}
+
 function deleteComment(e) {
   e.preventDefault();
   if(Session.get('auth')) {
     target = e.target;
     commentId = $(target).attr('data-id');
     Meteor.call('deleteComment', {commentId: commentId, auth: Session.get('auth')});
+  }
+}
+
+
+function deleteUser(e) {
+  e.preventDefault();
+  if(Session.get('auth') && confirm('Are you sure you want to delete this user?')) {
+    target = e.target;
+    userId = $(target).attr('data-user-id');
+    Meteor.call('removeUser', {id: userId, auth: Session.get('auth')}, standardHandler);
+  }
+}
+
+function deleteBlogRoll(e) {
+  e.preventDefault();
+  if(Session.get('auth')) {
+    target = e.target;
+    id = $(target).attr('data-id');
+    Meteor.call('deleteBlogRoll', {id: id, auth: Session.get('auth')}, standardHandler);
   }
 }
 
@@ -248,9 +302,16 @@ function deletePost(e) {
   }
 }
 
+function editPost(e) {
+  e.preventDefault();
+  target = e.target;
+  postId = $(target).attr('data-slug');
+  Stellar.redirect('/user_area/edit?id='+postId);
+}
+
 function deletedPost(error, response) {
   if(!error && response) {
-    Britto.setPage('/', false, true);
+    Stellar.redirect('/');
   }
 }
 
