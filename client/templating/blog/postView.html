@@ -1,0 +1,31 @@
+<template name="postView">
+  <section class="postView">
+    {{#with post}}
+      {{>post}}
+    {{/with}}
+
+    {{#if disqus}}
+      <div id="disqus_thread"></div>
+    {{else}}
+    <h3>Comments</h3>
+    {{>comments}}
+    <form id="comment-form" class="form-horizontal" action="#" >
+      <input type="hidden" id="comment-post" value="{{#with post}}{{_id}}{{/with}}" />
+      <fieldset>
+        <legend>Comment</legend>
+        <div class="control-group">
+          <label for="comment-name" class="control-label">Name</label>
+          <div class="controls"><input type="text" id="comment-name" /></div>
+        </div>
+        <div class="control-group">
+          <label for="comment-comment" class="control-label">Comment</label>
+          <div class="controls"><textarea id="comment-comment" ></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" id="comment-button" >Comment</button>
+        </div>
+      </fieldset>
+    </form>
+    {{/if}}
+  </section>
+</template>

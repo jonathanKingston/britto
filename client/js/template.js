@@ -1,3 +1,11 @@
+Template.sidelinks.sidelinks = function() {
+  var sidelinks = Sidelinks.find();
+  if(sidelinks && sidelinks.count() > 0) {
+    return sidelinks;
+  }
+  return false;
+}
+
 Template.posts.postlist = function() {
   return Posts.find({}, {sort: {created: -1}});
 }

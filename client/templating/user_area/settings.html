@@ -1,0 +1,18 @@
+<template name="settings">
+  <form id="change-setting-form" class="form-horizontal" action="#" >
+    <fieldset>
+      <legend>Change settings</legend>
+      {{#each settings}}
+      <div class="control-group">
+        <label for="change-setting-{{key}}" class="control-label">{{#labelify}}{{key}}{{/labelify}}</label>
+        <div class="controls"><input type="text" data-key="{{key}}" id="change-setting-{{key}}" value="{{value}}" />
+          <span class="help-inline">{{description}}</span>
+        </div>
+      </div>
+      {{/each}}
+      <div class="form-actions">
+        <button class="btn btn-primary" id="change-setting-button" >Submit</button>
+      </div>
+    </fieldset>
+  </form>  
+</template>

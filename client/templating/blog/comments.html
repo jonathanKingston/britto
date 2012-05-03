@@ -1,0 +1,10 @@
+<template name="comments">  <section class="comments">
+    {{#if commentslist post}}
+      {{#each commentslist post}}
+        {{>comment}}
+      {{/each}}
+    {{else}}
+      <p>There are no comments on this post yet.</p>
+    {{/if}}
+  </section>
+</template>

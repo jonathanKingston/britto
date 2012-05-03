@@ -44,3 +44,14 @@
     </div>
   </div>
 </template>
+
+<template name="sidelinks">
+  {{#if sidelinks}}
+  <h2>Blog roll</h2>
+  <ul>
+    {{#each sidelinks}}
+      <li><a href="{{link}}">{{name}}</a></li>
+    {{/each}}
+  </ul>
+  {{/if}}
+</template>

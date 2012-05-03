@@ -1,0 +1,27 @@
+<template name="user_area">
+  {{#if user }}
+  <section class="user_area">
+    <h2>Hi {{#with user}}{{ name }}{{/with}}!</h2>
+    <form id="post-form" class="form-horizontal" action="#">
+      <fieldset>
+        <legend>Make a post</legend>
+        <div class="control-group">
+          <label for="post-title" class="control-label">Title</label>
+          <div class="controls"><input type="text" id="post-title" value="{{#with post}}{{title}}{{/with}}" /></div>
+        </div>
+        <div class="control-group">
+          <label for="post-body" class="control-label">Body</label>
+          <div class="controls"><textarea id="post-body" style="width:100%; height:300px;">{{#with post}}{{body}}{{/with}}</textarea></div>
+        </div>
+        <div class="control-group">
+          <label for="post-slug" class="control-label">Slug</label>
+          <div class="controls"><input type="text" id="post-slug" value="{{#with post}}{{slug}}{{/with}}" /></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" id="post-button" >Post</button>
+        </div>
+      </fieldset>
+    </form>
+  </section>
+  {{/if}}
+</template>
