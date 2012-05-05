@@ -46,8 +46,9 @@ Britto.load = {};
 Britto.load.madewith = function() {
   madewith = Settings.findOne({key: 'madewith_shortname'});
   if(madewith && madewith.value != '') {
-    shortname = madewith.value;  // connect to madewith and subscribe to my app's record
-    hostname = 'britto.meteor.com';
+    var hostname = madewith.value;
+    var match = hostname.match(/(.*)\.meteor.com$/);
+    var shortname = match ? match[1] : hostname; // connect to madewith and subscribe to my app's record
     var server = Meteor.connect("http://madewith.meteor.com/sockjs");
     var sub = server.subscribe("myApp", hostname);
 
