@@ -46,11 +46,8 @@ Britto.load = {};
 Britto.load.madewith = function() {
   madewith = Settings.findOne({key: 'madewith_shortname'});
   if(madewith && madewith.value != '') {
-
-    var hostname = window.location.host;
-    var match = hostname.match(/(.*)\.meteor.com$/);
-
     shortname = madewith.value;  // connect to madewith and subscribe to my app's record
+    hostname = 'britto.meteor.com';
     var server = Meteor.connect("http://madewith.meteor.com/sockjs");
     var sub = server.subscribe("myApp", hostname);
 
@@ -69,7 +66,7 @@ Britto.load.madewith = function() {
     };
 
     Template.madewith.shortname = function () {
-      return shortname;
+      return madewith;
     };
 
     Template.madewith.events = {
@@ -85,7 +82,7 @@ Britto.load.madewith = function() {
       }
     };
 
-    $('body').append(Template.madewith());
+    $('body').append(Meteor.ui.render(function() { return Template.madewith();}));
   }
 }
 
