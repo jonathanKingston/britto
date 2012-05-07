@@ -141,7 +141,7 @@ function madePost(error, response) {
 
 function loginCallback(error, returnVal) {
   if(!error) {
-    Session.set('auth', returnVal.auth);
+    Stellar.session.updateKey(returnVal.auth);
     Session.set('user', returnVal);
     Stellar.redirect('user_area');
   } else {
@@ -172,7 +172,20 @@ function renderNewSlide(content) {
 }
 */
 
+//This is the callback for sessionUser, this adds in the helper method which all the menus check for on the client side
+function sessionLogin(error, returnVal) {
+  if(!error) {
+    Session.set('user', returnVal)
+  }
+}
+
 Meteor.startup(function() {
+  //This is a helper function for the page to keep state between refresh
+  if(!Session.get('user') && Stellar.session.getKey()) {
+    Meteor.call('sessionUser', Stellar.session.getKey(), sessionLogin);
+  }
+
+
   //Internal Meteor events don't seem to always fire TODO check for bugs
   //TODO need a better way to do this crap
   $('body').on('click', '#comment-button', makeComment);
@@ -212,10 +225,10 @@ Meteor.startup(function() {
 
 function changeSetting(e) {
   e.preventDefault();
-  if(Session.get('auth')) {
+  if(Session.get('user')) {
     settings = [];
     $('#change-setting-form input').each(function(input) { settings.push([$(this).attr('data-key'), $(this).val()]);});
-    Meteor.call('changeSetting', {settings: settings, auth: Session.get('auth')}, standardHandler);
+    Meteor.call('changeSetting', {settings: settings, auth: Stellar.session.getKey()}, standardHandler);
   }
 }
 
@@ -235,13 +248,13 @@ function standardHandler(error, response) {
 
 function changePassword(e) {
   e.preventDefault();
-  if(Session.get('auth')) {
+  if(Session.get('user')) {
     if($('#change-new-password').val() === '') {
       Britto.alert('warning', 'Your passwords were blank, what sort of parents would we be letting you do that?');
       return;
     }
     if($('#change-new-password').val() == $('#change-repeat-password').val()) {
-      Meteor.call('changePassword', {current_password: $('#change-current-password').val(), password: $('#change-new-password').val(), auth: Session.get('auth')}, standardHandler);
+      Meteor.call('changePassword', {current_password: $('#change-current-password').val(), password: $('#change-new-password').val(), auth: Stellar.session.getKey()}, standardHandler);
     } else {
       Britto.alert('warning', 'Your passwords were not the same');
     }
@@ -250,62 +263,62 @@ function changePassword(e) {
 
 function changeUser(e) {
   e.preventDefault();
-  if(Session.get('auth')) {
-    details = {auth: Session.get('auth'), name: $('#change-user-name').val()};
+  if(Session.get('user')) {
+    details = {auth: Stellar.session.getKey(), name: $('#change-user-name').val()};
     Meteor.call('changeUser', details, standardHandler);
   }
 }
 
 function addUser(e) {
   e.preventDefault();
-  if(Session.get('auth')) {
-    details = {auth: Session.get('auth'), name: $('#add-user-name').val(), username: $('#add-user-username').val(), password: $('#add-user-password').val()};
+  if(Session.get('user')) {
+    details = {auth: Stellar.session.getKey(), name: $('#add-user-name').val(), username: $('#add-user-username').val(), password: $('#add-user-password').val()};
     Meteor.call('addUser', details, standardHandler);
   }
 }
 
 function addBlogRoll(e) {
   e.preventDefault();
-  if(Session.get('auth')) {
-    details = {auth: Session.get('auth'), name: $('#add-blog-roll-name').val(), link: $('#add-blog-roll-link').val()};
+  if(Session.get('user')) {
+    details = {auth: Stellar.session.getKey(), name: $('#add-blog-roll-name').val(), link: $('#add-blog-roll-link').val()};
     Meteor.call('insertBlogRoll', details, standardHandler);
   }
 }
 
 function deleteComment(e) {
   e.preventDefault();
-  if(Session.get('auth')) {
+  if(Session.get('user')) {
     target = e.target;
     commentId = $(target).attr('data-id');
-    Meteor.call('deleteComment', {commentId: commentId, auth: Session.get('auth')});
+    Meteor.call('deleteComment', {commentId: commentId, auth: Stellar.session.getKey()});
   }
 }
 
 
 function deleteUser(e) {
   e.preventDefault();
-  if(Session.get('auth') && confirm('Are you sure you want to delete this user?')) {
+  if(Session.get('user') && confirm('Are you sure you want to delete this user?')) {
     target = e.target;
     userId = $(target).attr('data-user-id');
-    Meteor.call('removeUser', {id: userId, auth: Session.get('auth')}, standardHandler);
+    Meteor.call('removeUser', {id: userId, auth: Stellar.session.getKey()}, standardHandler);
   }
 }
 
 function deleteBlogRoll(e) {
   e.preventDefault();
-  if(Session.get('auth')) {
+  if(Session.get('user')) {
     target = e.target;
     id = $(target).attr('data-id');
-    Meteor.call('deleteBlogRoll', {id: id, auth: Session.get('auth')}, standardHandler);
+    Meteor.call('deleteBlogRoll', {id: id, auth: Stellar.session.getKey()}, standardHandler);
   }
 }
 
 function deletePost(e) {
   e.preventDefault();
-  if(Session.get('auth') && confirm('Are you sure you want to delete this post?')) {
+  if(Session.get('user') && confirm('Are you sure you want to delete this post?')) {
     target = e.target;
     postId = $(target).attr('data-id');
-    Meteor.call('deletePost', {commentId: postId, auth: Session.get('auth')}, deletedPost);
+    Meteor.call('deletePost', {commentId: postId, auth: Stellar.session.getKey()}, deletedPost);
   }
 }
 
@@ -331,8 +344,8 @@ function changeTitle() {
 
 function makePost(e) {
   e.preventDefault();
-  if(Session.get('auth')) {
-    Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Session.get('auth')}, madePost);
+  if(Session.get('user')) {
+    Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Stellar.session.getKey()}, madePost);
   }
   return false;
 }
