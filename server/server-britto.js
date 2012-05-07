@@ -1,4 +1,3 @@
-//TODO strip out reliance of API key as it will be confusing for first timers looking at this code for samples
 //TODO add auth filters here to neaten and also put these methods in a class
 Meteor.methods({
   comment: makeComment,
@@ -23,13 +22,13 @@ function logoutSession(key) {
 
 function checkAuth(auth) {
   sessionData = Stellar.session.get(auth); //Get session data
-  return Users.findOne({apikey: sessionData.data.apikey});
+  return Users.findOne({_id: sessionData.data._id}); //Make sure there is a user with this id
 }
 
 function changePassword(args) {
   if(user = checkAuth(args.auth)) {
     if(hashPassword(args.current_password, user.salt) == user.password) {
-      Users.update({apikey: args.auth}, {$set: {password: hashPassword(args.password, user.salt)}});
+      Users.update({_id: user.id}, {$set: {password: hashPassword(args.password, user.salt)}});
       return true;
     }
   }
@@ -38,7 +37,7 @@ function changePassword(args) {
 
 function changeUser(args) {
   if(user = checkAuth(args.auth)) {
-    Users.update({apikey: args.auth}, {$set: {name: args.name}});
+    Users.update({_id: user.id}, {$set: {name: args.name}});
     return true;
   }
   return false;
@@ -109,6 +108,7 @@ function loginUser(username, password) {
   return false;
 }
 
+//Returns to the client what is stored in the session, don't do this if you are storing things in the session the client should not know
 function sessionUser(key) {
   sessionKey = Stellar.session.get(key);
   if(sessionKey) {
@@ -182,8 +182,6 @@ function createUser(vals) {
   vals.salt = Crypto.SHA256(Math.random().toString());
   vals.password = hashPassword(vals.password, vals.salt);
   vals.created = new Date();
-  //This apikey is because we don't have server side sessions yet
-  vals.apikey = Crypto.SHA256(Math.random().toString());
   id = Users.insert(vals);
   return id;
 }

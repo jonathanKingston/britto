@@ -7,7 +7,7 @@ Meteor.publish("allcomments", function() {
 });
 
 Meteor.publish("allusers", function() {
-  return Users.find({}, {fields: {username: 0, password: 0, salt: 0, apikey: 0}});
+  return Users.find({}, {fields: {username: 0, password: 0, salt: 0}});
 });
 
 Meteor.publish("allposts", function() {
