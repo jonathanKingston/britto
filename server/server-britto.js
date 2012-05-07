@@ -46,7 +46,6 @@ function getServerSession(key) {
       throw new Meteor.Error(401, 'Session timeout');
       return false;
     }
-    //TODO check expired here, if it has... delete it and return false
     return serverSession
   } else {
     throw new Meteor.Error(401, 'Invalid session');
