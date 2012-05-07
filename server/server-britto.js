@@ -8,14 +8,67 @@ Meteor.methods({
   changeSetting: changeSetting,
   post: makePost,
   login: loginUser,
+  logout: logoutSession,
   deleteComment: deleteComment,
   deletePost: deletePost,
   deleteBlogRoll: deleteBlogRoll,
   insertBlogRoll: insertBlogRoll
 });
 
+function logoutSession(key) {
+  ServerSessions.remove({key: key});
+  return true;
+}
+
+//This isn't a public method
+//This method should be called when the user has no session, it isn't perfect as there is no built in cookies or on start up passing of cookied to the server.
+//Howeverl  it should be just as secure just not as quick/simple as I would like
+function generateServerSession(data) {
+  var key = generateRandomKey();
+  var expires = new Date();
+  expires.setDate(expires.getDate()+5);
+  serverSession = ServerSessions.insert({data: data, created: new Date(), key: key, expires: expires}); //Set expire time to now to check this works
+  return key;
+}
+
+//This is not a public method at all, never make it public
+//function updateServerSession(key, data) {
+//  newquay = generateRandomKey(); //Generate a random key to stop session fixation, client will need to update their copy.
+//  serverSession = ServerSessions.update({key: key}, {$set: {key: newquay, data: data}});
+//}
+
+//This is not a public method at all, never make it public
+function getServerSession(key) {
+  if(serverSession = ServerSessions.findOne({key: key})) {
+    now = new Date();
+    if(serverSession.expires < now) {
+      sessionGarbageCollection();
+      throw new Meteor.Error(401, 'Session timeout');
+      return false;
+    }
+    //TODO check expired here, if it has... delete it and return false
+    return serverSession
+  } else {
+    throw new Meteor.Error(401, 'Invalid session');
+    return false;
+  }
+}
+
+//Clears all expired sessions
+function sessionGarbageCollection() {
+  now = new Date();
+  ServerSessions.remove({expires: {$lt: now}})
+}
+
+//This might need to be more random and will need to check for collisions
+function generateRandomKey() {
+  return Crypto.SHA256(Math.random().toString());
+}
+
+
 function checkAuth(auth) {
-  return Users.findOne({apikey: auth});
+  data = getServerSession(auth);
+  return Users.findOne({apikey: data.data.apikey});
 }
 
 function changePassword(args) {
@@ -92,11 +145,13 @@ function loginUser(username, password) {
   user = Users.findOne({username: username});
   if(user) {
     if(user.password == hashPassword(password, user.salt)) {
-      thisUser = {name: user.name, username: user.username, auth: user.apikey};
+      sessionKey = generateServerSession(user);
+      thisUser = {name: user.name, username: user.username, auth: sessionKey}; //user.apikey
       return thisUser;
     }
   }
   throw new Meteor.Error(401, 'Login not correct');
+  return false;
 }
 
 function makePost(args) {

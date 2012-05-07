@@ -134,6 +134,8 @@ Britto.load.disqusCount = function() {
 function madePost(error, response) {
   if(!error) {
     Stellar.redirect('/');
+  } else {
+    return standardHandler(error, response);
   }
 }
 
@@ -142,8 +144,9 @@ function loginCallback(error, returnVal) {
     Session.set('auth', returnVal.auth);
     Session.set('user', returnVal);
     Stellar.redirect('user_area');
+  } else {
+    return standardHandler(error, response);
   }
-  return false;
 }
 
 /* TODO - Goodbye for now, add back later
@@ -220,7 +223,13 @@ function standardHandler(error, response) {
   if(!error && response) {
     Stellar.redirect('');
   } else {
+    if(error.error == 401) {
+      Stellar.redirect('home/login');
+      Britto.alert('error', error.reason);
+      return false;
+    }
     Britto.alert('error', 'There was an error updating that');
+    return false;
   }    
 }
 
@@ -310,6 +319,8 @@ function editPost(e) {
 function deletedPost(error, response) {
   if(!error && response) {
     Stellar.redirect('/');
+  } else {
+    return standardHandler(error, response);
   }
 }
 
@@ -346,5 +357,7 @@ function makeComment(e) {
 function madeComment(error, response) {
   if(!error) {
     $('#comment-comment').val('');
+  } else {
+    return standardHandler(error, response);
   }
 }
