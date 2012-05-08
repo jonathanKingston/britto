@@ -26,7 +26,7 @@ Handlebars.registerHelper('short_content_escape', function(slug, content, option
 
 Handlebars.registerHelper('disqus_link', function(slug, options) {
   //TODO url escape?
-  return '<a href="/blog/'+slug+'#disqus_thread" data-disqus-identifier="/blog/'+slug+'" ></a>';
+  return '<a href="/blog/'+slug+'#disqus_thread" data-disqus-identifier="http://'+window.location.host+'/blog/'+slug+'" ></a>';
 });
 
 Handlebars.registerHelper('labelify', function(options) {
