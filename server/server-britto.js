@@ -99,8 +99,9 @@ function loginUser(username, password) {
   user = Users.findOne({username: username});
   if(user) {
     if(user.password == hashPassword(password, user.salt)) {
-      thisUser = {name: user.name, username: user.username, auth: sessionKey}; //Filter what is sent to the client, this can be then stored in a cookie safely
+      thisUser = {name: user.name, username: user.username}; //Filter what is sent to the client, this can be then stored in a cookie safely
       sessionKey = Stellar.session.set(thisUser); //Set the session data
+      thisUser['auth'] = sessionKey;
       return thisUser;
     }
   }

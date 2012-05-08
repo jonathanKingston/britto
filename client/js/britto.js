@@ -145,7 +145,7 @@ function loginCallback(error, returnVal) {
     Session.set('user', returnVal);
     Stellar.redirect('user_area');
   } else {
-    return standardHandler(error, response);
+    return standardHandler(error, returnVal);
   }
 }
 
