@@ -236,7 +236,7 @@ function standardHandler(error, response) {
   if(!error && response) {
     Stellar.redirect('');
   } else {
-    if(error.error == 401) {
+    if(error && error.error && error.error == 401) {
       Stellar.redirect('home/login');
       Britto.alert('error', error.reason);
       return false;

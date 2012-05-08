@@ -22,7 +22,11 @@ function logoutSession(key) {
 
 function checkAuth(auth) {
   sessionData = Stellar.session.get(auth); //Get session data
-  return Users.findOne({_id: sessionData.data._id}); //Make sure there is a user with this id
+  if(sessionData) {
+    return Users.findOne({username: sessionData.data.username}); //Make sure there is a user with this id
+  } else {
+    return false;
+  }
 }
 
 function changePassword(args) {
