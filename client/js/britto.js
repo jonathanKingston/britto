@@ -108,7 +108,7 @@ Britto.load.disqus = function(slug) {
   disqus = Settings.findOne({key: 'disqus'});
   if(disqus && disqus.value != '') {
     var disqus_shortname = disqus.value;
-    var disqus_identifier = 'http://'+window.location.host+'/blog/'+slug;
+    var disqus_identifier = '/blog/'+slug;
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
