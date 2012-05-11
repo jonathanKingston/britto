@@ -21,7 +21,6 @@ Britto.settingsLoaded = function() {
 Meteor.subscribe("allsettings", Britto.settingsLoaded);
 
 Meteor.subscribe("allblogroll");
-Meteor.subscribe("allposts");
 //TODO change this to a per post subscription - removing it was killing the templates :/
 Meteor.subscribe("allcomments");
 Meteor.subscribe("allusers");
@@ -185,6 +184,7 @@ Meteor.startup(function() {
     Meteor.call('sessionUser', Stellar.session.getKey(), sessionLogin);
   }
 
+  Meteor.call('blog_page_count', function(error, result) {if(!error) {Session.set('blog_page_count');}});
 
   //Internal Meteor events don't seem to always fire TODO check for bugs
   //TODO need a better way to do this crap

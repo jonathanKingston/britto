@@ -1,5 +1,6 @@
 //TODO add auth filters here to neaten and also put these methods in a class
 Meteor.methods({
+  pageCount: pageCount,
   comment: makeComment,
   changePassword: changePassword,
   changeUser: changeUser,
@@ -15,6 +16,13 @@ Meteor.methods({
   deleteBlogRoll: deleteBlogRoll,
   insertBlogRoll: insertBlogRoll
 });
+
+//TODO when minimogo adds in limit and so on, clear this function out its just a helper
+function pageCount() {
+  var posts = Posts.find();
+  return Math.ceil(posts.count()/10);
+}
+
 
 function logoutSession(key) {
   return Stellar.session.delete(key); //Delete the session key
