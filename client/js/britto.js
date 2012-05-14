@@ -178,6 +178,47 @@ function sessionLogin(error, returnVal) {
   }
 }
 
+Template.postView.events = {
+  'click #comment-button, submit #comment-button': function() { makeComment(); }
+};
+
+Template.login.events = {
+  'click #login-button, submit #login-button': doLogin
+};
+
+Template.user_area.events = {
+  'click #post-button, submit #post-button': makePost,
+  'change #post-title': changeTitle
+};
+
+Template.settings.events = {
+  'click #change-setting-button, submit #change-setting-button': changeSetting,
+  'click #add-blog-roll-button, submit #add-blog-roll-button': addBlogRoll,
+  'click .delete-blog-roll': deleteBlogRoll
+};
+
+Template.options.events = {
+  'click #change-password-button, submit #change-password-button': changePassword,
+  'click #change-user-button, submit #change-user-button': changeUser
+};
+
+Template.users.events = {
+  'click #add-user-button, submit #add-user-button': addUser
+};
+
+Template.comment.events = {
+  '.delete-comment': deleteComment
+};
+
+Template.post.events = {
+  '.delete-post': deletePost,
+  '.edit-post': editPost
+};
+
+Template.users.events = {
+  '.delete-user': deleteUser
+};
+
 Meteor.startup(function() {
   //This is a helper function for the page to keep state between refresh
   if(!Session.get('user') && Stellar.session.getKey()) {
@@ -185,42 +226,6 @@ Meteor.startup(function() {
   }
 
   Meteor.call('blog_page_count', function(error, result) {if(!error) {Session.set('blog_page_count');}});
-
-  //Internal Meteor events don't seem to always fire TODO check for bugs
-  //TODO need a better way to do this crap
-  $('body').on('click', '#comment-button', makeComment);
-  $('body').on('submit', '#comment-button', makeComment);
-
-  $('body').on('submit', '#login-button', doLogin);
-  $('body').on('click', '#login-button', doLogin);
-
-  $('body').on('submit', '#post-button', makePost);
-  $('body').on('click', '#post-button', makePost);
-
-  $('body').on('submit', '#change-setting-button', changeSetting);
-  $('body').on('click', '#change-setting-button', changeSetting);
-
-  $('body').on('submit', '#change-password-button', changePassword);
-  $('body').on('click', '#change-password-button', changePassword);
-
-  $('body').on('submit', '#change-user-button', changeUser);
-  $('body').on('click', '#change-user-button', changeUser);
-
-  $('body').on('submit', '#add-user-button', addUser);
-  $('body').on('click', '#add-user-button', addUser);
-
-  $('body').on('change', '#post-title', changeTitle);
-
-  $('body').on('submit', '#add-blog-roll-button', addBlogRoll);
-  $('body').on('click', '#add-blog-roll-button', addBlogRoll);
-
-  $('body').on('click', '.delete-comment', deleteComment);
-  $('body').on('click', '.delete-post', deletePost);
-  $('body').on('click', '.delete-user', deleteUser);
-  $('body').on('click', '.delete-blog-roll', deleteBlogRoll);
-
-  $('body').on('click', '.edit-post', editPost);
-
 });
 
 function changeSetting(e) {
