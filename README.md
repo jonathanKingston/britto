@@ -2,6 +2,7 @@ Britto
 ======
 
 Britto a simple blog made with Meteor.
+Current version: 0.2
 
 How to use
 ----------

@@ -10,7 +10,9 @@
     <h3>Comments</h3>
     {{>comments}}
     <form id="comment-form" class="form-horizontal" action="#" >
-      <input type="hidden" id="comment-post" value="{{#with post}}{{_id}}{{/with}}" />
+      {{#with post}}
+      <input type="hidden" id="comment-post" value="{{_id}}" />
+      {{/with}}
       <fieldset>
         <legend>Comment</legend>
         <div class="control-group">

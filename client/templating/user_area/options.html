@@ -4,7 +4,9 @@
       <legend>About you</legend>
       <div class="control-group">
         <label for="change-user-name" class="control-label">Name</label>
-        <div class="controls"><input type="text" id="change-user-name" value="{{#with user}}{{name}}{{/with}}" /></div>
+        {{#with user}}
+        <div class="controls"><input type="text" id="change-user-name" value="{{name}}" /></div>
+        {{/with}}
       </div>
       <div class="form-actions">
         <button class="btn btn-primary" id="change-user-button" >Submit</button>
