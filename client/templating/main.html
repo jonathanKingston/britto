@@ -13,30 +13,9 @@
 
         <div class="nav-collapse">
           <ul class="nav">
-            <li class="active">
-              <a href="/" >Home</a>
-            </li>
-            {{#if user}}
-              <li class="">
-                <a href="/user_area">User area</a>
-              </li>
-              <li class="">
-                <a href="/user_area/users">Users</a>
-              </li>
-              <li class="">
-                <a href="/user_area/options">Options</a>
-              </li>
-              <li>
-                <a href="/user_area/settings">Settings</a>
-              </li>
-              <li>
-                <a href="/home/logout">Logout</a>
-              </li>  
-            {{else}}
-              <li class="">
-                <a href="/home/login">Login</a>
-              </li>
-            {{/if}}
+            {{#each links}}
+              {{#nav_link url}}{{text}}{{/nav_link}}
+            {{/each}}
           </ul>
         </div>
    

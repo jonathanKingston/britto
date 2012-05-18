@@ -6,6 +6,22 @@ Handlebars.registerHelper('date', function(date) {
   return 'N/A';
 });
 
+//TODO think of neatening this up
+$(window).bind('stellar_page_load', function() {
+   var refresh = Session.get('nav_link') || 0;
+   Session.set('nav_link', !refresh);
+});
+
+Handlebars.registerHelper('nav_link', function (url, options) {
+  var linkText = options.fn(this);
+  classAttr = '';
+  Session.get('nav_link');
+  if(window.location.pathname == url) {
+    classAttr = 'class="active"';
+  }
+  return '<li '+classAttr+'><a href="'+url+'">'+linkText+'</a></li>';
+});
+
 //Markdown handles escapes so shouldn't be an issue
 Handlebars.registerHelper('better_markdown_escape', function(string, fn) {
   return better_markdown(string);

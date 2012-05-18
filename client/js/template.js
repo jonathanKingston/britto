@@ -6,6 +6,21 @@ Template.sidelinks.blogRoll = function() {
   return false;
 }
 
+Template.nav.links = function() {
+  var links = [{url: '/blog/', text: 'Home'}];
+  if(Session.get('user')) {
+    links.push({url: '/user_area', text: 'User area'});
+    links.push({url: '/user_area/users', text: 'Users'});
+    links.push({url: '/user_area/options', text: 'Options'});
+    links.push({url: '/user_area/settings', text: 'Settings'});
+    links.push({url: '/home/logout', text: 'Logout'});
+  } else {
+    links.push({url: '/home/login', text: 'Login'});
+  }
+
+  return links;
+}
+
 Template.posts.postlist = function() {
   return Posts.find({}, {sort: {created: -1}});
 }
