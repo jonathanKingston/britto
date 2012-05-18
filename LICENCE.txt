@@ -62,3 +62,7 @@ http://www.shamasis.net/projects/ga/
 Refer jquery.ga.debug.js
 Revision: 13
 This plugin complies and conforms to the licensing scheme of jQuery. You are free to redistribute the code and use it in any of your applications.
+
+----
+
+Background by http://www.flickr.com/photos/wwarby/

@@ -1,10 +1,14 @@
-#mainContainer {padding-top:50px; padding-bottom:50px; }
-
+body {background:url(/img/graffiti-s.jpg) 0 0 no-repeat; background-size:100%; background-attachment:fixed;}
+#mainContainer {padding:50px 50px; background-color:rgba(255,255,255,0.90); }
 .post dd, .post dt {display:inline;}
 #mainContent {position:relative;}
 .madewith_badge {background-image:url(/madewithmeteor.png);}
 .madewith_vote_count {top:4px; width:48px; text-align:left;}
 .madewith_upvote:hover {background-image:url(/madewithmeteorarrow.png);}
+
+
+.form-actions {background-color:transparent; border:none;}
+legend {border-bottom:1px solid #333;}
 
 
 #slides {display:block; position:relative; }
