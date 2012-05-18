@@ -2,14 +2,14 @@ Britto
 ======
 
 Britto a simple blog made with Meteor.
-Current version: 0.2
+Current version: 0.2.1
 
 How to use
 ----------
 
 To use Britto, you need to install Meteor:
 
-    curl install.meteor.com | /bin/sh
+    curl install.meteor.com | sh
 
 Then you can clone the code onto your system:
 
