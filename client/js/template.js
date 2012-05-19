@@ -21,10 +21,6 @@ Template.nav.links = function() {
   return links;
 }
 
-Template.posts.postlist = function() {
-  return Posts.find({}, {sort: {created: -1}});
-}
-
 _.each(['postShort', 'post'], function(template) {
   Template[template].commentCount = function(id) {
     return Comments.find({postId: id}).count();

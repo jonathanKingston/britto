@@ -1,6 +1,15 @@
 <template name="listView">
   <section class="listView">
-    {{>posts}}
+    <section class="posts">
+      {{#if count}}
+        {{#each postlist}}
+          {{>postShort}}
+        {{/each}}
+      {{else}}
+        <p>We couldnt find anything with those keywords</p>
+      {{/if}}
+    </section>
+    {{#post_links}}{{/post_links}}
     {{attach_event}}
   </section>
 </template>

@@ -13,4 +13,8 @@ legend {border-bottom:1px solid #333;}
 
 #slides {display:block; position:relative; }
 .slide {position:absolute; width:900px; background:#fff;}
+
+
+#search-input {width:10em;}
+.search-form input {margin:0;}
 footer {margin-top:2em;}

@@ -178,6 +178,17 @@ function sessionLogin(error, returnVal) {
   }
 }
 
+Template.search.events = {
+  'click #search-button, submit #search-button': function(e) {
+        e.preventDefault();
+        var search_string = $('#search-input').attr('value');
+  
+        if (search_string != '' ) {
+          Stellar.redirect('search/results?find='+search_string );
+        }
+  }
+};
+
 Template.postView.events = {
   'click #comment-button, submit #comment-button': function() { makeComment(); }
 };
