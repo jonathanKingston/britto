@@ -40,7 +40,7 @@ function checkAuth(auth) {
 function changePassword(args) {
   if(user = checkAuth(args.auth)) {
     if(hashPassword(args.current_password, user.salt) == user.password) {
-      Users.update({_id: user.id}, {$set: {password: hashPassword(args.password, user.salt)}});
+      val = Users.update({_id: user._id}, {$set: {password: hashPassword(args.password, user.salt)}});
       return true;
     }
   }
@@ -49,7 +49,7 @@ function changePassword(args) {
 
 function changeUser(args) {
   if(user = checkAuth(args.auth)) {
-    Users.update({_id: user.id}, {$set: {name: args.name}});
+    Users.update({_id: user._id}, {$set: {name: args.name}});
     return true;
   }
   return false;

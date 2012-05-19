@@ -21,7 +21,6 @@ Meteor.publish("postpage", function(page) {
   return Posts.find({}, {sort: {created: -1}, skip: start, limit: perpage, fields: {}});
 });
 
-
 Meteor.publish("post", function(slug) {
   return Posts.find({slug: slug}, {fields: {}});
 });
