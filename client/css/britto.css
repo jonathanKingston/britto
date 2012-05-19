@@ -2,7 +2,7 @@ body {background:url(/img/graffiti-s.jpg) 0 0 no-repeat; background-size:100%; b
 #mainContainer {padding:50px 50px; background-color:rgba(255,255,255,0.90); margin-bottom:50px;}
 .post dd, .post dt {display:inline;}
 #mainContent {position:relative;}
-.madewith_badge {background-image:url(/madewithmeteor.png);}
+.madewith_badge {background-image:url(/madewithmeteor.png); position:fixed !important;}
 .madewith_vote_count {top:4px; width:48px; text-align:left;}
 .madewith_upvote:hover {background-image:url(/madewithmeteorarrow.png);}
 

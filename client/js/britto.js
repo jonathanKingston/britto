@@ -66,7 +66,7 @@ Britto.load.madewith = function() {
     };
 
     Template.madewith.shortname = function () {
-      return madewith;
+      return madewith.value;
     };
 
     Template.madewith.events = {
