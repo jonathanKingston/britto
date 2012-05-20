@@ -42,6 +42,22 @@ table {
 	border-spacing: 0;
 }
 
+code {
+  padding: 2px 4px;
+  color: #D14;
+  background-color: #F7F7F9;
+  border: 1px solid #E1E1E8;
+}
+code, pre {
+  padding: 0 3px 2px;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 12px;
+  color: #333;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
 label {
   display: block;
   margin-bottom: 5px;
