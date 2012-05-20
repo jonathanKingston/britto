@@ -65,6 +65,12 @@ select,
   border-radius: 3px;
 }
 
+ul li {
+  list-style-type:disc;
+  margin-left:2em;
+  margin-bottom:1em;
+}
+
 .btn {
   display: inline-block;
   *display: inline;
@@ -324,7 +330,9 @@ clear: both;
 }
 
 .navbar ul li {
+  list-style:none;
   float:left;
+  margin:0;
 }
 
 .navbar ul a {
@@ -382,3 +390,69 @@ a.madewith_badge {background-image:url(/madewithmeteor.png); position:fixed; top
 #search-input {width:10em;}
 .search-form input {margin:0;}
 footer {margin-top:2em;}
+
+
+
+.close {
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 18px;
+  color: black;
+  text-shadow: 0 1px 0 white;
+  opacity: 0.2;
+  filter: alpha(opacity=20);
+}
+
+button.close {
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  -webkit-appearance: none;
+}
+
+.close:hover {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+}
+
+.alert .close {
+  position: relative;
+  top: -4px;
+  right: -21px;
+  line-height: 18px;
+}
+
+.alert {
+  padding: 8px 35px 8px 14px;
+  margin-bottom: 18px;
+  color: #C09853;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  background-color: #FCF8E3;
+  border: 1px solid #FBEED5;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.alert-danger, .alert-error {
+  color: #B94A48;
+  background-color: #F2DEDE;
+  border-color: #EED3D7;
+}
+
+.alert-success {
+  color: #468847;
+  background-color: #DFF0D8;
+  border-color: #D6E9C6;
+}
+
+.alert-info {
+  color: #3A87AD;
+  background-color: #D9EDF7;
+  border-color: #BCE8F1;
+}
