@@ -2,7 +2,7 @@ Britto
 ======
 
 Britto a simple blog made with Meteor.
-Current version: 0.2.2
+Current version: 0.2.3
 
 How to use
 ----------
@@ -24,8 +24,6 @@ Add packages Britto needs:
     
     //In the app direcory now:
     meteor add stellar
-    meteor add bootstrap
-
 
 Move to that directory and deploy to your own location:
 
@@ -33,6 +31,16 @@ Move to that directory and deploy to your own location:
     meteor deploy [yourlocation].meteor.com
 
 You can then visit your applications address and login with username: admin and password: password.
+
+Styling
+-------
+
+To style Meteor you can edit: /client/css/britto.css
+To use bootstrap:
+  rm /client/css/britto.css
+  mv /client/css/britto.bootstrap /client/css/britto.css
+  meteor add bootstrap
+
 
 Legacy
 ------
