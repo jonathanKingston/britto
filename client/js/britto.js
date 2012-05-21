@@ -209,12 +209,9 @@ Template.settings.events = {
 };
 
 Template.options.events = {
+  'click': function() {alert('slut');},
   'click #change-password-button, submit #change-password-button': changePassword,
   'click #change-user-button, submit #change-user-button': changeUser
-};
-
-Template.users.events = {
-  'click #add-user-button, submit #add-user-button': addUser
 };
 
 Template.comment.events = {
@@ -227,6 +224,7 @@ Template.post.events = {
 };
 
 Template.users.events = {
+  'click #new-user-button, submit #new-user-button': addUser,
   'click .delete-user, submit .delete-user': deleteUser
 };
 
