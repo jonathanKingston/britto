@@ -14,7 +14,9 @@ Meteor.methods({
   deleteComment: deleteComment,
   deletePost: deletePost,
   deleteBlogRoll: deleteBlogRoll,
-  insertBlogRoll: insertBlogRoll
+  insertBlogRoll: insertBlogRoll,
+  publishPost: publishPost,
+  unpublishPost: unpublishPost
 });
 
 //TODO when minimogo adds in limit and so on, clear this function out its just a helper
@@ -133,9 +135,9 @@ function sessionUser(key) {
 function makePost(args) {
   if(user = checkAuth(args.auth)) {
     post = Posts.findOne({slug: args.slug});
-    //console.log("created =="+args.created+" in server britto");
+   
     created = new Date(args.created);
-    //console.log ( "created = "+created);
+   
     //TODO If the user changes the slug, this will create a new post, Should fix at some point
     if(post) {
       Posts.update({slug: args.slug}, {$set: {
@@ -207,3 +209,21 @@ function createUser(vals) {
   id = Users.insert(vals);
   return id;
 }
+
+
+function publishPost ( args ) {
+  if(user = checkAuth(args.auth)) {
+    Posts.update({slug: args.slug}, {$set: { published: args.published } } );
+    return true;
+  }
+  return false;
+}
+
+function unpublishPost ( args ) {
+  if(user = checkAuth(args.auth)) {
+    Posts.update({slug: args.slug}, {$set: { published: args.published } } );
+    return true;
+  }
+  return false;
+}
+

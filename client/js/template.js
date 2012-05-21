@@ -10,6 +10,7 @@ Template.nav.links = function() {
   var links = [{url: '/blog/', text: 'Home'}];
   if(Session.get('user')) {
     links.push({url: '/user_area', text: 'User area'});
+    links.push({url: '/user_area/post_list', text: 'Post list'});
     links.push({url: '/user_area/users', text: 'Users'});
     links.push({url: '/user_area/options', text: 'Options'});
     links.push({url: '/user_area/settings', text: 'Settings'});
@@ -81,17 +82,28 @@ _.each(['postShort', 'post', 'postView'], function(template) {
   }
 });
 
-_.each(['options', 'user_area', 'comment', 'nav', 'post'], function(template) {
+_.each(['options', 'user_area', 'post_list', 'comment', 'nav', 'post'], function(template) {
   Template[template].user = function() {
     return Session.get('user');
   }
 });
 
 
+Template.post_list.postUser = function(id) {
+    user = Users.findOne({_id: id});
+    if(user) {
+      return user.name;
+    } else {
+      return '';
+    }
+  }
+
 //called in user_area.html to get all users for the author select fields
 Template.user_area.userlist = function () {
-  return Users.find({}, { fields: { name: 1 } });
+  return Users.find({}, { fields: { name: 1, _id: 1 } });
 }
+
+
 
 Template.user_area.dates = function () {
   dates = {};

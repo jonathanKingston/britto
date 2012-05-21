@@ -1,0 +1,34 @@
+<template name="post_list">
+  {{#if user }}
+  <section class="post_list">
+    <h2>Hi {{#with user}}{{ name }}{{/with}}!</h2>
+    
+    {{#with posts}}
+    <table id="post-table">
+      <tbody>
+      <tr>
+        <th>Title:</th>
+        <th>Author:</th>
+        <th>Edit:</th>
+        <th>Publish:</th>
+        <th>Delete:</th>
+      </tr>
+      {{#each posts}}
+        <tr>
+          <td class="post-title"><a href="/blog/{{slug}}">{{title}}</a></td>
+          <td class="post-author">{{postUser author}}</td>
+          <td id="post-edit-{{_id}}"><input data-slug="{{slug}}" class="post-edit-button" type="button" value="Edit" /></td>
+          {{#if published }}
+          <td id="post-unpublish-{{_id}}"><input class="post-unpublish-button" data-slug="{{slug}}" type="button" value="Unpublish" /></td>
+          {{else}}
+          <td id="post-publish-{{_id}}"><input class="post-publish-button" data-slug="{{slug}}" type="button" value="Publish" /></td>
+          {{/if}}
+          <td id="post_delete_{{_id}}"><input  data-id="{{_id}}" class="post-delete-button" type="button" value="Delete" /></td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+    {{/with}}
+  </section>
+  {{/if}}
+</template>

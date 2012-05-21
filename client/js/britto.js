@@ -230,6 +230,13 @@ Template.users.events = {
   'click .delete-user, submit .delete-user': deleteUser
 };
 
+Template.post_list.events = {
+  'click .post-edit-button': editPost,
+  'click .post-delete-button': deletePost,
+  'click .post-publish-button': publishPost,
+  'click .post-unpublish-button': unpublishPost
+};
+
 Meteor.startup(function() {
   //This is a helper function for the page to keep state between refresh
   if(!Session.get('user') && Stellar.session.getKey()) {
@@ -365,12 +372,6 @@ function makePost(e) {
   created = new Date( $('#post-year').val(), $('#post-month').val(), $('#post-day').val(), $('#post-hour').val(), $('#post-minute').val() );
   date = new Date();
   
-  console.log( '<<<<<---- created '+created+ " date ="+date);
-  //console.log ("new Post = ");
-  //console.log ({title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Stellar.session.getKey(), author: author, published: published, created: created } );
-  
-  //console.log("year = "+$('#post-year').val() +" month="+ $('#post-month').val() + " day = "+$('#post-day').val()+ "hour ="+ $('#post-hour').val()+" minute = "+$('#post-minute').val() );
-  
   if(Session.get('user')) {
     Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Stellar.session.getKey(), author: author, published: published, created: created }, madePost);
   }
@@ -429,4 +430,38 @@ function checkDate ( ) {
     return false;
   }
   return true;
+}
+
+
+function publishPost (e) {
+  e.preventDefault();
+  target = e.target;
+  slug = $(target).attr('data-slug');
+  Meteor.call('publishPost', {slug: slug, published: true, auth: Stellar.session.getKey()}, publishedPost);
+}
+
+
+function publishedPost ( error, response) {
+  //dont really get what kind of errorhandling i should call here,
+  //will standardhandler() do=?
+  if(error) {
+    return standardHandler(error, response);
+  }
+}
+
+
+function unpublishPost (e) {
+  e.preventDefault();
+  target = e.target;
+  slug = $(target).attr('data-slug');
+  Meteor.call('unpublishPost', {slug: slug, published: false, auth: Stellar.session.getKey() }, unpublishedPost);
+}
+
+
+function unpublishedPost ( error, response ) {
+  //dont really get what kind of errorhandling i should call here,
+  //will standardhandler() do=?
+  if(error) {
+    return standardHandler(error, response);
+  }
 }
