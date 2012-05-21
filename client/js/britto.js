@@ -190,7 +190,7 @@ Template.search.events = {
 };
 
 Template.postView.events = {
-  'click #comment-button, submit #comment-button': function() { makeComment(); }
+  'click #comment-button, submit #comment-button': makeComment
 };
 
 Template.login.events = {
@@ -218,16 +218,16 @@ Template.users.events = {
 };
 
 Template.comment.events = {
-  '.delete-comment': deleteComment
+  'click .delete-comment, submit .delete-comment': deleteComment
 };
 
 Template.post.events = {
-  '.delete-post': deletePost,
-  '.edit-post': editPost
+  'click .delete-post, submit .delete-post': deletePost,
+  'click .edit-post, submit .edit-post': editPost
 };
 
 Template.users.events = {
-  '.delete-user': deleteUser
+  'click .delete-user, submit .delete-user': deleteUser
 };
 
 Meteor.startup(function() {

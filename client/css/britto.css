@@ -397,6 +397,7 @@ a.madewith_badge {background-image:url(/madewithmeteor.png); position:fixed; top
   background-color:transparent;
   border:none;
   padding-left:12em;
+  margin-bottom:2em;
 }
 
 #slides {display:block; position:relative; }
