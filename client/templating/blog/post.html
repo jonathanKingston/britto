@@ -3,7 +3,7 @@
     <h2><a href="/blog/{{slug}}" >{{ title }}</a></h2>
     {{#better_markdown_escape body}}{{/better_markdown_escape}}
     <dl>
-      <dt>Posted by</dt><dd>{{postUser userId}}</dd>
+      <dt>Posted by</dt><dd>{{author}}</dd>
       <dt>Created</dt><dd><time>{{date created}}</time></dd>
     </dl>
     {{#if user}}<button class="btn btn-primary delete-post" data-id="{{_id}}" >Delete post</button>{{/if}}

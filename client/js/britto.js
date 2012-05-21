@@ -134,6 +134,7 @@ function madePost(error, response) {
   if(!error) {
     Stellar.redirect('/');
   } else {
+    console.log(" error = "+error );
     return standardHandler(error, response);
   }
 }
@@ -199,7 +200,8 @@ Template.login.events = {
 
 Template.user_area.events = {
   'click #post-button, submit #post-button': makePost,
-  'change #post-title': changeTitle
+  'change #post-title': changeTitle,
+  'change #date-control-group select': checkDate
 };
 
 Template.settings.events = {
@@ -358,8 +360,19 @@ function changeTitle() {
 
 function makePost(e) {
   e.preventDefault();
+  author = $('select#post-author option').filter(':selected').val();
+  published = $('#post-published').attr('checked') == 'checked';
+  created = new Date( $('#post-year').val(), $('#post-month').val(), $('#post-day').val(), $('#post-hour').val(), $('#post-minute').val() );
+  date = new Date();
+  
+  console.log( '<<<<<---- created '+created+ " date ="+date);
+  //console.log ("new Post = ");
+  //console.log ({title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Stellar.session.getKey(), author: author, published: published, created: created } );
+  
+  //console.log("year = "+$('#post-year').val() +" month="+ $('#post-month').val() + " day = "+$('#post-day').val()+ "hour ="+ $('#post-hour').val()+" minute = "+$('#post-minute').val() );
+  
   if(Session.get('user')) {
-    Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Stellar.session.getKey()}, madePost);
+    Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Stellar.session.getKey(), author: author, published: published, created: created }, madePost);
   }
   return false;
 }
@@ -387,4 +400,33 @@ function madeComment(error, response) {
   } else {
     return standardHandler(error, response);
   }
+}
+
+
+//checks the day for the user_area
+function checkDate ( ) {
+  //remove all shown errors if there are some
+  $('.error').removeClass('error');
+
+  error = false;
+  
+  day = $('#post-day').val();
+  month = $('#post-month').val();
+  year = $('#post-year').val();
+  
+  lastDayMonth = parseInt(month) + 1;
+  
+  // if monthnum is december or higher, reset to january
+  if ( month >= 12 ) {
+    lastDayMonth = 0;
+  }
+  
+  lastDayInMonth = new Date( year, lastDayMonth, 0 ).getDate();
+  
+  if ( lastDayInMonth < day ) {
+    //error
+    $('#post-day').addClass('error');
+    return false;
+  }
+  return true;
 }

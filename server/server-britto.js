@@ -133,11 +133,17 @@ function sessionUser(key) {
 function makePost(args) {
   if(user = checkAuth(args.auth)) {
     post = Posts.findOne({slug: args.slug});
+    //console.log("created =="+args.created+" in server britto");
+    created = new Date(args.created);
+    //console.log ( "created = "+created);
     //TODO If the user changes the slug, this will create a new post, Should fix at some point
     if(post) {
       Posts.update({slug: args.slug}, {$set: {
           title: args.title,
-          body: args.body
+          body: args.body,
+          author: args.author,
+          published: args.published,
+          created: created
         } 
       });
     } else {
@@ -146,13 +152,16 @@ function makePost(args) {
         body: args.body,
         slug: args.slug,
         userId: user._id,
-        created: new Date()
+        author: args.author,
+        published: args.published,
+        created: created
       });
     }
     return true;
   }
   return false;
-}
+};
+    
 
 function insertBlogRoll(args) {
   if(user = checkAuth(args.auth)) {
