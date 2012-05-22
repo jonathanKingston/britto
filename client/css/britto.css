@@ -501,3 +501,20 @@ button.close {
 #post-table tr:nth-child(even) {
   background: #dde;
 }
+
+ul#post-list-sort {
+  list-style: none;
+  margin: 0 10px;
+  float: left;
+}
+
+ul#post-list-sort li {
+  display: inline;
+}
+
+
+select#orderby {
+  width: auto;
+  padding: 0;
+  height: 20px;
+}

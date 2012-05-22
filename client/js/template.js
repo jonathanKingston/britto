@@ -90,13 +90,13 @@ _.each(['options', 'user_area', 'post_list', 'comment', 'nav', 'post'], function
 
 
 Template.post_list.postUser = function(id) {
-    user = Users.findOne({_id: id});
-    if(user) {
-      return user.name;
-    } else {
-      return '';
-    }
+  user = Users.findOne({_id: id});
+  if(user) {
+    return user.name;
+  } else {
+    return '';
   }
+}
 
 //called in user_area.html to get all users for the author select fields
 Template.user_area.userlist = function () {

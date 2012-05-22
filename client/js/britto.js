@@ -234,7 +234,8 @@ Template.post_list.events = {
   'click .post-edit-button': editPost,
   'click .post-delete-button': deletePost,
   'click .post-publish-button': publishPost,
-  'click .post-unpublish-button': unpublishPost
+  'click .post-unpublish-button': unpublishPost,
+  'change .orderby': changeOrderBy
 };
 
 Meteor.startup(function() {
@@ -464,4 +465,18 @@ function unpublishedPost ( error, response ) {
   if(error) {
     return standardHandler(error, response);
   }
+}
+
+function changeOrderBy (e) {
+  orderby = e.target;
+  $('ul#post-list-sort li a').each(function(){
+    href = $(this).attr('href').split('&');
+    href[1] = orderby;
+    for ( var hr in href ) {
+      href = href + hr;
+    }
+    
+    $(this).attr( 'href', hr );
+    
+  });
 }

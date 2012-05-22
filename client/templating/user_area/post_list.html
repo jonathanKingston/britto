@@ -4,11 +4,25 @@
     <h2>Hi {{#with user}}{{ name }}{{/with}}!</h2>
     
     {{#with posts}}
+    <div id="sort-control">
+        <ul id="post-list-sort">
+          <li>Sort by</li>
+          <li><a href="user_area/post_list?sort=title&orderby={{orderby}}">title</a></li>
+          <li><a href="user_area/post_list?sort=created&orderby={{orderby}}">date</a></li>
+          <li><a href="user_area/post_list?sort=author&orderby={{orderby}}">author</a></li>
+          <li><a href="user_area/post_list?sort=published&orderby={{orderby}}">published</a></li>
+        </ul>
+        <select id="orderby">
+        <option name="select-orderby" {{#if orderby_asc}}selected="selected"{{/if}} value="asc">ascending</option>
+        <option name="select-orderby" {{#if orderby_desc}}selected="selected"{{/if}} value="desc">descending</option>
+      </select>
+    </div>
     <table id="post-table">
       <tbody>
       <tr>
         <th>Title:</th>
         <th>Author:</th>
+        <th>Date:</th>
         <th>Edit:</th>
         <th>Publish:</th>
         <th>Delete:</th>
@@ -17,6 +31,7 @@
         <tr>
           <td class="post-title"><a href="/blog/{{slug}}">{{title}}</a></td>
           <td class="post-author">{{postUser author}}</td>
+          <td class="post-date">{{date created}}</td>
           <td id="post-edit-{{_id}}"><input data-slug="{{slug}}" class="post-edit-button" type="button" value="Edit" /></td>
           {{#if published }}
           <td id="post-unpublish-{{_id}}"><input class="post-unpublish-button" data-slug="{{slug}}" type="button" value="Unpublish" /></td>
