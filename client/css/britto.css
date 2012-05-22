@@ -58,6 +58,12 @@ code, pre {
   border-radius: 3px;
 }
 
+pre code{
+  display: block;
+  word-break: break-word;
+  padding:1em;
+}
+
 label {
   display: block;
   margin-bottom: 5px;
