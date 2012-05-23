@@ -33,3 +33,11 @@ Meteor.publish("allsettings", function() {
 Meteor.publish("allblogroll", function() {
   return BlogRoll.find({}, {fields: {}});
 });
+
+Meteor.publish("tags", function() {
+  return Tags.find({}, {fields: {}});
+});
+
+Meteor.publish("posttags", function(postId) {
+  return Tags.find({postId: postId}, {fields: {}});
+});

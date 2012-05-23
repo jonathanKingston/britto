@@ -1,0 +1,13 @@
+<template name="post_tags">
+ <div id="tag-container">
+    <div id="tags">{{tags}}</div>
+    <div id="tag-control">
+      <form id="add-tag" action="#" method="post">
+      <label for="slug">Name:</label><input type="text" name="name" value="" />
+      <label for="slug">Slug:</label><input type="text" name="slug" value="" />
+      <label for="slug">Description:</label><textarea type="text" name="description"></textarea>
+      <input id="add-tag-submit" type="submit" value="Add Tag" />
+      </form>
+    </div>
+   </div>
+</template>

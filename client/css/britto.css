@@ -330,7 +330,7 @@ clear: both;
   color:#fff;
 }
 
-.navbar-fixed-top {
+.position-fixed {
   position:fixed;
 }
 
@@ -498,7 +498,7 @@ button.close {
   text-align: left;
 }
 
-#post-table tr:nth-child(even) {
+.post-list article:nth-child(even) {
   background: #dde;
 }
 
@@ -517,4 +517,42 @@ select#orderby {
   width: auto;
   padding: 0;
   height: 20px;
+}
+
+.post-title {
+  width: 25%;
+  display: inline-block;
+}
+.post-author {
+  width: 15%;
+  display: inline-block;
+}
+
+nav.user-area-nav {
+  display: inline-block;
+  position: fixed;
+  background-color: #222;
+  z-index: 1001;
+  top: 45px;
+  padding: 5px 10px;
+}
+
+nav.user-area-nav header {
+  color: #fff;
+  font-size: 1.1em;
+  margin: 0 0 10px;
+  
+}
+
+nav.user-area-nav ul li {
+  list-style: none;
+  margin-left: 0;
+}
+
+nav.user-area-nav ul li a {
+  color: #ccc;
+}
+
+nav.user-area-nav ul li a:hover {
+  color: #fff;
 }

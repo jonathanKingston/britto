@@ -227,3 +227,47 @@ function unpublishPost ( args ) {
   return false;
 }
 
+
+function makeTag(args) {
+  if(user = checkAuth(args.auth)) {
+    if ( args && args.slug && args.name ) {
+      tag = Tags.findOne({slug: args.slug});
+     
+      created = new Date(args.created);
+     
+      //TODO If the user changes the slug, this will create a new post, Should fix at some point
+      if(tag) {
+        Tags.update({slug: args.slug}, 
+          {$set: {
+            name: args.name,
+            slug: args.slug,
+            description: args.description
+          } 
+        });
+      } else {
+        Tags.insert({
+          name: args.name,
+          slug: args.slug,
+          description: args.description
+        });
+      }
+      return true;
+    }
+    return false;
+  }
+  return false;
+};
+
+
+
+function deleteTag(args) {
+  if(user = checkAuth(args.auth)) {
+    if ( args && args.tagId ) {
+      Tags.remove({_id: args.tagId});
+      return true;
+    }
+    return false;
+  }
+  return false;
+}
+

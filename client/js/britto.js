@@ -211,7 +211,7 @@ Template.settings.events = {
 };
 
 Template.options.events = {
-  'click': function() {alert('slut');},
+  'click': function() {console.log('slut');},
   'click #change-password-button, submit #change-password-button': changePassword,
   'click #change-user-button, submit #change-user-button': changeUser
 };
@@ -235,7 +235,9 @@ Template.post_list.events = {
   'click .post-delete-button': deletePost,
   'click .post-publish-button': publishPost,
   'click .post-unpublish-button': unpublishPost,
-  'change .orderby': changeOrderBy
+  'change .orderby': changeOrderBy,
+  'click #add-tag-submit, submit #add-tag-submit': makeTag,
+  'click #delete-tag-submit, submit #delete-tag-submit': deleteTag,
 };
 
 Meteor.startup(function() {
@@ -467,6 +469,7 @@ function unpublishedPost ( error, response ) {
   }
 }
 
+
 function changeOrderBy (e) {
   orderby = e.target;
   $('ul#post-list-sort li a').each(function(){
@@ -475,8 +478,16 @@ function changeOrderBy (e) {
     for ( var hr in href ) {
       href = href + hr;
     }
-    
     $(this).attr( 'href', hr );
-    
   });
+}
+
+function makeTag ( e ) {
+  e.preventDefault();
+  
+}
+
+function deleteTag ( e ) {
+  e.preventDefault();
+  
 }

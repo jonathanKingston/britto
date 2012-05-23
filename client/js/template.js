@@ -7,19 +7,46 @@ Template.sidelinks.blogRoll = function() {
 }
 
 Template.nav.links = function() {
+  var post_sub_links = [];
+  
   var links = [{url: '/blog/', text: 'Home'}];
-  if(Session.get('user')) {
+  /*if(Session.get('user')) {
     links.push({url: '/user_area', text: 'User area'});
+    links.push({url: '/user_area', text: 'Make Post'});
     links.push({url: '/user_area/post_list', text: 'Post list'});
+    links.push({url: '/user_area/post_tags', text: 'Post tags'});
     links.push({url: '/user_area/users', text: 'Users'});
     links.push({url: '/user_area/options', text: 'Options'});
     links.push({url: '/user_area/settings', text: 'Settings'});
     links.push({url: '/home/logout', text: 'Logout'});
-  } else {
+  }*/ 
+  if( !Session.get('user') ) {
     links.push({url: '/home/login', text: 'Login'});
   }
 
   return links;
+}
+
+Template.user_area_nav.user_is_logged_in = function () {
+  return Session.get('user');
+}
+
+Template.user_area_nav.user_area_links = function () {
+  if ( !Session.get('user')) {
+    return false;
+  }
+  
+  user_area_links = [
+    {url: '/user_area', text: 'Make Post'},
+    {url: '/user_area/post_list', text: 'Post list'},
+    //{url: '/user_area/post_tags', text: 'Post tags'},
+    {url: '/user_area/users', text: 'Users'},
+    {url: '/user_area/options', text: 'Options'},
+    {url: '/user_area/settings', text: 'Settings'},
+    {url: '/home/logout', text: 'Logout'}
+  ];
+  
+  return user_area_links;
 }
 
 _.each(['postShort', 'post'], function(template) {
@@ -97,6 +124,27 @@ Template.post_list.postUser = function(id) {
     return '';
   }
 }
+
+Template.post_list.post_tags = function() {
+  tags = Tags.find({_id: this._id});
+  if(tags) {
+    return tags;
+  } else {
+    return '';
+  }
+}
+
+_.each(['options', 'user_area', 'post_list', 'comment', 'nav', 'post'], function(template) {
+  Template[template].tags = function() {
+    tags = Tags.find();
+    if(tags) {
+      return tags;
+    } else {
+      return '';
+    }
+  }
+});
+
 
 //called in user_area.html to get all users for the author select fields
 Template.user_area.userlist = function () {
