@@ -16,7 +16,11 @@ Meteor.methods({
   deleteBlogRoll: deleteBlogRoll,
   insertBlogRoll: insertBlogRoll,
   publishPost: publishPost,
-  unpublishPost: unpublishPost
+  unpublishPost: unpublishPost,
+  makeTag: makeTag,
+  deleteTag: deleteTag,
+  addPostTag: addPostTag,
+  removePostTag: removePostTag
 });
 
 //TODO when minimogo adds in limit and so on, clear this function out its just a helper
@@ -145,6 +149,7 @@ function makePost(args) {
           body: args.body,
           author: args.author,
           published: args.published,
+          tags: args.tags,
           created: created
         } 
       });
@@ -156,6 +161,7 @@ function makePost(args) {
         userId: user._id,
         author: args.author,
         published: args.published,
+        tags: args.tags,
         created: created
       });
     }
@@ -232,12 +238,10 @@ function makeTag(args) {
   if(user = checkAuth(args.auth)) {
     if ( args && args.slug && args.name ) {
       tag = Tags.findOne({slug: args.slug});
-     
-      created = new Date(args.created);
-     
-      //TODO If the user changes the slug, this will create a new post, Should fix at some point
+      tagId = false;
+      //TODO If the userchanges the slug, this will create a new tag, Should fix at some point
       if(tag) {
-        Tags.update({slug: args.slug}, 
+        tagId = Tags.update({slug: args.slug}, 
           {$set: {
             name: args.name,
             slug: args.slug,
@@ -245,20 +249,19 @@ function makeTag(args) {
           } 
         });
       } else {
-        Tags.insert({
+        tagId = Tags.insert({
           name: args.name,
           slug: args.slug,
           description: args.description
         });
       }
-      return true;
+      return tagId;
     }
     return false;
   }
+  throw new Meteor.Error(401, 'You are not logged in');
   return false;
 };
-
-
 
 function deleteTag(args) {
   if(user = checkAuth(args.auth)) {
@@ -268,6 +271,48 @@ function deleteTag(args) {
     }
     return false;
   }
+  throw new Meteor.Error(401, 'You are not logged in');
   return false;
 }
 
+
+function addPostTag ( args ) {
+  if ( user = checkAuth(args.auth ) ) {
+    tagsInPost = Posts.findOne({ _id: args.postId}, { fields: { tags: 1 } } );
+    tag = Tags.findOnt({ _id: args.tagId}, { fields: { _id: 1 }} );
+    
+    newtags = [];
+    exists = false;
+    for ( var eachTag in tagsInPost ) {
+      if ( eachTag._id == args.tagId ) {
+        exists = true;
+        break;
+      }
+      newtags.push(eachTag);
+    }
+    if ( exists ) {
+      return false;
+    }
+    
+    Posts.update( { _id: args.postId }, { $set: { tags: newtags } } );
+    return true;
+  }
+  throw new Meteor.Error(401, 'You are not logged in');
+  return false;
+}
+
+function removePostTag ( args ) {
+  if ( user = checkAuth(args.auth ) ) {
+    tags = Posts.findOne({ _id: args.postId}, { fields: { tags: 1 } } );
+    newtags = [];
+    for ( var tag in tags ) {
+      if ( tag._id != args.tagId ) {
+        newtags.push(tag);
+      }
+    }
+    Posts.update( { _id: args.postId }, { $set: { tags: newtags } } );
+    return true;
+  }
+  throw new Meteor.Error(401, 'You are not logged in');
+  return false;
+}

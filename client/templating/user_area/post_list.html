@@ -25,7 +25,7 @@
       {{#each posts}}
         <article>
           <header>
-            <input id="post-expand-{{_id}}" class="post-expand-button" data-slug="{{slug}}" type="button" value="Expand" />
+            <!--<input id="post-expand-{{_id}}" class="post-expand-button" data-slug="{{slug}}" type="button" value="Expand" />-->
             <span class="post-title"><a href="/blog/{{slug}}">{{title}}</a></span>
             <span class="post-author">{{postUser author}}</span>
             <span class="post-date">{{date created}}</span>
@@ -40,10 +40,18 @@
             </span>
           </header>
           <div class="article-content">
-            <div id="tags">
-              {{#each post_tags}}
-                test
-              {{/each}}
+            <div class="tags">
+              <ul class="tags-list" data-id="{{_id}}">
+                {{#each post_tags}}
+                  <li>
+                    <a href="/tags?tag={{slug}}">{{name}}</a>
+                    <form class="tag-remove-form" action="#" method="post">
+                      <input class="tag-remove-button" data-id="{{_id}}" type="submit" value="x" title="remove tag" />
+                    </form>
+                  </li>
+                {{/each}}
+              </ul>
+              </ul>
             </div>
           </div>
         </article>

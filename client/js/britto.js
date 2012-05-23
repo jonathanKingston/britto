@@ -236,10 +236,14 @@ Template.post_list.events = {
   'click .post-publish-button': publishPost,
   'click .post-unpublish-button': unpublishPost,
   'change .orderby': changeOrderBy,
-  'click #add-tag-submit, submit #add-tag-submit': makeTag,
-  'click #delete-tag-submit, submit #delete-tag-submit': deleteTag,
+  'click .tag-remove-button, submit .tag-remove-form': removePostTag
 };
 
+Template.post_tags.events = {
+  'click .tag-delete-button': deleteTag,
+  'click #add-tag-submit, submit #add-tag': makeTag,
+  'change #tag-name, keyup #tag-name': changeTagName
+};
 Meteor.startup(function() {
   //This is a helper function for the page to keep state between refresh
   if(!Session.get('user') && Stellar.session.getKey()) {
@@ -260,6 +264,7 @@ function changeSetting(e) {
 
 function standardHandler(error, response) {
   if(!error && response) {
+    console.log("error="+error+"response="+response);
     Stellar.redirect('');
   } else {
     if(error && error.error && error.error == 401) {
@@ -440,7 +445,7 @@ function publishPost (e) {
   e.preventDefault();
   target = e.target;
   slug = $(target).attr('data-slug');
-  Meteor.call('publishPost', {slug: slug, published: true, auth: Stellar.session.getKey()}, publishedPost);
+  Meteor.call('publishPost', {slug: slug, published: true, auth: Stellar.session.getKey()}, standardHandler);
 }
 
 
@@ -457,16 +462,7 @@ function unpublishPost (e) {
   e.preventDefault();
   target = e.target;
   slug = $(target).attr('data-slug');
-  Meteor.call('unpublishPost', {slug: slug, published: false, auth: Stellar.session.getKey() }, unpublishedPost);
-}
-
-
-function unpublishedPost ( error, response ) {
-  //dont really get what kind of errorhandling i should call here,
-  //will standardhandler() do=?
-  if(error) {
-    return standardHandler(error, response);
-  }
+  Meteor.call('unpublishPost', {slug: slug, published: false, auth: Stellar.session.getKey() }, standardHandler);
 }
 
 
@@ -485,9 +481,75 @@ function changeOrderBy (e) {
 function makeTag ( e ) {
   e.preventDefault();
   
+  if (Session.get('user')) {
+    name = $('#tag-name').val();
+    slug = $('#tag-slug').val();
+    description = $('#tag-description').html();
+    Meteor.call( 'makeTag', { name: name, slug: slug, description: description, auth: Stellar.session.getKey() }, madeTag);
+  }
+  return false;
 }
+
+
+function madeTag ( error, response ) {
+  if(error) {
+    return standardHandler(error, response);
+  }
+  $('#tag-name').val('');
+  $('#tag-slug').val('');
+  $('#tag-description').html('');
+}
+
 
 function deleteTag ( e ) {
   e.preventDefault();
-  
+  if(Session.get('user') && confirm('Are you sure you want to delete this tag?')) {
+    target = e.target;
+    tagId = $(target).attr('data-id');
+    Meteor.call('deleteTag', {tagId: tagId, auth: Stellar.session.getKey() }, deletedPost);
+    return true;
+  }
+  return false;
+}
+
+function deletedPost ( error,response ){
+  if ( error ) {
+    return standardHandler(error, response);
+  }
+}
+
+function changeTagName() {
+  slug = $('#tag-name').val();
+  $('#tag-slug').val(slug.replace(/\s/g, '_').toLowerCase());
+}
+
+function addPostTag(e) {
+  e.preventDefault();
+  if ( Session.get('user') ) {
+    target = e.target;
+    tagId = $(e.target).attr('data-id');
+    postId = $('.tags-list').attr('data-id');
+    Meteor.call('addPostTag', { postId: postId, tagId: tagId, auth: Stellar.session.getKey()}, changedTag );
+    return true;
+  }
+  return false;
+}
+
+function removePostTag(e) {
+  e.preventDefault();
+  if ( Session.get('user') && confirm('Do you really want to remove this Tag from this Post?') ) {
+    target = e.target;
+    tagId = $(e.target).attr('data-id');
+    postId = $('.tags-list').attr('data-id');
+    console.log("tagId="+tagId+" postId="+postId);
+    Meteor.call('removePostTag', { postId: postId, tagId: tagId, auth: Stellar.session.getKey()}, changedTag );
+    return true;
+  }
+  return false;
+} 
+
+function changedTag(error, response ){
+  if ( error ) {
+    return standardHandler(error, response);
+  }
 }

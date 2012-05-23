@@ -1,12 +1,41 @@
 <template name="post_tags">
  <div id="tag-container">
-    <div id="tags">{{tags}}</div>
-    <div id="tag-control">
-      <form id="add-tag" action="#" method="post">
-      <label for="slug">Name:</label><input type="text" name="name" value="" />
-      <label for="slug">Slug:</label><input type="text" name="slug" value="" />
-      <label for="slug">Description:</label><textarea type="text" name="description"></textarea>
-      <input id="add-tag-submit" type="submit" value="Add Tag" />
+    <div class="tags">
+      <header><h4>All tags:</h4></header>
+      {{#with tags }}
+      <ul class="tags-list">
+        {{#each tags}}
+          <li>
+            <a href="/tags?tag={{slug}}">{{name}}</a>
+            <form action="#" method="post">
+              <input class="tag-delete-button" data-id="{{_id}}" type="submit" value="x" title="delete tag" />
+            </form>
+          </li>
+        {{/each}}
+      </ul>
+      {{/with}}
+    </div>
+    <div class="tag-control">
+      <form id="add-tag" class="form-horizontal" action="#" method="post">
+        <fieldset>
+          <legend>Add tag:</legend>
+        
+          <div class="control-group">
+              <label for="name" class="control-label">Name:</label>
+              <div class="controls"><input id="tag-name" type="text" name="name" value="" /></div>
+          </div>
+          <div class="control-group">
+            <label for="slug" class="control-label">Slug:</label>
+            <div class="controls"><input id="tag-slug" type="text" name="slug" value="" /></div>
+          </div>
+          <div class="control-group">
+            <label for="description" class="control-label">Description:</label>
+            <div class="controls"><textarea  id="tag-description" type="text" name="description"></textarea></div>
+          </div>
+          <div class="form-actions">
+            <button id="add-tag-submit">Add tag</button>
+          </div>
+        </fieldset>
       </form>
     </div>
    </div>

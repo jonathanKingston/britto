@@ -39,7 +39,7 @@ Template.user_area_nav.user_area_links = function () {
   user_area_links = [
     {url: '/user_area', text: 'Make Post'},
     {url: '/user_area/post_list', text: 'Post list'},
-    //{url: '/user_area/post_tags', text: 'Post tags'},
+    {url: '/user_area/post_tags', text: 'Post tags'},
     {url: '/user_area/users', text: 'Users'},
     {url: '/user_area/options', text: 'Options'},
     {url: '/user_area/settings', text: 'Settings'},
@@ -99,6 +99,7 @@ Template.listView.attach_event = function() {
   $('head').append('<script type="text/javascript">Britto.load.disqusCount();</script>');
 }
 
+
 _.each(['postShort', 'post', 'postView'], function(template) {
   Template[template].disqus = function() {
     setting = Settings.findOne({key: 'disqus'});
@@ -106,6 +107,25 @@ _.each(['postShort', 'post', 'postView'], function(template) {
       return setting.value;
     }
     return false;
+  }
+  
+  Template[template].postTags = function( tagReq ) {
+    tagIds = [];
+    
+    for ( var i = 0; i < tagReq.length; i++ ) {
+      tagIds.push( tagReq[i]._id );
+    }
+    
+    console.log(tagIds);
+    
+    tags = Tags.find({ _id: { $in: tagIds } }, {fields: { name: 1, slug: 1 }});
+    console.log(tags);
+    
+    if ( tags){
+      return tags;
+    } else {
+      return false;
+    }
   }
 });
 
@@ -126,25 +146,26 @@ Template.post_list.postUser = function(id) {
 }
 
 Template.post_list.post_tags = function() {
-  tags = Tags.find({_id: this._id});
-  if(tags) {
-    return tags;
-  } else {
-    return '';
-  }
-}
-
-_.each(['options', 'user_area', 'post_list', 'comment', 'nav', 'post'], function(template) {
-  Template[template].tags = function() {
-    tags = Tags.find();
+  //fetch returns the ids as an array
+  post = Posts.findOne({_id: this._id}, { fields: { tags: 1 } });
+  
+  if ( post && post.tags ) {
+    
+    tagIds = [];
+    for ( var i = 0; i < post.tags.length; i++ ) {
+      tagIds.push(post.tags[i]._id );
+    }
+    
+    tags = Tags.find({_id: {$in: tagIds} }, { fields: {} });
+    
     if(tags) {
       return tags;
     } else {
-      return '';
+      return false;
     }
   }
-});
-
+  return false;
+}
 
 //called in user_area.html to get all users for the author select fields
 Template.user_area.userlist = function () {

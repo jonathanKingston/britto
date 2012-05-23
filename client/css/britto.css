@@ -498,7 +498,7 @@ button.close {
   text-align: left;
 }
 
-.post-list article:nth-child(even) {
+#post-container article:nth-child(odd) {
   background: #dde;
 }
 
@@ -555,4 +555,41 @@ nav.user-area-nav ul li a {
 
 nav.user-area-nav ul li a:hover {
   color: #fff;
+}
+
+.tags header h4{
+  margin: 0 0 10px;
+  font-size: 1.1em;
+}
+
+
+ul.tags-list li {
+  border: 1px solid;
+  border-radius: 3px;
+  display: inline;
+  padding: 3px;
+  margin: 0 5px 0 0;
+}
+
+ul.tags-list li input {
+  padding: 0 3px;
+  border: 0 none;
+  background: transparent;
+}
+
+ul.tags-list form, ul.tags-list li {
+  display: inline;
+}
+
+.tag-control {
+  margin: 10px 0 0;
+}
+
+.tag-ul {
+  margin: 0 0 5px;
+}
+
+ul.tag-ul li {
+  display: inline;
+  margin: 0;
 }
