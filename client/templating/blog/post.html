@@ -3,17 +3,14 @@
     <h2><a href="/blog/{{slug}}" >{{ title }}</a></h2>
     {{#better_markdown_escape body}}{{/better_markdown_escape}}
     
-    {{#if tags}}
     <ul class="tag-ul">
       <li>Tagged with:</li>
-      {{#each postTags tags}}
+      {{#each postTags _id}}
       <li>
-        <a href="/tags?tag={{slug}}">{{name}}</a>
+        <a href="/blog/tag?show={{slug}}">{{name}}</a>
       </li>
       {{/each}}
     </ul>
-    {{/if}}
-    
     <dl>
       <dt>Posted by</dt><dd>{{postUser author}}</dd>
       <dt>Created</dt><dd><time>{{date created}}</time></dd>

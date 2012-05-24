@@ -24,6 +24,8 @@ Meteor.subscribe("allblogroll");
 //TODO change this to a per post subscription - removing it was killing the templates :/
 Meteor.subscribe("allcomments");
 Meteor.subscribe("allusers");
+Meteor.subscribe("alltags");
+Meteor.subscribe("alltagsinposts");
 
 Britto.alert = function(type, message) {
   Stellar.log(message);
@@ -201,7 +203,9 @@ Template.login.events = {
 Template.user_area.events = {
   'click #post-button, submit #post-button': makePost,
   'change #post-title': changeTitle,
-  'change #date-control-group select': checkDate
+  'change #date-control-group select': checkDate,
+  'click .tag-remove-button, submit .tag-remove-form': removePostTag,
+  'click .tag-add-button, submit .tag-add-form': addPostTag
 };
 
 Template.settings.events = {
@@ -529,26 +533,31 @@ function addPostTag(e) {
     target = e.target;
     tagId = $(e.target).attr('data-id');
     postId = $('.tags-list').attr('data-id');
-    Meteor.call('addPostTag', { postId: postId, tagId: tagId, auth: Stellar.session.getKey()}, changedTag );
+    Meteor.call('addPostTag', { postId: postId, tagId: tagId, auth: Stellar.session.getKey()}, doNothing );
     return true;
   }
   return false;
 }
 
+//removes a tag from a post
 function removePostTag(e) {
   e.preventDefault();
   if ( Session.get('user') && confirm('Do you really want to remove this Tag from this Post?') ) {
     target = e.target;
     tagId = $(e.target).attr('data-id');
     postId = $('.tags-list').attr('data-id');
-    console.log("tagId="+tagId+" postId="+postId);
-    Meteor.call('removePostTag', { postId: postId, tagId: tagId, auth: Stellar.session.getKey()}, changedTag );
+    
+    console.log("removePostTag: tagId="+tagId+" postId="+postId);
+    
+    Meteor.call('removePostTag', { postId: postId, tagId: tagId, auth: Stellar.session.getKey()}, doNothing );
     return true;
   }
   return false;
 } 
 
-function changedTag(error, response ){
+//only do something on error
+//i guess this is wrong, but standardhandler always reconnects me to home
+function doNothing (error, response ) {
   if ( error ) {
     return standardHandler(error, response);
   }

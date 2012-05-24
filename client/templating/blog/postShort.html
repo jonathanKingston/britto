@@ -2,12 +2,13 @@
   <article class="post" id="{{_id}}">
     <h2><a href="/blog/{{slug}}" >{{ title }}</a></h2>
     {{#short_content_escape slug body}}{{/short_content_escape}}
-    {{#if tags}}
+    
+    {{#if hasTag _id}}
     <ul class="tag-ul">
       <li>Tagged with:</li>
-      {{#each postTags tags}}
+      {{#each postTags _id}}
       <li>
-        <a href="/tags?tag={{slug}}">{{name}}</a>
+        <a href="/blog/tag?show={{slug}}">{{name}}</a>
       </li>
       {{/each}}
     </ul>

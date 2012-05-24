@@ -9,7 +9,10 @@ Template.sidelinks.blogRoll = function() {
 Template.nav.links = function() {
   var post_sub_links = [];
   
+  //replace this with database entries soon
   var links = [{url: '/blog/', text: 'Home'}];
+  
+  //moved into admin-menu
   /*if(Session.get('user')) {
     links.push({url: '/user_area', text: 'User area'});
     links.push({url: '/user_area', text: 'Make Post'});
@@ -20,6 +23,8 @@ Template.nav.links = function() {
     links.push({url: '/user_area/settings', text: 'Settings'});
     links.push({url: '/home/logout', text: 'Logout'});
   }*/ 
+  
+  //if the user is not logged in, show loginlink in menu
   if( !Session.get('user') ) {
     links.push({url: '/home/login', text: 'Login'});
   }
@@ -27,15 +32,19 @@ Template.nav.links = function() {
   return links;
 }
 
+//helper to easily see if the user is logged in.
 Template.user_area_nav.user_is_logged_in = function () {
   return Session.get('user');
 }
 
+//admin menu
 Template.user_area_nav.user_area_links = function () {
+  //only show to logged in users
   if ( !Session.get('user')) {
     return false;
   }
-  
+  //defining the menu items.
+  //should be read from the db soon
   user_area_links = [
     {url: '/user_area', text: 'Make Post'},
     {url: '/user_area/post_list', text: 'Post list'},
@@ -50,10 +59,12 @@ Template.user_area_nav.user_area_links = function () {
 }
 
 _.each(['postShort', 'post'], function(template) {
+  //get commentcount
   Template[template].commentCount = function(id) {
     return Comments.find({postId: id}).count();
   }
-
+  
+  //helper that returns the name after getting the user._id
   Template[template].postUser = function(id) {
     user = Users.findOne({_id: id});
     if(user) {
@@ -64,6 +75,7 @@ _.each(['postShort', 'post'], function(template) {
   }
 });
 
+//list of comments for one post
 Template.comments.commentslist = function(post) {
   comments = Comments.find({postId: post._id}, {sort: {created: 1}});
   if(comments.count() === 0) {
@@ -100,7 +112,7 @@ Template.listView.attach_event = function() {
 }
 
 
-_.each(['postShort', 'post', 'postView'], function(template) {
+_.each(['postShort', 'post', 'postView', 'post_list', 'user_area'], function(template) {
   Template[template].disqus = function() {
     setting = Settings.findOne({key: 'disqus'});
     if(setting && setting.value != '') {
@@ -109,19 +121,25 @@ _.each(['postShort', 'post', 'postView'], function(template) {
     return false;
   }
   
-  Template[template].postTags = function( tagReq ) {
-    tagIds = [];
-    
-    for ( var i = 0; i < tagReq.length; i++ ) {
-      tagIds.push( tagReq[i]._id );
+  Template[template].hasTag = function ( postId ) {
+    tagCount = TagsInPosts.find( { postId: postId} ).count()
+    if ( !tagCount || tagCount == 0 ) {
+      return false;
     }
+    return  tagCount > 0;
+  }
+  
+  Template[template].postTags = function( postId ) {
+    tagsInPost = TagsInPosts.find( { postId: postId }, {fields: { tagId: 1 } } );
     
-    console.log(tagIds);
+    tagIds = [];
+    tagsInPost.forEach ( function ( tag ) {
+      tagIds.push ( tag.tagId );
+    });
     
     tags = Tags.find({ _id: { $in: tagIds } }, {fields: { name: 1, slug: 1 }});
-    console.log(tags);
     
-    if ( tags){
+    if ( tags ) {
       return tags;
     } else {
       return false;
@@ -145,32 +163,17 @@ Template.post_list.postUser = function(id) {
   }
 }
 
-Template.post_list.post_tags = function() {
-  //fetch returns the ids as an array
-  post = Posts.findOne({_id: this._id}, { fields: { tags: 1 } });
-  
-  if ( post && post.tags ) {
-    
-    tagIds = [];
-    for ( var i = 0; i < post.tags.length; i++ ) {
-      tagIds.push(post.tags[i]._id );
-    }
-    
-    tags = Tags.find({_id: {$in: tagIds} }, { fields: {} });
-    
-    if(tags) {
-      return tags;
-    } else {
-      return false;
-    }
-  }
-  return false;
-}
 
 //called in user_area.html to get all users for the author select fields
 Template.user_area.userlist = function () {
   return Users.find({}, { fields: { name: 1, _id: 1 } });
 }
+
+_.each(['user_area', 'tagcloud'], function (template) {
+  Template[template].alltags = function(){
+    return Tags.find();
+  }
+});
 
 
 

@@ -138,34 +138,32 @@ function sessionUser(key) {
 
 function makePost(args) {
   if(user = checkAuth(args.auth)) {
-    post = Posts.findOne({slug: args.slug});
-   
+    post = Posts.findOne({slug: args.slug}, { fields:  { _id: 1 } } );
+    postId = false;
     created = new Date(args.created);
-   
+    
     //TODO If the user changes the slug, this will create a new post, Should fix at some point
     if(post) {
-      Posts.update({slug: args.slug}, {$set: {
+      postId = Posts.update({slug: args.slug}, {$set: {
           title: args.title,
           body: args.body,
           author: args.author,
           published: args.published,
-          tags: args.tags,
           created: created
         } 
       });
     } else {
-      Posts.insert({
+      postId = Posts.insert({
         title: args.title,
         body: args.body,
         slug: args.slug,
         userId: user._id,
         author: args.author,
         published: args.published,
-        tags: args.tags,
         created: created
       });
     }
-    return true;
+    return postId;
   }
   return false;
 };
@@ -278,23 +276,13 @@ function deleteTag(args) {
 
 function addPostTag ( args ) {
   if ( user = checkAuth(args.auth ) ) {
-    tagsInPost = Posts.findOne({ _id: args.postId}, { fields: { tags: 1 } } );
-    tag = Tags.findOnt({ _id: args.tagId}, { fields: { _id: 1 }} );
+    tagInPost = TagsInPosts.findOne( { postId: args.postId, tagId: args.tagId } );
     
-    newtags = [];
-    exists = false;
-    for ( var eachTag in tagsInPost ) {
-      if ( eachTag._id == args.tagId ) {
-        exists = true;
-        break;
-      }
-      newtags.push(eachTag);
+    if ( tagInPost ) {
+      TagsInPosts.update( { _id: tagInPost._id }, { $set: { tagId: tagInPost._id, postId: args.postId } } );
+    }else {
+      TagsInPosts.insert( { tagId: args.tagId, postId: args.postId } );
     }
-    if ( exists ) {
-      return false;
-    }
-    
-    Posts.update( { _id: args.postId }, { $set: { tags: newtags } } );
     return true;
   }
   throw new Meteor.Error(401, 'You are not logged in');
@@ -303,14 +291,9 @@ function addPostTag ( args ) {
 
 function removePostTag ( args ) {
   if ( user = checkAuth(args.auth ) ) {
-    tags = Posts.findOne({ _id: args.postId}, { fields: { tags: 1 } } );
-    newtags = [];
-    for ( var tag in tags ) {
-      if ( tag._id != args.tagId ) {
-        newtags.push(tag);
-      }
-    }
-    Posts.update( { _id: args.postId }, { $set: { tags: newtags } } );
+    tag = TagsInPosts.findOne({ _id: args.postId}, { });
+        
+    TagsInPosts.remove( { postId: args.postId, tagId: args.tagId } );
     return true;
   }
   throw new Meteor.Error(401, 'You are not logged in');

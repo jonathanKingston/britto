@@ -571,7 +571,7 @@ ul.tags-list li {
   margin: 0 5px 0 0;
 }
 
-ul.tags-list li input {
+ul.tags-list li input, ul.tags-list li button {
   padding: 0 3px;
   border: 0 none;
   background: transparent;

@@ -69,6 +69,38 @@
           <label for="post-body" class="control-label">Body</label>
           <div class="controls"><textarea id="post-body" style="width:100%; height:300px;">{{body}}</textarea></div>
         </div>
+        {{#if _id}}
+        <div class="control-group">
+          <label for="post-tags" class="control-label">Assigned Tags</label>
+          <div class="controls">
+            <ul class="tags-list" data-id="{{_id}}">
+              {{#each postTags _id}}
+              <li>
+                <a href="/blog/tag?show={{slug}}">{{name}}</a>
+                <form class="tag-remove-form" action="#" method="post">
+                  <button class="tag-remove-button" data-id="{{_id}}" title="remove tag">x</button>
+                </form>
+              </li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="add-post-tags" class="control-label">Add Tags</label>
+          <div class="controls">
+            <ul class="tags-list" data-id="{{_id}}">
+              {{#each alltags}}
+              <li>
+                <a href="/blog/tag?show={{slug}}">{{name}}</a>
+                <form class="tag-add-form" action="#" method="post">
+                  <button class="tag-add-button" data-id="{{_id}}" title="add tag to post">+</button>
+                </form>
+              </li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+        {{/if}}
         <div class="control-group">
           <label for="post-slug" class="control-label">Slug</label>
           <div class="controls"><input type="text" id="post-slug" value="{{slug}}" /></div>

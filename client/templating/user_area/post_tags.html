@@ -6,7 +6,7 @@
       <ul class="tags-list">
         {{#each tags}}
           <li>
-            <a href="/tags?tag={{slug}}">{{name}}</a>
+            <a href="/blog/tag?show={{slug}}">{{name}}</a>
             <form action="#" method="post">
               <input class="tag-delete-button" data-id="{{_id}}" type="submit" value="x" title="delete tag" />
             </form>

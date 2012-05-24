@@ -26,7 +26,17 @@
         <article>
           <header>
             <!--<input id="post-expand-{{_id}}" class="post-expand-button" data-slug="{{slug}}" type="button" value="Expand" />-->
-            <span class="post-title"><a href="/blog/{{slug}}">{{title}}</a></span>
+            <span class="post-title">
+              {{#if published}}
+              <a href="/blog/{{slug}}">
+              {{/if}}
+              
+              {{title}}
+              
+              {{#if published}}
+              </a>
+              {{/if}}
+            </span>
             <span class="post-author">{{postUser author}}</span>
             <span class="post-date">{{date created}}</span>
             <span>
@@ -39,12 +49,13 @@
               <input id="post_delete_{{_id}}" data-id="{{_id}}" class="post-delete-button" type="button" value="Delete" />
             </span>
           </header>
+          {{#if hasTag _id}}
           <div class="article-content">
             <div class="tags">
               <ul class="tags-list" data-id="{{_id}}">
-                {{#each post_tags}}
+                {{#each postTags _id}}
                   <li>
-                    <a href="/tags?tag={{slug}}">{{name}}</a>
+                    <a href="/blog/tag?show={{slug}}">{{name}}</a>
                     <form class="tag-remove-form" action="#" method="post">
                       <input class="tag-remove-button" data-id="{{_id}}" type="submit" value="x" title="remove tag" />
                     </form>
@@ -54,6 +65,7 @@
               </ul>
             </div>
           </div>
+          {{/if}}
         </article>
      
       {{/each}}
