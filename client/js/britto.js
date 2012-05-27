@@ -267,9 +267,14 @@ function changeSetting(e) {
       function(input) { 
         val = $(this).val();
         //checkbox select to bool mapping
-        if ( val == "on" ) {
-          val = true;
+        if ( $(this).attr('type') == 'checkbox' ) {
+          if ( $(this).attr('checked') ) {
+            val = true;
+          } else {
+            val = false;
+          }
         }
+        
         settings.push([$(this).attr('data-key'), val]);
       }
     );
