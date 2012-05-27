@@ -1,16 +1,21 @@
 Meteor.startup(function () {
 
-//  console.log('Setup settings');
+  //console.log('Setup settings');
   setSetting('site_name', 'Britto blog', 'This is the name of your site');
   setSetting('disqus', '', 'This is to enable disqus comments on the blog instead of inbuilt comments, leave blank to use inbuilt ones');
   setSetting('analytics_code', '', 'Enable google analytics by adding code here');
   setSetting('madewith_shortname', 'britto.meteor.com', 'Enable madewith on your site specify [appname.meteor.com] or [urlname.com]');
-
+  
+  //add widget settings
+  setSetting('show_search', true, 'Show search widget');
+  setSetting('show_blogroll', true, 'Show blogroll widget');
+  setSetting('show_tagcloud', false, 'Show tagcloud widget' );
+  
+  
   if(Users.find().count() === 0) {
     console.log('Adding in users');
     userId = createUser({username: 'admin', password: 'password', name: 'Your name'});
     userId2 = createUser({username: 'admin2', password: 'password', name: 'Your other name'});
-    
     
     console.log('Logging in test user');
     var user = loginUser('admin', 'password');
@@ -23,6 +28,9 @@ Meteor.startup(function () {
     console.log(Tags.find().count()+' tags added');
     
     tags = Tags.find({}, {fields: {_id:1} }).fetch();
+    
+    console.log('Adding in blogroll link');
+    insertBlogRoll( { name: 'Britto - Blogging made better', link: 'http://britto.co/', auth: key } );
     
     
     console.log('Adding in test post');

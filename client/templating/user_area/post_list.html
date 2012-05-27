@@ -1,7 +1,7 @@
 <template name="post_list">
   
   {{#if user }}
-  <div class="post_list">
+  <div class="post-list">
     <h2>Hi {{#with user}}{{ name }}{{/with}}!</h2>
     
     {{#with posts}}
@@ -30,9 +30,7 @@
               {{#if published}}
               <a href="/blog/{{slug}}">
               {{/if}}
-              
               {{title}}
-              
               {{#if published}}
               </a>
               {{/if}}
@@ -49,25 +47,27 @@
               <input id="post_delete_{{_id}}" data-id="{{_id}}" class="post-delete-button" type="button" value="Delete" />
             </span>
           </header>
+          
           {{#if hasTag _id}}
           <div class="article-content">
             <div class="tags">
               <ul class="tags-list" data-id="{{_id}}">
+                
                 {{#each postTags _id}}
                   <li>
                     <a href="/blog/tag?show={{slug}}">{{name}}</a>
-                    <form class="tag-remove-form" action="#" method="post">
-                      <input class="tag-remove-button" data-id="{{_id}}" type="submit" value="x" title="remove tag" />
-                    </form>
+                    <a title="remove tag" class="tag-remove-button" data-id="{{_id}}">x</a>
                   </li>
                 {{/each}}
+                
               </ul>
               </ul>
             </div>
           </div>
+          
           {{/if}}
         </article>
-     
+        
       {{/each}}
     </div>
     

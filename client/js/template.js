@@ -1,3 +1,26 @@
+Template.widgets.showSearch = function () {
+  setting = Settings.findOne({key: 'show_search'});
+  if ( setting && setting.value ) {
+    return setting.value;
+  }
+  return false;
+}
+Template.widgets.showBlogRoll = function () {
+  setting = Settings.findOne({key: 'show_blogroll'});
+  if ( setting && setting.value ) {
+    return setting.value;
+  }
+  return false;
+}
+Template.widgets.showTagCloud = function () {
+  setting = Settings.findOne({key: 'show_tagcloud'});
+  if ( setting && setting.value ) {
+    return setting.value;
+  }
+  return false;
+}
+
+
 Template.sidelinks.blogRoll = function() {
   var blogRoll = BlogRoll.find();
   if(blogRoll && blogRoll.count() > 0) {
@@ -27,6 +50,8 @@ Template.nav.links = function() {
   //if the user is not logged in, show loginlink in menu
   if( !Session.get('user') ) {
     links.push({url: '/home/login', text: 'Login'});
+  }else{
+    links.push({url: '/home/logout', text: 'Logout'});
   }
 
   return links;
@@ -51,8 +76,7 @@ Template.user_area_nav.user_area_links = function () {
     {url: '/user_area/post_tags', text: 'Post tags'},
     {url: '/user_area/users', text: 'Users'},
     {url: '/user_area/options', text: 'Options'},
-    {url: '/user_area/settings', text: 'Settings'},
-    {url: '/home/logout', text: 'Logout'}
+    {url: '/user_area/settings', text: 'Settings'}
   ];
   
   return user_area_links;
@@ -171,7 +195,52 @@ Template.user_area.userlist = function () {
 
 _.each(['user_area', 'tagcloud'], function (template) {
   Template[template].alltags = function(){
-    return Tags.find();
+    
+    tags = Tags.find({}, { fields: { name: 1, slug: 1, _id: 1 } });
+
+    //this should be moved somewhere else or be cached, pretty intensely hitting the database here i guess
+    counts = [];
+    highest_count = 0;
+    lowest_count = 1000;
+    
+    tagsWithCount = [];
+    tags.forEach(function(tag){
+      count = TagsInPosts.find({ tagId: tag._id }).count();
+      if ( highest_count < count ) {
+        highest_count = count;
+      }
+      if ( lowest_count > count && count > 0 ) {
+        lowest_count = count;
+      }
+      returnTag = { count: count, name: tag.name, slug: tag.slug};
+      tagsWithCount.push(returnTag);
+      //console.log("tagswithcount "+tagsWithCount.length+" set");
+    });    
+    
+    //console.log( "tagsWithCount length = "+tagsWithCount.length );
+    
+    returnTags = [];
+    for (var i = 0; i < tagsWithCount.length; i++ ){
+      
+      tag = tagsWithCount[i];
+      
+      fontsize = tag.count / ( highest_count - lowest_count );
+      
+      if ( fontsize > 1.4 ) {
+        fontsize = 1.4;
+      }
+      if ( fontsize < 1 ) {
+        fontsize = 1;
+      }
+      
+      returnTag = { fontsize: fontsize, name: tag.name, slug: tag.slug};
+      
+      //console.log("tagforeach returnTag.name="+returnTag.name+" fontsize = "+fontsize);
+      
+      returnTags.push(returnTag);
+      //console.log ( "returnTags["+i+"] set to "+returnTags[i]);
+    }
+    return returnTags;
   }
 });
 

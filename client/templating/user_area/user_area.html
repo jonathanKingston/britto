@@ -77,9 +77,7 @@
               {{#each postTags _id}}
               <li>
                 <a href="/blog/tag?show={{slug}}">{{name}}</a>
-                <form class="tag-remove-form" action="#" method="post">
-                  <button class="tag-remove-button" data-id="{{_id}}" title="remove tag">x</button>
-                </form>
+                <a class="tag-remove-button" data-id="{{_id}}" title="remove tag">x</a>
               </li>
               {{/each}}
             </ul>
@@ -92,9 +90,7 @@
               {{#each alltags}}
               <li>
                 <a href="/blog/tag?show={{slug}}">{{name}}</a>
-                <form class="tag-add-form" action="#" method="post">
-                  <button class="tag-add-button" data-id="{{_id}}" title="add tag to post">+</button>
-                </form>
+                <a class="tag-add-button" data-id="{{_id}}" title="add tag to post">+</a>
               </li>
               {{/each}}
             </ul>

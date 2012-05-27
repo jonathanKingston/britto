@@ -27,18 +27,32 @@ Handlebars.registerHelper('better_markdown_escape', function(string, fn) {
   return better_markdown(string);
 });
 
+Handlebars.registerHelper('settingIsBool', function( value ) {
+  //console.log( typeof (value) );
+  if ( value != undefined && typeof value == "boolean" ) {
+    return true;
+  }
+  return false;
+});
+
 Handlebars.registerHelper('post_links', function() {
   var links = '';
   var lastPage = Session.get('blog_page_count');
+  
+  if ( !lastPage ) {
+    console.log('<--------------- last page is undefined');
+  }
+  
   var page = 1;
   if(Session.get('page')) {
     page = Session.get('page');
   }
-  if(page != lastPage) {
+  
+  if(page < lastPage) {
     links += ' <a href="/blog/index?page='+(parseInt(page) + 1)+'" >Next page</a>';
   }
 
-  if(page != 1) {
+  if(page > 1) {
     links += ' <a href="/blog/index?page='+(parseInt(page) - 1)+'" >Previous page</a>';
   }
   return links;

@@ -87,8 +87,8 @@ select {
 }
 
 ul li {
-  list-style-type:disc;
-  margin-left:2em;
+  list-style-type:none;
+  margin-left:1em;
   margin-bottom:1em;
 }
 
@@ -571,10 +571,16 @@ ul.tags-list li {
   margin: 0 5px 0 0;
 }
 
-ul.tags-list li input, ul.tags-list li button {
+ul.tags-list li input, ul.tags-list li a {
   padding: 0 3px;
   border: 0 none;
   background: transparent;
+  cursor: pointer;
+}
+
+ul.tags-list li a.tag-remove-button,
+ul.tags-list li a.tag-add-button {
+  color: #000;
 }
 
 ul.tags-list form, ul.tags-list li {
@@ -592,4 +598,13 @@ ul.tags-list form, ul.tags-list li {
 ul.tag-ul li {
   display: inline;
   margin: 0;
+}
+
+.post-list #post-container article {
+  height: 65px;
+}
+
+ul.tag-cloud li {
+  display: inline;
+  margin: 0 2px;
 }

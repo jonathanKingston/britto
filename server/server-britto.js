@@ -199,8 +199,11 @@ function setSetting(key, value, description) {
       value: value,
       description: description
     });
-  }
+  }/*else{
+    console.log( "setting with key:"+key+" is already set. maybe you should be using changeSetting(key, value, description) instead?");
+  }*/
 }
+
 
 function hashPassword(password, salt) {
   return Crypto.SHA256(salt + '-' + password);

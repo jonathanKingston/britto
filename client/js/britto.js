@@ -3,6 +3,8 @@ Handlebars.registerHelper('setting', function(options) {
   //TODO: escaping the key here could cause issues
   var key = options.fn(this);
   var setting = Settings.findOne({key: key.toString()});
+  
+  
   if(setting) {
     return Handlebars._escape(setting.value);
   }
@@ -254,14 +256,24 @@ Meteor.startup(function() {
     Meteor.call('sessionUser', Stellar.session.getKey(), sessionLogin);
   }
 
-  Meteor.call('blog_page_count', function(error, result) {if(!error) {Session.set('blog_page_count');}});
+  Meteor.call('blog_page_count', function(error, result) {if(!error && result) {Session.set('blog_page_count', result);}});
 });
 
 function changeSetting(e) {
   e.preventDefault();
   if(Session.get('user')) {
     settings = [];
-    $('#change-setting-form input').each(function(input) { settings.push([$(this).attr('data-key'), $(this).val()]);});
+    $('#change-setting-form input').each(
+      function(input) { 
+        val = $(this).val();
+        //checkbox select to bool mapping
+        if ( val == "on" ) {
+          val = true;
+        }
+        settings.push([$(this).attr('data-key'), val]);
+      }
+    );
+    
     Meteor.call('changeSetting', {settings: settings, auth: Stellar.session.getKey()}, standardHandler);
   }
 }
@@ -374,7 +386,17 @@ function deletedPost(error, response) {
 
 function changeTitle() {
   slug = $('#post-title').val();
-  $('#post-slug').val(slug.replace(/\s/g, '_').toLowerCase());
+  slug = slug.replace(/\s/g, '_').toLowerCase();
+  slug = replaceUmlaute(slug);
+  $('#post-slug').val(slug);
+}
+
+function replaceUmlaute(s) {
+  //replace äüö with ae ue and oe for german titles
+  //later add support for more special chars defined in the admin interface
+  //removing the need of adding them all here and always test against those that we need to test against ;)
+  tr = {"\u00e4":"ae", "\u00fc":"ue", "\u00f6":"oe", "\u00df":"ss" }
+  return s.replace(/[\u00e4|\u00fc|\u00f6|\u00df]/g, function($0) { return tr[$0] });
 }
 
 function makePost(e) {
@@ -449,16 +471,7 @@ function publishPost (e) {
   e.preventDefault();
   target = e.target;
   slug = $(target).attr('data-slug');
-  Meteor.call('publishPost', {slug: slug, published: true, auth: Stellar.session.getKey()}, standardHandler);
-}
-
-
-function publishedPost ( error, response) {
-  //dont really get what kind of errorhandling i should call here,
-  //will standardhandler() do=?
-  if(error) {
-    return standardHandler(error, response);
-  }
+  Meteor.call('publishPost', {slug: slug, published: true, auth: Stellar.session.getKey()}, doNothing);
 }
 
 
@@ -466,7 +479,7 @@ function unpublishPost (e) {
   e.preventDefault();
   target = e.target;
   slug = $(target).attr('data-slug');
-  Meteor.call('unpublishPost', {slug: slug, published: false, auth: Stellar.session.getKey() }, standardHandler);
+  Meteor.call('unpublishPost', {slug: slug, published: false, auth: Stellar.session.getKey() }, doNothing);
 }
 
 
@@ -510,17 +523,12 @@ function deleteTag ( e ) {
   if(Session.get('user') && confirm('Are you sure you want to delete this tag?')) {
     target = e.target;
     tagId = $(target).attr('data-id');
-    Meteor.call('deleteTag', {tagId: tagId, auth: Stellar.session.getKey() }, deletedPost);
+    Meteor.call('deleteTag', {tagId: tagId, auth: Stellar.session.getKey() }, doNothing);
     return true;
   }
   return false;
 }
 
-function deletedPost ( error,response ){
-  if ( error ) {
-    return standardHandler(error, response);
-  }
-}
 
 function changeTagName() {
   slug = $('#tag-name').val();
@@ -547,7 +555,7 @@ function removePostTag(e) {
     tagId = $(e.target).attr('data-id');
     postId = $('.tags-list').attr('data-id');
     
-    console.log("removePostTag: tagId="+tagId+" postId="+postId);
+    //console.log("removePostTag: tagId="+tagId+" postId="+postId);
     
     Meteor.call('removePostTag', { postId: postId, tagId: tagId, auth: Stellar.session.getKey()}, doNothing );
     return true;
@@ -557,7 +565,7 @@ function removePostTag(e) {
 
 //only do something on error
 //i guess this is wrong, but standardhandler always reconnects me to home
-function doNothing (error, response ) {
+function doNothing ( error, response ) {
   if ( error ) {
     return standardHandler(error, response);
   }
