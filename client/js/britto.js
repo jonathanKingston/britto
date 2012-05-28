@@ -3,6 +3,8 @@ Handlebars.registerHelper('setting', function(options) {
   //TODO: escaping the key here could cause issues
   var key = options.fn(this);
   var setting = Settings.findOne({key: key.toString()});
+  
+  
   if(setting) {
     return Handlebars._escape(setting.value);
   }
@@ -24,6 +26,8 @@ Meteor.subscribe("allblogroll");
 //TODO change this to a per post subscription - removing it was killing the templates :/
 Meteor.subscribe("allcomments");
 Meteor.subscribe("allusers");
+Meteor.subscribe("alltags");
+Meteor.subscribe("alltagsinposts");
 
 Britto.alert = function(type, message) {
   Stellar.log(message);
@@ -134,6 +138,7 @@ function madePost(error, response) {
   if(!error) {
     Stellar.redirect('/');
   } else {
+    console.log(" error = "+error );
     return standardHandler(error, response);
   }
 }
@@ -199,7 +204,10 @@ Template.login.events = {
 
 Template.user_area.events = {
   'click #post-button, submit #post-button': makePost,
-  'change #post-title': changeTitle
+  'change #post-title': changeTitle,
+  'change #date-control-group select': checkDate,
+  'click .tag-remove-button, submit .tag-remove-form': removePostTag,
+  'click .tag-add-button, submit .tag-add-form': addPostTag
 };
 
 Template.settings.events = {
@@ -209,7 +217,7 @@ Template.settings.events = {
 };
 
 Template.options.events = {
-  'click': function() {alert('slut');},
+  'click': function() {console.log('slut');},
   'click #change-password-button, submit #change-password-button': changePassword,
   'click #change-user-button, submit #change-user-button': changeUser
 };
@@ -228,26 +236,56 @@ Template.users.events = {
   'click .delete-user, submit .delete-user': deleteUser
 };
 
+Template.post_list.events = {
+  'click .post-edit-button': editPost,
+  'click .post-delete-button': deletePost,
+  'click .post-publish-button': publishPost,
+  'click .post-unpublish-button': unpublishPost,
+  'change .orderby': changeOrderBy,
+  'click .tag-remove-button, submit .tag-remove-form': removePostTag
+};
+
+Template.post_tags.events = {
+  'click .tag-delete-button': deleteTag,
+  'click #add-tag-submit, submit #add-tag': makeTag,
+  'change #tag-name, keyup #tag-name': changeTagName
+};
 Meteor.startup(function() {
   //This is a helper function for the page to keep state between refresh
   if(!Session.get('user') && Stellar.session.getKey()) {
     Meteor.call('sessionUser', Stellar.session.getKey(), sessionLogin);
   }
 
-  Meteor.call('blog_page_count', function(error, result) {if(!error) {Session.set('blog_page_count');}});
+  Meteor.call('blog_page_count', function(error, result) {if(!error && result) {Session.set('blog_page_count', result);}});
 });
 
 function changeSetting(e) {
   e.preventDefault();
   if(Session.get('user')) {
     settings = [];
-    $('#change-setting-form input').each(function(input) { settings.push([$(this).attr('data-key'), $(this).val()]);});
+    $('#change-setting-form input').each(
+      function(input) { 
+        val = $(this).val();
+        //checkbox select to bool mapping
+        if ( $(this).attr('type') == 'checkbox' ) {
+          if ( $(this).attr('checked') ) {
+            val = true;
+          } else {
+            val = false;
+          }
+        }
+        
+        settings.push([$(this).attr('data-key'), val]);
+      }
+    );
+    
     Meteor.call('changeSetting', {settings: settings, auth: Stellar.session.getKey()}, standardHandler);
   }
 }
 
 function standardHandler(error, response) {
   if(!error && response) {
+    console.log("error="+error+"response="+response);
     Stellar.redirect('');
   } else {
     if(error && error.error && error.error == 401) {
@@ -353,13 +391,28 @@ function deletedPost(error, response) {
 
 function changeTitle() {
   slug = $('#post-title').val();
-  $('#post-slug').val(slug.replace(/\s/g, '_').toLowerCase());
+  slug = slug.replace(/\s/g, '_').toLowerCase();
+  slug = replaceUmlaute(slug);
+  $('#post-slug').val(slug);
+}
+
+function replaceUmlaute(s) {
+  //replace äüö with ae ue and oe for german titles
+  //later add support for more special chars defined in the admin interface
+  //removing the need of adding them all here and always test against those that we need to test against ;)
+  tr = {"\u00e4":"ae", "\u00fc":"ue", "\u00f6":"oe", "\u00df":"ss" }
+  return s.replace(/[\u00e4|\u00fc|\u00f6|\u00df]/g, function($0) { return tr[$0] });
 }
 
 function makePost(e) {
   e.preventDefault();
+  author = $('select#post-author option').filter(':selected').val();
+  published = $('#post-published').attr('checked') == 'checked';
+  created = new Date( $('#post-year').val(), $('#post-month').val(), $('#post-day').val(), $('#post-hour').val(), $('#post-minute').val() );
+  date = new Date();
+  
   if(Session.get('user')) {
-    Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Stellar.session.getKey()}, madePost);
+    Meteor.call('post', {title: $('#post-title').val(), body: $('#post-body').val(), slug: $('#post-slug').val(), auth: Stellar.session.getKey(), author: author, published: published, created: created }, madePost);
   }
   return false;
 }
@@ -385,6 +438,140 @@ function madeComment(error, response) {
   if(!error) {
     $('#comment-comment').val('');
   } else {
+    return standardHandler(error, response);
+  }
+}
+
+
+//checks the day for the user_area
+function checkDate ( ) {
+  //remove all shown errors if there are some
+  $('.error').removeClass('error');
+
+  error = false;
+  
+  day = $('#post-day').val();
+  month = $('#post-month').val();
+  year = $('#post-year').val();
+  
+  lastDayMonth = parseInt(month) + 1;
+  
+  // if monthnum is december or higher, reset to january
+  if ( month >= 12 ) {
+    lastDayMonth = 0;
+  }
+  
+  lastDayInMonth = new Date( year, lastDayMonth, 0 ).getDate();
+  
+  if ( lastDayInMonth < day ) {
+    //error
+    $('#post-day').addClass('error');
+    return false;
+  }
+  return true;
+}
+
+
+function publishPost (e) {
+  e.preventDefault();
+  target = e.target;
+  slug = $(target).attr('data-slug');
+  Meteor.call('publishPost', {slug: slug, published: true, auth: Stellar.session.getKey()}, doNothing);
+}
+
+
+function unpublishPost (e) {
+  e.preventDefault();
+  target = e.target;
+  slug = $(target).attr('data-slug');
+  Meteor.call('unpublishPost', {slug: slug, published: false, auth: Stellar.session.getKey() }, doNothing);
+}
+
+
+function changeOrderBy (e) {
+  orderby = e.target;
+  $('ul#post-list-sort li a').each(function(){
+    href = $(this).attr('href').split('&');
+    href[1] = orderby;
+    for ( var hr in href ) {
+      href = href + hr;
+    }
+    $(this).attr( 'href', hr );
+  });
+}
+
+function makeTag ( e ) {
+  e.preventDefault();
+  
+  if (Session.get('user')) {
+    name = $('#tag-name').val();
+    slug = $('#tag-slug').val();
+    description = $('#tag-description').html();
+    Meteor.call( 'makeTag', { name: name, slug: slug, description: description, auth: Stellar.session.getKey() }, madeTag);
+  }
+  return false;
+}
+
+
+function madeTag ( error, response ) {
+  if(error) {
+    return standardHandler(error, response);
+  }
+  $('#tag-name').val('');
+  $('#tag-slug').val('');
+  $('#tag-description').html('');
+}
+
+
+function deleteTag ( e ) {
+  e.preventDefault();
+  if(Session.get('user') && confirm('Are you sure you want to delete this tag?')) {
+    target = e.target;
+    tagId = $(target).attr('data-id');
+    Meteor.call('deleteTag', {tagId: tagId, auth: Stellar.session.getKey() }, doNothing);
+    return true;
+  }
+  return false;
+}
+
+
+function changeTagName() {
+  slug = $('#tag-name').val();
+  $('#tag-slug').val(slug.replace(/\s/g, '_').toLowerCase());
+}
+
+function addPostTag(e) {
+  e.preventDefault();
+  if ( Session.get('user') ) {
+    target = e.target;
+    tagId = $(e.target).attr('data-id');
+    postId = $('.tags-list').attr('data-id');
+    Meteor.call('addPostTag', { postId: postId, tagId: tagId, auth: Stellar.session.getKey()}, doNothing );
+    return true;
+  }
+  return false;
+}
+
+//removes a tag from a post
+function removePostTag(e) {
+  e.preventDefault();
+  if ( Session.get('user') && confirm('Do you really want to remove this Tag from this Post?') ) {
+    target = e.target;
+    tagId = $(e.target).attr('data-id');
+    postId = $('.tags-list').attr('data-id');
+    
+    //console.log("removePostTag: tagId="+tagId+" postId="+postId);
+    
+    Meteor.call('removePostTag', { postId: postId, tagId: tagId, auth: Stellar.session.getKey()}, doNothing );
+    return true;
+  }
+  return false;
+} 
+
+//only do something on error
+//i guess this is wrong, but standardhandler always reconnects me to home
+function doNothing ( error, response ) {
+  if ( error ) {
     return standardHandler(error, response);
   }
 }

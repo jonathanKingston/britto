@@ -1,0 +1,41 @@
+<template name="widgets">
+  {{#if showSearch}}
+    {{>search}}
+  {{/if}}
+  {{#if showBlogRoll}}
+    {{>sidelinks}}
+  {{/if}}
+  {{#if showTagCloud }}
+    {{>tagcloud}}
+  {{/if}}
+</template>
+
+<template name="search">
+  <form class="search-form form-horizontal" action="#" >
+    <input type="text" id="search-input" />
+    <input type="submit" id="search-button" value="Search" class="btn btn-primary" />
+  </form>
+</template>
+
+<template name="tagcloud">
+  <div class="widget">
+    
+    <h2>Tags</h2>
+    <ul class="tag-cloud">
+      {{#each alltags}}
+      <li><a href="/blog/tag?show={{slug}}" style="font-size:{{fontsize}}em;">{{name}}</a></li>
+      {{/each}}
+    </ul>
+  </div>
+</template>
+
+<template name="sidelinks">
+  {{#if blogRoll}}
+  <h2>Blog roll</h2>
+  <ul>
+    {{#each blogRoll}}
+      <li><a href="{{link}}">{{name}}</a></li>
+    {{/each}}
+  </ul>
+  {{/if}}
+</template>

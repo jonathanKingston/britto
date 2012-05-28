@@ -14,7 +14,13 @@ Meteor.methods({
   deleteComment: deleteComment,
   deletePost: deletePost,
   deleteBlogRoll: deleteBlogRoll,
-  insertBlogRoll: insertBlogRoll
+  insertBlogRoll: insertBlogRoll,
+  publishPost: publishPost,
+  unpublishPost: unpublishPost,
+  makeTag: makeTag,
+  deleteTag: deleteTag,
+  addPostTag: addPostTag,
+  removePostTag: removePostTag
 });
 
 //TODO when minimogo adds in limit and so on, clear this function out its just a helper
@@ -132,27 +138,36 @@ function sessionUser(key) {
 
 function makePost(args) {
   if(user = checkAuth(args.auth)) {
-    post = Posts.findOne({slug: args.slug});
+    post = Posts.findOne({slug: args.slug}, { fields:  { _id: 1 } } );
+    postId = false;
+    created = new Date(args.created);
+    
     //TODO If the user changes the slug, this will create a new post, Should fix at some point
     if(post) {
-      Posts.update({slug: args.slug}, {$set: {
+      postId = Posts.update({slug: args.slug}, {$set: {
           title: args.title,
-          body: args.body
+          body: args.body,
+          author: args.author,
+          published: args.published,
+          created: created
         } 
       });
     } else {
-      Posts.insert({
+      postId = Posts.insert({
         title: args.title,
         body: args.body,
         slug: args.slug,
         userId: user._id,
-        created: new Date()
+        author: args.author,
+        published: args.published,
+        created: created
       });
     }
-    return true;
+    return postId;
   }
   return false;
-}
+};
+    
 
 function insertBlogRoll(args) {
   if(user = checkAuth(args.auth)) {
@@ -184,8 +199,11 @@ function setSetting(key, value, description) {
       value: value,
       description: description
     });
-  }
+  }/*else{
+    console.log( "setting with key:"+key+" is already set. maybe you should be using changeSetting(key, value, description) instead?");
+  }*/
 }
+
 
 function hashPassword(password, salt) {
   return Crypto.SHA256(salt + '-' + password);
@@ -197,4 +215,90 @@ function createUser(vals) {
   vals.created = new Date();
   id = Users.insert(vals);
   return id;
+}
+
+
+function publishPost ( args ) {
+  if(user = checkAuth(args.auth)) {
+    Posts.update({slug: args.slug}, {$set: { published: args.published } } );
+    return true;
+  }
+  return false;
+}
+
+function unpublishPost ( args ) {
+  if(user = checkAuth(args.auth)) {
+    Posts.update({slug: args.slug}, {$set: { published: args.published } } );
+    return true;
+  }
+  return false;
+}
+
+
+function makeTag(args) {
+  if(user = checkAuth(args.auth)) {
+    if ( args && args.slug && args.name ) {
+      tag = Tags.findOne({slug: args.slug});
+      tagId = false;
+      //TODO If the userchanges the slug, this will create a new tag, Should fix at some point
+      if(tag) {
+        tagId = Tags.update({slug: args.slug}, 
+          {$set: {
+            name: args.name,
+            slug: args.slug,
+            description: args.description
+          } 
+        });
+      } else {
+        tagId = Tags.insert({
+          name: args.name,
+          slug: args.slug,
+          description: args.description
+        });
+      }
+      return tagId;
+    }
+    return false;
+  }
+  throw new Meteor.Error(401, 'You are not logged in');
+  return false;
+};
+
+function deleteTag(args) {
+  if(user = checkAuth(args.auth)) {
+    if ( args && args.tagId ) {
+      Tags.remove({_id: args.tagId});
+      return true;
+    }
+    return false;
+  }
+  throw new Meteor.Error(401, 'You are not logged in');
+  return false;
+}
+
+
+function addPostTag ( args ) {
+  if ( user = checkAuth(args.auth ) ) {
+    tagInPost = TagsInPosts.findOne( { postId: args.postId, tagId: args.tagId } );
+    
+    if ( tagInPost ) {
+      TagsInPosts.update( { _id: tagInPost._id }, { $set: { tagId: tagInPost._id, postId: args.postId } } );
+    }else {
+      TagsInPosts.insert( { tagId: args.tagId, postId: args.postId } );
+    }
+    return true;
+  }
+  throw new Meteor.Error(401, 'You are not logged in');
+  return false;
+}
+
+function removePostTag ( args ) {
+  if ( user = checkAuth(args.auth ) ) {
+    tag = TagsInPosts.findOne({ _id: args.postId}, { });
+        
+    TagsInPosts.remove( { postId: args.postId, tagId: args.tagId } );
+    return true;
+  }
+  throw new Meteor.Error(401, 'You are not logged in');
+  return false;
 }

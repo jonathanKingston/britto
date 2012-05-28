@@ -18,12 +18,13 @@ Meteor.publish("allposts", function() {
 Meteor.publish("postpage", function(page) {
   var perpage = 10;
   var start = (page-1) * perpage;
-  return Posts.find({}, {sort: {created: -1}, skip: start, limit: perpage, fields: {}});
+  return Posts.find({published: true, created: { $lte: new Date() } }, {sort: {created: -1}, skip: start, limit: perpage, fields: {}});
 });
 
 Meteor.publish("post", function(slug) {
-  return Posts.find({slug: slug}, {fields: {}});
+  return Posts.find({published: true, created: { $lte: new Date() }, slug: slug}, {fields: {}});
 });
+
 
 Meteor.publish("allsettings", function() {
   return Settings.find({}, {fields: {}});
@@ -31,4 +32,12 @@ Meteor.publish("allsettings", function() {
 
 Meteor.publish("allblogroll", function() {
   return BlogRoll.find({}, {fields: {}});
+});
+
+Meteor.publish("alltags", function() {
+  return Tags.find({}, {fields: {}});
+});
+
+Meteor.publish("alltagsinposts", function () {
+  return TagsInPosts.find({}, {fields: {}});
 });

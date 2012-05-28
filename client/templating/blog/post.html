@@ -2,8 +2,17 @@
   <article class="post" id="{{_id}}">
     <h2><a href="/blog/{{slug}}" >{{ title }}</a></h2>
     {{#better_markdown_escape body}}{{/better_markdown_escape}}
+    
+    <ul class="tag-ul">
+      <li>Tagged with:</li>
+      {{#each postTags _id}}
+      <li>
+        <a href="/blog/tag?show={{slug}}">{{name}}</a>
+      </li>
+      {{/each}}
+    </ul>
     <dl>
-      <dt>Posted by</dt><dd>{{postUser userId}}</dd>
+      <dt>Posted by</dt><dd>{{postUser author}}</dd>
       <dt>Created</dt><dd><time>{{date created}}</time></dd>
     </dl>
     {{#if user}}<button class="btn btn-primary delete-post" data-id="{{_id}}" >Delete post</button>{{/if}}

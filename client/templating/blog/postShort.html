@@ -2,8 +2,20 @@
   <article class="post" id="{{_id}}">
     <h2><a href="/blog/{{slug}}" >{{ title }}</a></h2>
     {{#short_content_escape slug body}}{{/short_content_escape}}
+    
+    {{#if hasTag _id}}
+    <ul class="tag-ul">
+      <li>Tagged with:</li>
+      {{#each postTags _id}}
+      <li>
+        <a href="/blog/tag?show={{slug}}">{{name}}</a>
+      </li>
+      {{/each}}
+    </ul>
+    {{/if}}
     <dl>
       <dt>Posted by</dt><dd>{{postUser userId}}</dd>
+
       <dt>Created</dt><dd><time>{{date created}}</time></dd>
       {{#if disqus}}
         {{#disqus_link slug}}{{/disqus_link}}

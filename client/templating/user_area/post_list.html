@@ -1,0 +1,79 @@
+<template name="post_list">
+  
+  {{#if user }}
+  <div class="post-list">
+    <h2>Hi {{#with user}}{{ name }}{{/with}}!</h2>
+    
+    {{#with posts}}
+    <!-- here for later
+    <div id="sort-control">
+        <ul id="post-list-sort">
+          <li>Sort by</li>
+          <li><a href="user_area/post_list?sort=title&orderby={{orderby}}">title</a></li>
+          <li><a href="user_area/post_list?sort=created&orderby={{orderby}}">date</a></li>
+          <li><a href="user_area/post_list?sort=author&orderby={{orderby}}">author</a></li>
+          <li><a href="user_area/post_list?sort=published&orderby={{orderby}}">published</a></li>
+        </ul>
+        <select id="orderby">
+        <option name="select-orderby" {{#if orderby_asc}}selected="selected"{{/if}} value="asc">ascending</option>
+        <option name="select-orderby" {{#if orderby_desc}}selected="selected"{{/if}} value="desc">descending</option>
+      </select>
+    </div>
+    -->
+    <div id="post-container">
+      
+      {{#each posts}}
+        <article>
+          <header>
+            <!--<input id="post-expand-{{_id}}" class="post-expand-button" data-slug="{{slug}}" type="button" value="Expand" />-->
+            <span class="post-title">
+              {{#if published}}
+              <a href="/blog/{{slug}}">
+              {{/if}}
+              {{title}}
+              {{#if published}}
+              </a>
+              {{/if}}
+            </span>
+            <span class="post-author">{{postUser author}}</span>
+            <span class="post-date">{{date created}}</span>
+            <span>
+              <input id="post-edit-{{_id}}" class="post-edit-button" data-slug="{{slug}}" type="button" value="Edit" />
+              {{#if published }}
+              <input id="post-unpublish-{{_id}}" class="post-unpublish-button" data-slug="{{slug}}" type="button" value="Unpublish" />
+              {{else}}
+              <input id="post-publish-{{_id}}" class="post-publish-button" data-slug="{{slug}}" type="button" value="Publish" />
+              {{/if}}
+              <input id="post_delete_{{_id}}" data-id="{{_id}}" class="post-delete-button" type="button" value="Delete" />
+            </span>
+          </header>
+          
+          {{#if hasTag _id}}
+          <div class="article-content">
+            <div class="tags">
+              <ul class="tags-list" data-id="{{_id}}">
+                
+                {{#each postTags _id}}
+                  <li>
+                    <a href="/blog/tag?show={{slug}}">{{name}}</a>
+                    <a title="remove tag" class="tag-remove-button" data-id="{{_id}}">x</a>
+                  </li>
+                {{/each}}
+                
+              </ul>
+              </ul>
+            </div>
+          </div>
+          
+          {{/if}}
+        </article>
+        
+      {{/each}}
+    </div>
+    
+    {{/with}}
+  </div>
+  
+  {{/if}}
+  
+</template>

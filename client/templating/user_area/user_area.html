@@ -10,16 +10,98 @@
           <label for="post-title" class="control-label">Title</label>
           <div class="controls"><input type="text" id="post-title" value="{{title}}" /></div>
         </div>
+        {{#with userlist}}
+         <div class="control-group">
+          <label for="post-author" class="control-label">Author</label>
+          <div class="controls">
+            <select id="post-author">
+              {{#each userlist}}
+              <option value="{{_id}}">{{name}}</option>
+              {{/each}}
+            </select>
+          </div>
+        </div>
+        {{/with}}
+        <div class="control-group">
+          <label for="post-published" class="control-label">Publish Post:</label>
+          <div class="controls">
+            <input id="post-published" type="checkbox" checked />
+            <span>If date is in the future and publish is checked, the post will be published at that date</span>
+          </div>
+        </div>
+        <div class="control-group" id="date-control-group">
+          <label for="post-day" class="control-label">Date</label>
+          <div class="controls">
+            {{#with dates}}
+            <select id="post-day">
+              {{#each days }}
+              <option {{#if selected}}selected="selected" {{/if}}value="{{day}}">{{day}}</option>
+              {{/each}}
+            </select>
+            <span>/</span>
+            <select id="post-month">
+              {{#each months }}
+              <option {{#if selected}}selected="selected" {{/if}}value="{{monthnum}}">{{monthname}}</option>
+              {{/each}}
+            </select>
+            <span>/</span>
+            <select id="post-year">
+              {{#each years }}
+              <option {{#if selected}}selected="selected" {{/if}}value="{{year}}">{{year}}</option>
+              {{/each}}
+            </select>
+            <span>@</span>
+            <select id="post-hour">
+              {{#each hours}}
+              <option {{#if selected}}selected="selected" {{/if}}value="{{hour}}">{{hour}}</option>
+              {{/each}}
+            </select>
+            <span>:</span>
+            <select id="post-minute">
+              {{#each minutes}}
+              <option {{#if selected}}selected="selected" {{/if}}value="{{minute}}">{{minute}}</option>
+              {{/each}}
+            </select>
+            {{/with}}
+          </div>
+        </div>
         <div class="control-group">
           <label for="post-body" class="control-label">Body</label>
           <div class="controls"><textarea id="post-body" style="width:100%; height:300px;">{{body}}</textarea></div>
         </div>
+        {{#if _id}}
+        <div class="control-group">
+          <label for="post-tags" class="control-label">Assigned Tags</label>
+          <div class="controls">
+            <ul class="tags-list" data-id="{{_id}}">
+              {{#each postTags _id}}
+              <li>
+                <a href="/blog/tag?show={{slug}}">{{name}}</a>
+                <a class="tag-remove-button" data-id="{{_id}}" title="remove tag">x</a>
+              </li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="add-post-tags" class="control-label">Add Tags</label>
+          <div class="controls">
+            <ul class="tags-list" data-id="{{_id}}">
+              {{#each alltags}}
+              <li>
+                <a href="/blog/tag?show={{slug}}">{{name}}</a>
+                <a class="tag-add-button" data-id="{{_id}}" title="add tag to post">+</a>
+              </li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+        {{/if}}
         <div class="control-group">
           <label for="post-slug" class="control-label">Slug</label>
           <div class="controls"><input type="text" id="post-slug" value="{{slug}}" /></div>
         </div>
         <div class="form-actions">
-          <input type="hidden" id="post-id" value="{{_id}}" />
           <button class="btn btn-primary" id="post-button" >Post</button>
         </div>
         {{/with}}
