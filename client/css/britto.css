@@ -526,11 +526,9 @@ select#orderby {
 
 .post-title {
   width: 25%;
-  display: inline-block;
 }
 .post-author {
   width: 15%;
-  display: inline-block;
 }
 
 nav.user-area-nav {
@@ -568,12 +566,15 @@ nav.user-area-nav ul li a:hover {
 }
 
 /* TODO perhaps should resort to label that bootstrap uses for tags */
+ul.tags-list {
+  margin-bottom:1em;
+}
 ul.tags-list li {
   border: 1px solid;
   border-radius: 3px;
   display: inline;
-  padding: 3px;
-  margin: 0 5px 0 0;
+  padding: 0.25em;
+  margin: 0 1em 0 0;
   background-color: #fff;
 }
 

@@ -1,8 +1,6 @@
 <template name="post_list">  
   {{#if user }}
-  <h2>Posts</h2>
-  <div class="post-list">
-    {{#with posts}}
+    <h2>Posts</h2>
     <!-- here for later
     <div id="sort-control">
         <ul id="post-list-sort">
@@ -18,13 +16,11 @@
       </select>
     </div>
     -->
-    <div id="post-container">
-      
+    <table>
       {{#each posts}}
-        <article>
-          <header>
+        <tr>
             <!--<input id="post-expand-{{_id}}" class="post-expand-button" data-slug="{{slug}}" type="button" value="Expand" />-->
-            <span class="post-title">
+            <td class="post-title">
               {{#if published}}
               <a href="/blog/{{slug}}">
               {{/if}}
@@ -32,10 +28,10 @@
               {{#if published}}
               </a>
               {{/if}}
-            </span>
-            <span class="post-author">{{postUser author}}</span>
-            <span class="post-date">{{date created}}</span>
-            <span>
+            </td>
+            <td class="post-author">{{postUser author}}</span>
+            <td class="post-date">{{date created}}</span>
+            <td>
               <input id="post-edit-{{_id}}" class="post-edit-button btn" data-slug="{{slug}}" type="button" value="Edit" />
               {{#if published }}
               <input id="post-unpublish-{{_id}}" class="post-unpublish-button btn" data-slug="{{slug}}" type="button" value="Unpublish" />
@@ -43,35 +39,24 @@
               <input id="post-publish-{{_id}}" class="post-publish-button btn" data-slug="{{slug}}" type="button" value="Publish" />
               {{/if}}
               <input id="post_delete_{{_id}}" data-id="{{_id}}" class="post-delete-button btn" type="button" value="Delete" />
-            </span>
-          </header>
-          
-          {{#if hasTag _id}}
-          <div class="article-content">
-            <div class="tags">
+            </td>
+      
+        </tr>
+        {{#if hasTag _id}}
+          <tr>
+            <td colspan="4">
               <ul class="tags-list" data-id="{{_id}}">
-                
                 {{#each postTags _id}}
                   <li>
                     <a href="/blog/tag?show={{slug}}">{{name}}</a>
                     <a title="remove tag" class="tag-remove-button" data-id="{{_id}}">x</a>
                   </li>
                 {{/each}}
-                
               </ul>
-              </ul>
-            </div>
-          </div>
-          
-          {{/if}}
-        </article>
-        
+            </td>
+          </tr>
+        {{/if}}
       {{/each}}
-    </div>
-    
-    {{/with}}
-  </div>
-  
+    </table>
   {{/if}}
-  
 </template>

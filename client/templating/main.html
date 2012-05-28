@@ -9,9 +9,7 @@
   <header class="navbar position-fixed">
     <div class="navbar-inner">
       <div class="container">
-        
         <a class="brand" href="/" >{{#setting}}site_name{{/setting}}</a>
-
         <nav class="nav-collapse">
           <ul class="nav">
             {{#each links}}
@@ -33,9 +31,8 @@
 </template>
 
 <template name="user_area_nav">
-  {{#if user_is_logged_in }}
+  {{#if user_is_logged_in}}
   <nav class="user-area-nav">
-    <header>Admin menu:</header>
     <ul class="nav user-area-nav-ul">
       {{#each user_area_links}}
         {{#nav_link url}}{{text}}{{/nav_link}}
