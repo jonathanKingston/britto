@@ -485,8 +485,7 @@ button.close {
   border-color: #BCE8F1;
 }
 
-
-
+/* TODO page specific css should be removed */
 #date-control-group select {
   width: auto;
   padding: 0;
@@ -568,13 +567,14 @@ nav.user-area-nav ul li a:hover {
   font-size: 1.1em;
 }
 
-
+/* TODO perhaps should resort to label that bootstrap uses for tags */
 ul.tags-list li {
   border: 1px solid;
   border-radius: 3px;
   display: inline;
   padding: 3px;
   margin: 0 5px 0 0;
+  background-color: #fff;
 }
 
 ul.tags-list li input, ul.tags-list li a {

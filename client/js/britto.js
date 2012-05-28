@@ -138,7 +138,6 @@ function madePost(error, response) {
   if(!error) {
     Stellar.redirect('/');
   } else {
-    console.log(" error = "+error );
     return standardHandler(error, response);
   }
 }
@@ -285,8 +284,8 @@ function changeSetting(e) {
 
 function standardHandler(error, response) {
   if(!error && response) {
-    console.log("error="+error+"response="+response);
-    Stellar.redirect('');
+    //TODO move this to other places where needed
+    //Stellar.redirect('');
   } else {
     if(error && error.error && error.error == 401) {
       Stellar.redirect('home/login');
@@ -294,7 +293,7 @@ function standardHandler(error, response) {
       return false;
     }
     Britto.alert('error', 'There was an error updating that');
-    return false;
+    //return false;
   }    
 }
 
@@ -397,6 +396,7 @@ function changeTitle() {
 }
 
 function replaceUmlaute(s) {
+  //TODO add greater support for all chars
   //replace äüö with ae ue and oe for german titles
   //later add support for more special chars defined in the admin interface
   //removing the need of adding them all here and always test against those that we need to test against ;)
@@ -442,9 +442,8 @@ function madeComment(error, response) {
   }
 }
 
-
 //checks the day for the user_area
-function checkDate ( ) {
+function checkDate() {
   //remove all shown errors if there are some
   $('.error').removeClass('error');
 
@@ -471,36 +470,33 @@ function checkDate ( ) {
   return true;
 }
 
-
-function publishPost (e) {
+function publishPost(e) {
   e.preventDefault();
   target = e.target;
   slug = $(target).attr('data-slug');
-  Meteor.call('publishPost', {slug: slug, published: true, auth: Stellar.session.getKey()}, doNothing);
+  Meteor.call('publishPost', {slug: slug, published: true, auth: Stellar.session.getKey()}, standardHandler);
 }
 
-
-function unpublishPost (e) {
+function unpublishPost(e) {
   e.preventDefault();
   target = e.target;
   slug = $(target).attr('data-slug');
-  Meteor.call('unpublishPost', {slug: slug, published: false, auth: Stellar.session.getKey() }, doNothing);
+  Meteor.call('unpublishPost', {slug: slug, published: false, auth: Stellar.session.getKey() }, standardHandler);
 }
 
-
-function changeOrderBy (e) {
+function changeOrderBy(e) {
   orderby = e.target;
   $('ul#post-list-sort li a').each(function(){
     href = $(this).attr('href').split('&');
     href[1] = orderby;
-    for ( var hr in href ) {
+    for(var hr in href) { //TODO Change this to _.each
       href = href + hr;
     }
-    $(this).attr( 'href', hr );
+    $(this).attr('href', hr);
   });
 }
 
-function makeTag ( e ) {
+function makeTag(e) {
   e.preventDefault();
   
   if (Session.get('user')) {
@@ -513,7 +509,7 @@ function makeTag ( e ) {
 }
 
 
-function madeTag ( error, response ) {
+function madeTag(error, response) {
   if(error) {
     return standardHandler(error, response);
   }
@@ -523,12 +519,12 @@ function madeTag ( error, response ) {
 }
 
 
-function deleteTag ( e ) {
+function deleteTag(e) {
   e.preventDefault();
   if(Session.get('user') && confirm('Are you sure you want to delete this tag?')) {
     target = e.target;
     tagId = $(target).attr('data-id');
-    Meteor.call('deleteTag', {tagId: tagId, auth: Stellar.session.getKey() }, doNothing);
+    Meteor.call('deleteTag', {tagId: tagId, auth: Stellar.session.getKey() }, standardHandler);
     return true;
   }
   return false;
@@ -546,7 +542,7 @@ function addPostTag(e) {
     target = e.target;
     tagId = $(e.target).attr('data-id');
     postId = $('.tags-list').attr('data-id');
-    Meteor.call('addPostTag', { postId: postId, tagId: tagId, auth: Stellar.session.getKey()}, doNothing );
+    Meteor.call('addPostTag', { postId: postId, tagId: tagId, auth: Stellar.session.getKey()}, standardHandler);
     return true;
   }
   return false;
@@ -560,18 +556,8 @@ function removePostTag(e) {
     tagId = $(e.target).attr('data-id');
     postId = $('.tags-list').attr('data-id');
     
-    //console.log("removePostTag: tagId="+tagId+" postId="+postId);
-    
-    Meteor.call('removePostTag', { postId: postId, tagId: tagId, auth: Stellar.session.getKey()}, doNothing );
+    Meteor.call('removePostTag', {postId: postId, tagId: tagId, auth: Stellar.session.getKey()}, standardHandler);
     return true;
   }
   return false;
-} 
-
-//only do something on error
-//i guess this is wrong, but standardhandler always reconnects me to home
-function doNothing ( error, response ) {
-  if ( error ) {
-    return standardHandler(error, response);
-  }
 }

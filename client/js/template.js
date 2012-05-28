@@ -19,8 +19,6 @@ Template.widgets.showTagCloud = function () {
   }
   return false;
 }
-
-
 Template.sidelinks.blogRoll = function() {
   var blogRoll = BlogRoll.find();
   if(blogRoll && blogRoll.count() > 0) {
@@ -35,20 +33,8 @@ Template.nav.links = function() {
   //replace this with database entries soon
   var links = [{url: '/blog/', text: 'Home'}];
   
-  //moved into admin-menu
-  /*if(Session.get('user')) {
-    links.push({url: '/user_area', text: 'User area'});
-    links.push({url: '/user_area', text: 'Make Post'});
-    links.push({url: '/user_area/post_list', text: 'Post list'});
-    links.push({url: '/user_area/post_tags', text: 'Post tags'});
-    links.push({url: '/user_area/users', text: 'Users'});
-    links.push({url: '/user_area/options', text: 'Options'});
-    links.push({url: '/user_area/settings', text: 'Settings'});
-    links.push({url: '/home/logout', text: 'Logout'});
-  }*/ 
-  
   //if the user is not logged in, show loginlink in menu
-  if( !Session.get('user') ) {
+  if(!Session.get('user')) {
     links.push({url: '/home/login', text: 'Login'});
   }else{
     links.push({url: '/home/logout', text: 'Logout'});
@@ -65,15 +51,15 @@ Template.user_area_nav.user_is_logged_in = function () {
 //admin menu
 Template.user_area_nav.user_area_links = function () {
   //only show to logged in users
-  if ( !Session.get('user')) {
+  if (!Session.get('user')) {
     return false;
   }
   //defining the menu items.
-  //should be read from the db soon
+  //should be read from the db soon - hmm might slow it down while we don't have prerendered html
   user_area_links = [
-    {url: '/user_area', text: 'Make Post'},
-    {url: '/user_area/post_list', text: 'Post list'},
-    {url: '/user_area/post_tags', text: 'Post tags'},
+    {url: '/user_area/posts', text: 'Posts'},
+    {url: '/user_area', text: '&nbsp;&nbsp;New Post'}, //TODO make sub pages here and neaten up, this path should be /user_area/posts/new but that needs a change in stellar :/
+    {url: '/user_area/post_tags', text: '&nbsp;&nbsp;Tags'},
     {url: '/user_area/users', text: 'Users'},
     {url: '/user_area/options', text: 'Options'},
     {url: '/user_area/settings', text: 'Settings'}
@@ -214,10 +200,8 @@ _.each(['user_area', 'tagcloud'], function (template) {
       }
       returnTag = { count: count, name: tag.name, slug: tag.slug};
       tagsWithCount.push(returnTag);
-      //console.log("tagswithcount "+tagsWithCount.length+" set");
     });    
     
-    //console.log( "tagsWithCount length = "+tagsWithCount.length );
     
     returnTags = [];
     for (var i = 0; i < tagsWithCount.length; i++ ){
@@ -225,7 +209,7 @@ _.each(['user_area', 'tagcloud'], function (template) {
       tag = tagsWithCount[i];
       
       fontsize = tag.count / ( highest_count - lowest_count );
-      
+      //TODO This should be classes
       if ( fontsize > 1.4 ) {
         fontsize = 1.4;
       }
@@ -234,18 +218,13 @@ _.each(['user_area', 'tagcloud'], function (template) {
       }
       
       returnTag = { fontsize: fontsize, name: tag.name, slug: tag.slug};
-      
-      //console.log("tagforeach returnTag.name="+returnTag.name+" fontsize = "+fontsize);
-      
       returnTags.push(returnTag);
-      //console.log ( "returnTags["+i+"] set to "+returnTags[i]);
     }
     return returnTags;
   }
 });
 
-
-
+//TODO neaten this method, needs explanation too
 Template.user_area.dates = function () {
   dates = {};
   //first get now
@@ -253,11 +232,11 @@ Template.user_area.dates = function () {
   
   created = now;
   
-  if ( params.id ) {
+  if(params.id) {
     created = Posts.find({ slug: params.id }, { fields: { created: 1 } });
   }
   
-  if ( created && created.created && !isNaN( created.created.getTime() ) ) {
+  if(created && created.created && !isNaN(created.created.getTime())) {
     now = created.created;
   }
   year = now.getFullYear();
@@ -265,7 +244,7 @@ Template.user_area.dates = function () {
   //setting the years:
   years = [];
   yearmax = year + 5;
-  for ( var i = 1990; i < yearmax; i++ ) {
+  for(var i = 1990; i < yearmax; i++) {
     selected = is_selected(i, year );
     years.push({ year: i, selected: selected });
   }
@@ -273,7 +252,7 @@ Template.user_area.dates = function () {
   
   //setting the month
   months = [];
-  for ( var i = 0; i < 12; i++ ) {
+  for(var i = 0; i < 12; i++) {
     selected = is_selected( i, now.getMonth() );
     months.push ( {monthnum: i, monthname: getMonthName(i), selected: selected} );
   } 
@@ -287,7 +266,7 @@ Template.user_area.dates = function () {
   
   lastDayInMonth = new Date( now.getFullYear(), monthForDay, 0 ).getDate();
   
-  for ( var i = 1; i <= lastDayInMonth; i++ ) {
+  for(var i = 1; i <= lastDayInMonth; i++) {
     selected = is_selected(i, now.getDate() );
     days.push({ day: i, selected: selected });
   }
@@ -295,7 +274,7 @@ Template.user_area.dates = function () {
   
   //adding hours
   hours = [];
-  for ( var i = 0; i < 24; i++ ) {
+  for(var i = 0; i < 24; i++) {
     selected = is_selected(i, now.getHours() );
     hours.push({hour: i, selected: selected });
   }
@@ -313,16 +292,15 @@ Template.user_area.dates = function () {
   return dates;
 }
 
-function is_selected ( i, now ) {
+function is_selected(i, now) {
   if ( i == now ) {
     return true;
   }
   return false;
 }
 
-function getMonthName (month) {
+function getMonthName(month) {
   //maybe add this to the admin later, formatting of the date string as well as monthnames.
   var m = ['January','February','March','April','May','June','July', 'August','September','October','November','December'];
   return m[month];
-} 
-
+}

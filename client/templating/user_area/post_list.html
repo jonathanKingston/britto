@@ -1,9 +1,7 @@
-<template name="post_list">
-  
+<template name="post_list">  
   {{#if user }}
+  <h2>Posts</h2>
   <div class="post-list">
-    <h2>Hi {{#with user}}{{ name }}{{/with}}!</h2>
-    
     {{#with posts}}
     <!-- here for later
     <div id="sort-control">
@@ -38,13 +36,13 @@
             <span class="post-author">{{postUser author}}</span>
             <span class="post-date">{{date created}}</span>
             <span>
-              <input id="post-edit-{{_id}}" class="post-edit-button" data-slug="{{slug}}" type="button" value="Edit" />
+              <input id="post-edit-{{_id}}" class="post-edit-button btn" data-slug="{{slug}}" type="button" value="Edit" />
               {{#if published }}
-              <input id="post-unpublish-{{_id}}" class="post-unpublish-button" data-slug="{{slug}}" type="button" value="Unpublish" />
+              <input id="post-unpublish-{{_id}}" class="post-unpublish-button btn" data-slug="{{slug}}" type="button" value="Unpublish" />
               {{else}}
-              <input id="post-publish-{{_id}}" class="post-publish-button" data-slug="{{slug}}" type="button" value="Publish" />
+              <input id="post-publish-{{_id}}" class="post-publish-button btn" data-slug="{{slug}}" type="button" value="Publish" />
               {{/if}}
-              <input id="post_delete_{{_id}}" data-id="{{_id}}" class="post-delete-button" type="button" value="Delete" />
+              <input id="post_delete_{{_id}}" data-id="{{_id}}" class="post-delete-button btn" type="button" value="Delete" />
             </span>
           </header>
           

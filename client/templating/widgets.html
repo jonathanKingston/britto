@@ -19,11 +19,10 @@
 
 <template name="tagcloud">
   <div class="widget">
-    
     <h2>Tags</h2>
     <ul class="tag-cloud">
       {{#each alltags}}
-      <li><a href="/blog/tag?show={{slug}}" style="font-size:{{fontsize}}em;">{{name}}</a></li>
+        <li><a href="/blog/tag?show={{slug}}" style="font-size:{{fontsize}}em;">{{name}}</a></li>
       {{/each}}
     </ul>
   </div>
@@ -31,11 +30,11 @@
 
 <template name="sidelinks">
   {{#if blogRoll}}
-  <h2>Blog roll</h2>
-  <ul>
-    {{#each blogRoll}}
-      <li><a href="{{link}}">{{name}}</a></li>
-    {{/each}}
-  </ul>
+    <h2>Blog roll</h2>
+    <ul>
+      {{#each blogRoll}}
+        <li><a href="{{link}}">{{name}}</a></li>
+      {{/each}}
+    </ul>
   {{/if}}
 </template>
