@@ -148,8 +148,7 @@ function makePost(args) {
           title: args.title,
           body: args.body,
           author: args.author,
-          published: args.published,
-          created: created
+          published: args.published
         } 
       });
     } else {
