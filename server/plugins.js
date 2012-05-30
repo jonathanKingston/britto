@@ -1,7 +1,16 @@
 Britto.plugin = {};
 
+//TODO add interface for all plugins
+//TODO add this to client side too
+
 Britto.plugin.installed = Stellar.Collection('Britto_plugin_installed');
-//TODO add installed plugins run
+
+Meteor.startup(function () {
+  var installedPlugins = Britto.plugin.installed.find({installed: true});
+  _.each(installedPlugins, function(plugin) {
+    Britto.plugin.run(plugin.name);
+  });
+});
 
 Britto.plugin.plugins = {};
  
@@ -34,12 +43,16 @@ Britto.plugin.uninstall = function(pluginName) {
         uninstall = true;
       }
     }
-    Britto.plugin.installed.update({name: pluginName}, {$set: {installed: true}});
+    Britto.plugin.installed.update({name: pluginName}, {$set: {installed: false}});
     return true;
   }
   return false;
 };
 
 Britto.plugin.run = function(pluginName) {
-  //ADD in check if installed here then run
+  if(installed = Britto.plugin.installed.findOne({name: pluginName, installed: true})) {
+    if(Britto.plugin.plugins[pluginName] && Britto.plugin.plugins[pluginName].run) {
+      Britto.plugin.plugins[pluginName].run();
+    }
+  }
 };
