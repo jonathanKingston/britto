@@ -9,7 +9,7 @@ Meteor.startup(function () {
   //add widget settings
   setSetting('show_search', true, 'Show search widget');
   setSetting('show_blogroll', true, 'Show blogroll widget');
-  setSetting('show_tagcloud', false, 'Show tagcloud widget' );
+  setSetting('show_tagcloud', false, 'Show tagcloud widget');
   
   
   if(Users.find().count() === 0) {
@@ -30,7 +30,7 @@ Meteor.startup(function () {
     tags = Tags.find({}, {fields: {_id:1} }).fetch();
     
     console.log('Adding in blogroll link');
-    insertBlogRoll( { name: 'Britto - Blogging made better', link: 'http://britto.co/', auth: key } );
+    insertBlogRoll({ name: 'Britto - Blogging made better', link: 'http://britto.co/', auth: key});
     
     
     console.log('Adding in test post');
@@ -41,7 +41,7 @@ Meteor.startup(function () {
         auth: key, 
         author: userId, 
         published: true, 
-        created: new Date(),
+        created: new Date()
     });
     
     //Make a long post now
@@ -67,12 +67,12 @@ Meteor.startup(function () {
         created: new Date()
     });
     
-    addPostTag( { postId: postId1, tagId: tagId1, auth: key } );
-    addPostTag( { postId: postId2, tagId: tagId2, auth: key } );
-    addPostTag( { postId: postId3, tagId: tagId3, auth: key } );
-    addPostTag( { postId: postId3, tagId: tagId1, auth: key } );
+    addPostTag({postId: postId1, tagId: tagId1, auth: key});
+    addPostTag({postId: postId2, tagId: tagId2, auth: key});
+    addPostTag({postId: postId3, tagId: tagId3, auth: key});
+    addPostTag({postId: postId3, tagId: tagId1, auth: key});
     
-    console.log( "Added "+TagsInPosts.find().count()+ " post tags to the posts");
+    console.log("Added "+TagsInPosts.find().count()+ " post tags to the posts");
     
     console.log('Log out test user');
     logoutSession(key);
