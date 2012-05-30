@@ -25,7 +25,6 @@ Meteor.publish("post", function(slug) {
   return Posts.find({published: true, created: { $lte: new Date() }, slug: slug}, {fields: {}});
 });
 
-
 Meteor.publish("allsettings", function() {
   return Settings.find({}, {fields: {}});
 });

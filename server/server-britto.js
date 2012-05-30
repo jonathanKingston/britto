@@ -29,7 +29,6 @@ function pageCount() {
   return Math.ceil(posts.count()/10);
 }
 
-
 function logoutSession(key) {
   return Stellar.session.delete(key); //Delete the session key
 }
