@@ -1,0 +1,5 @@
+www:
+  type: custom
+  buildscript: .dotcloudbuilder
+db:
+  type: mongodb
