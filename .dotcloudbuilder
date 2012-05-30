@@ -12,7 +12,7 @@ echo "Unpacking stellar"
 curl https://raw.github.com/jonathanKingston/stellar/master/stellar/package.js > package.js
 curl https://raw.github.com/jonathanKingston/stellar/master/stellar/stellar.js > stellar.js
 curl https://raw.github.com/jonathanKingston/stellar/master/stellar/jquery.cookie.js > jquery.cookie.js
-cd ~/meteor/
+cd ~/
 
 cd ${SERVICE_APPROOT:=.}
 
