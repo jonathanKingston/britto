@@ -266,6 +266,14 @@ h3 {
   line-height:1.5em;
 }
 
+em {
+  font-style:italic;
+}
+
+strong {
+  font-weight:bold;
+}
+
 legend {
   width:100%;
   font-size:1.4em;

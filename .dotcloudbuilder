@@ -1,0 +1,31 @@
+#!/bin/bash
+
+(
+    cd ~
+    [ -d meteor ] || git clone git://github.com/meteor/meteor.git
+)
+
+cd ~/meteor/packages
+mkdir stellar
+cd stellar
+curl https://raw.github.com/jonathanKingston/stellar/master/stellar/package.js > package.js
+curl https://raw.github.com/jonathanKingston/stellar/master/stellar/stellar.js > stellar.js
+curl https://raw.github.com/jonathanKingston/stellar/master/stellar/jquery.cookie.js > jquery.cookie.js
+cd ~/meteor/
+
+cd ${SERVICE_APPROOT:=.}
+
+rm -f /tmp/bundle.tar.gz
+~/meteor/meteor bundle /tmp/bundle.tar.gz
+rm -rf ~/bundle
+tar -C ~ -zxf /tmp/bundle.tar.gz
+
+cat >~/run <<EOF
+#!/bin/bash
+export MONGO_URL=\$DOTCLOUD_DB_MONGODB_URL/admin
+export PORT=\$PORT_WWW
+sleep 5 # give some time to MongoDB to come up
+exec ~/meteor/dev_bundle/bin/node bundle/main.js
+EOF
+chmod +x ~/run
+    
