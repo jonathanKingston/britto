@@ -86,7 +86,7 @@ Britto.load.madewith = function() {
       }
     };
 
-    $('body').append(Meteor.ui.render(function() { return Template.madewith();}));
+    $('body').append(Meteor.render(function() { return Template.madewith();}));
   }
 }
 

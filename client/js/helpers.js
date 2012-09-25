@@ -13,7 +13,7 @@ $(window).bind('stellar_page_load', function() {
 });
 
 Handlebars.registerHelper('nav_link', function (url, options) {
-  var linkText = options.fn(this);
+  var linkText = options.fn(this); //options.fn(this);
   classAttr = '';
   Session.get('nav_link');
   if(window.location.pathname == url) {
@@ -59,13 +59,13 @@ Handlebars.registerHelper('post_links', function() {
 });
 
 Handlebars.registerHelper('short_content_escape', function(slug, content, options) {
-  renderedContent = content;
   if(content) {
-    content = renderedContent.substring(0, 200);
-    if(content != renderedContent) {
+    if(content.length > 200) {
+      content = content.substring(0, 200);
       content += " <a href=\"/blog/"+slug+"\" >...</a>";
     }
-    return better_markdown(content);
+    //TODO fix this
+    return better_markdown(content.fn(this));
   } else {
     return '';
   }
@@ -88,7 +88,9 @@ Handlebars.registerHelper('better_markdown', function(fn) {
 });
 
 function better_markdown(input) {
+  //return input;
   var converter = new Showdown.converter();
+  return converter.makeHtml(input);
   ///////
   // Make Markdown *actually* skip over block-level elements when
   // processing a string.
@@ -129,7 +131,8 @@ function better_markdown(input) {
       idx = r.lastIndex;
       result = match[1];
     }
-    (inBlock ? blockBuf : newParts).push(input.substring(lastIndex, idx));
+    data = input();
+    (inBlock ? blockBuf : newParts).push(data.substring(lastIndex, idx));
     return result;
   };
 

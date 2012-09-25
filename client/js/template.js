@@ -87,6 +87,12 @@ _.each(['postShort', 'post'], function(template) {
 
 //list of comments for one post
 Template.comments.commentslist = function(post) {
+  console.log('commentslist');
+  console.log(this);
+  console.log(post);
+  if(!post) {
+    return false;
+  }
   comments = Comments.find({postId: post._id}, {sort: {created: 1}});
   if(comments.count() === 0) {
     return false;

@@ -13,11 +13,11 @@
         <nav class="nav-collapse">
           <ul class="nav">
             {{#each links}}
-              {{#nav_link url}}{{text}}{{/nav_link}}
+              {{#nav_link url}}{{{text}}}{{/nav_link}}
                 {{#if sub_links }}
                   <ul class="submenu">
                   {{#each sub_links}}
-                    {{#nav_link url}}{{text}}{{/nav_link}}
+                    {{#nav_link url}}{{{text}}}{{/nav_link}}
                   {{/each}}
                   </ul>
                 {{/if}}
@@ -35,7 +35,7 @@
   <nav class="user-area-nav">
     <ul class="nav user-area-nav-ul">
       {{#each user_area_links}}
-        {{#nav_link url}}{{text}}{{/nav_link}}
+        {{#nav_link url}}{{{text}}}{{/nav_link}}
       {{/each}}
     </ul>
   </nav>
